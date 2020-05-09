@@ -3,4 +3,4 @@ SpeedEngineVk
 SpeedEngineVk.code-workspace
 build/*
 lib/Vulkan/*
-.spv
+*.spv
