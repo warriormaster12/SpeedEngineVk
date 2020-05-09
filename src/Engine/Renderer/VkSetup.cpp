@@ -16,6 +16,7 @@ void Renderer::InitVulkan()
     createFramebuffers();
     createCommandPool();
     createVertexBuffer();
+    createIndexBuffer();
     createCommandBuffers();
     createSyncObjects();
     
@@ -177,6 +178,9 @@ QueueFamilyIndices Renderer::findQueueFamilies(VkPhysicalDevice device)
 void Renderer::DestroyVulkan()
 {  
     cleanupSwapChain();
+
+    vkDestroyBuffer(device, indexBuffer, nullptr);
+    vkFreeMemory(device, indexBufferMemory, nullptr);
 
     vkDestroyBuffer(device, vertexBuffer, nullptr);
     vkFreeMemory(device, vertexBufferMemory, nullptr);

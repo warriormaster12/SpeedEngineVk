@@ -62,13 +62,15 @@ struct Vertex {
 };
 
 const std::vector<Vertex> vertices = {
-    {{0.0f, -0.5f}, {1.0f, 1.0f, 1.0f}},
-    {{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
-    {{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
+    {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+    {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
+    {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
+    {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
 };
 
-
-
+const std::vector<uint16_t> indices = {
+    0, 1, 2, 2, 3, 0
+};
 
 
 class Renderer
@@ -190,8 +192,13 @@ private:
     void createVertexBuffer();
     void createCommandPool();
     void createCommandBuffers();
+    void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+    void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size); 
+    void createIndexBuffer();
     VkCommandPool commandPool;
     VkBuffer vertexBuffer;
+    VkBuffer indexBuffer;
+    
 
     std::vector<VkCommandBuffer> commandBuffers;
 
@@ -201,10 +208,14 @@ private:
     void createSyncObjects();
     const int MAX_FRAMES_IN_FLIGHT = 2;
 
+    
+
+
 
     //Memory managment
     VkMemoryRequirements memRequirements;
     VkDeviceMemory vertexBufferMemory;
+    VkDeviceMemory indexBufferMemory;
     uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
 
