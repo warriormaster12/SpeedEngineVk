@@ -1,0 +1,6 @@
+SpeedEngineVk
+.vscode/
+SpeedEngineVk.code-workspace
+build/*
+lib/Vulkan/*
+.spv/
