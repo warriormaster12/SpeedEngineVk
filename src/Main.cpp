@@ -16,7 +16,7 @@ public:
     
 
 private: 
-    Renderer renderer_ref;
+    VkRenderer::Renderer renderer_ref;
     void initWindow()
     {
         glfwInit();
@@ -24,8 +24,6 @@ private:
         window = glfwCreateWindow(WIDTH, HEIGHT, "VulkanEngine", nullptr, nullptr);
         glfwSetWindowUserPointer(window, this);
         renderer_ref.window = window; 
-        renderer_ref.WIDTH = WIDTH;
-        renderer_ref.HEIGHT = HEIGHT;
 
 
         glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
