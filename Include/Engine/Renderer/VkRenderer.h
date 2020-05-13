@@ -2,7 +2,7 @@
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
-#include "../../../lib/glm/glm/glm.hpp"
+#include <glm/glm.hpp>
 
 #include <iostream>
 #include <stdexcept>
@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <fstream>
 #include <array>
+#include "VkMemory.h"
 
 namespace VkRenderer
 {
@@ -74,7 +75,7 @@ namespace VkRenderer
     };
 
 
-    class Renderer
+    class Renderer : public VkMemory
     {
     public: 
         VkDevice device;
@@ -213,11 +214,6 @@ namespace VkRenderer
 
 
 
-        //Memory managment
-        VkMemoryRequirements memRequirements;
-        VkDeviceMemory vertexBufferMemory;
-        VkDeviceMemory indexBufferMemory;
-        uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
 
 

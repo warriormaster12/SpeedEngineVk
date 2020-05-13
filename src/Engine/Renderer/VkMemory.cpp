@@ -1,8 +1,8 @@
-#include "Engine/Renderer/VkRenderer.h"
+#include "Engine/Renderer/VkMemory.h"
 
 namespace VkRenderer
 {
-    uint32_t Renderer::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties)
+    uint32_t VkMemory::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties, VkPhysicalDevice physicalDevice)
     {
         VkPhysicalDeviceMemoryProperties memProperties;
         vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memProperties);
