@@ -14,10 +14,11 @@
 #include <algorithm>
 #include <fstream>
 #include <array>
-#include "VkMemory.h"
+
 
 namespace VkRenderer
 {
+    class VkMemory;
     struct QueueFamilyIndices {
         std::optional<uint32_t> graphicsFamily;
         std::optional<uint32_t> presentFamily;
@@ -75,7 +76,7 @@ namespace VkRenderer
     };
 
 
-    class Renderer : public VkMemory
+    class Renderer
     {
     public: 
         VkDevice device;
@@ -175,8 +176,6 @@ namespace VkRenderer
         VkPipelineLayout pipelineLayout;
         VkRenderPass renderPass;
         VkPipeline graphicsPipeline;
-        VkShaderModule createShaderModule(const std::vector<char>& code);
-        static std::vector<char> readFile(const std::string& filename);
         
         //Render setup
         std::vector<VkSemaphore> imageAvailableSemaphores;

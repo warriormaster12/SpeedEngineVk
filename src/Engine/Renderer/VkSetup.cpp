@@ -1,7 +1,9 @@
 #include "Engine/Renderer/VkRenderer.h"
+#include "Engine/Renderer/VkMemory.h"
 
 namespace VkRenderer
 {
+    VkMemory memory_ref;
     void Renderer::InitVulkan()
     {
         createInstance();
@@ -181,10 +183,10 @@ namespace VkRenderer
         cleanupSwapChain();
 
         vkDestroyBuffer(device, indexBuffer, nullptr);
-        vkFreeMemory(device, indexBufferMemory, nullptr);
+        vkFreeMemory(device, memory_ref.indexBufferMemory, nullptr);
 
         vkDestroyBuffer(device, vertexBuffer, nullptr);
-        vkFreeMemory(device, vertexBufferMemory, nullptr);
+        vkFreeMemory(device, memory_ref.vertexBufferMemory, nullptr);
 
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {

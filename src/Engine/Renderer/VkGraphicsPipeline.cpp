@@ -1,14 +1,16 @@
 #include "Engine/Renderer/VkRenderer.h"
+#include "Engine/Renderer/VkShader.h"
 
 
 namespace VkRenderer
 {
+    VkShader shader_ref;
     void Renderer::createGraphicsPipeline()
     {
-        auto vertShaderCode = readFile("EngineAssets/Shaders/vert.spv");
-        auto fragShaderCode = readFile("EngineAssets/Shaders/frag.spv");  
-        VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
-        VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);
+        auto vertShaderCode = shader_ref.readFile("EngineAssets/Shaders/vert.spv");
+        auto fragShaderCode = shader_ref.readFile("EngineAssets/Shaders/frag.spv");  
+        VkShaderModule vertShaderModule = shader_ref.createShaderModule(device,vertShaderCode);
+        VkShaderModule fragShaderModule = shader_ref.createShaderModule(device,fragShaderCode);
 
         VkPipelineShaderStageCreateInfo vertShaderStageInfo{};
         vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -166,37 +168,5 @@ namespace VkRenderer
     }
 
 
-
-    std::vector<char>Renderer::readFile(const std::string& filename)
-    {
-        std::ifstream file(filename, std::ios::ate | std::ios::binary);
-
-        if (!file.is_open()) {
-            throw std::runtime_error("failed to open file!");
-        }    
-        size_t fileSize = (size_t) file.tellg();
-        std::vector<char> buffer(fileSize);
-        
-        file.seekg(0);
-        file.read(buffer.data(), fileSize);
-
-        file.close();
-        
-        return buffer;
-    }
-
-    VkShaderModule Renderer::createShaderModule(const std::vector<char>& code)
-    {
-        VkShaderModuleCreateInfo createInfo{};
-        createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-        createInfo.codeSize = code.size();
-        createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data()); 
-
-        VkShaderModule shaderModule;
-        if (vkCreateShaderModule(device, &createInfo, nullptr, &shaderModule) != VK_SUCCESS)
-        {
-            throw std::runtime_error("failed to create shader module!");
-        }   
-        return shaderModule;
-    }
+   
 }
