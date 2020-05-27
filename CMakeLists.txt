@@ -20,22 +20,24 @@ target_include_directories(VulkanEngine PUBLIC
 
 
 
-if (LINUX)
+if (UNIX AND NOT APPLE)
+    set (LINUX TRUE)
 	target_compile_definitions(VulkanEngine PRIVATE -DVK_USE_PLATFORM_XLIB_KHR)
 
 	target_include_directories(VulkanEngine PRIVATE Vulkan::Vulkan)
 	target_include_directories(VulkanEngine PRIVATE ${X11+INCLUDE_DIR})
 	target_link_libraries(VulkanEngine PRIVATE Vulkan::Vulkan)
 	target_link_libraries(VulkanEngine PRIVATE ${X11_LIBRARIES} -lm)
-endif (LINUX)
+endif ()
+
 if (WIN32)
 	target_compile_definitions(VulkanEngine PRIVATE -DVK_USE_PLATFORM_WIN32LIB_KHR)
 
 	target_include_directories(VulkanEngine PRIVATE Vulkan::Vulkan)
 	target_include_directories(VulkanEngine PRIVATE ${WIN32+INCLUDE_DIR})
 	target_link_libraries(VulkanEngine PRIVATE Vulkan::Vulkan)
-	target_link_libraries(VulkanEngine PRIVATE ${WIN32_LIBRARIES} -lm)   
-endif (WIN32)
+	target_link_libraries(VulkanEngine PRIVATE ${WIN32_LIBRARIES})   
+endif ()
 
 #glfw
 add_subdirectory(lib/glfw EXCLUDE_FROM_ALL)
