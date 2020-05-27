@@ -1,8 +1,10 @@
 #include "Engine/Renderer/VkRenderer.h"
+#include "Engine/Renderer/VkGraphicsPipeline.h"
 
 
 namespace VkRenderer
 {
+    extern VkGPipeline pipeline_ref;
     void Renderer::createSurface()
     {
         if (glfwCreateWindowSurface(instance, window, nullptr, &surface) != VK_SUCCESS)
@@ -167,9 +169,9 @@ namespace VkRenderer
 
         vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
 
-        vkDestroyPipeline(device, graphicsPipeline, nullptr);
-        vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
-        vkDestroyRenderPass(device, renderPass, nullptr);
+        vkDestroyPipeline(device, pipeline_ref.graphicsPipeline, nullptr);
+        vkDestroyPipelineLayout(device, pipeline_ref.pipelineLayout, nullptr);
+        vkDestroyRenderPass(device, pipeline_ref.renderPass, nullptr);
 
         for (size_t i = 0; i < swapChainImageViews.size(); i++) {
             vkDestroyImageView(device, swapChainImageViews[i], nullptr);
@@ -192,8 +194,8 @@ namespace VkRenderer
 
         createSwapChain();
         createImageViews();
-        createRenderPass();
-        createGraphicsPipeline();
+        pipeline_ref.createRenderPass(swapChainImageFormat, device);
+        pipeline_ref.createGraphicsPipeline(device, swapChainExtent);
         createFramebuffers();
         createCommandBuffers();
     }

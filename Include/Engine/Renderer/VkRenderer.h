@@ -18,7 +18,6 @@
 
 namespace VkRenderer
 {
-    class VkMemory;
     struct QueueFamilyIndices {
         std::optional<uint32_t> graphicsFamily;
         std::optional<uint32_t> presentFamily;
@@ -171,11 +170,6 @@ namespace VkRenderer
 
         //Graphics Pipeline
 
-        void createGraphicsPipeline();
-        void createRenderPass();
-        VkPipelineLayout pipelineLayout;
-        VkRenderPass renderPass;
-        VkPipeline graphicsPipeline;
         
         //Render setup
         std::vector<VkSemaphore> imageAvailableSemaphores;

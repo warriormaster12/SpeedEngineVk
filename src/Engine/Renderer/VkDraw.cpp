@@ -1,10 +1,13 @@
 #include "Engine/Renderer/VkRenderer.h"
 #include "Engine/Renderer/VkMemory.h"
+#include "Engine/Renderer/VkGraphicsPipeline.h"
+
 
 
 namespace VkRenderer
 {
     extern VkMemory memory_ref;
+    extern VkGPipeline pipeline_ref;
     void Renderer::createFramebuffers()
     {
         swapChainFramebuffers.resize(swapChainImageViews.size());
@@ -16,7 +19,7 @@ namespace VkRenderer
 
         VkFramebufferCreateInfo framebufferInfo{};
         framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-        framebufferInfo.renderPass = renderPass;
+        framebufferInfo.renderPass = pipeline_ref.renderPass;
         framebufferInfo.attachmentCount = 1;
         framebufferInfo.pAttachments = attachments;
         framebufferInfo.width = swapChainExtent.width;
@@ -68,7 +71,7 @@ namespace VkRenderer
 
             VkRenderPassBeginInfo renderPassInfo{};
             renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-            renderPassInfo.renderPass = renderPass;
+            renderPassInfo.renderPass = pipeline_ref.renderPass;
             renderPassInfo.framebuffer = swapChainFramebuffers[i];
             renderPassInfo.renderArea.offset = {0, 0};
             renderPassInfo.renderArea.extent = swapChainExtent;
@@ -79,7 +82,7 @@ namespace VkRenderer
 
             vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-                vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+                vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_ref.graphicsPipeline);
 
                 VkBuffer vertexBuffers[] = {vertexBuffer};
                 VkDeviceSize offsets[] = {0};

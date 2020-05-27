@@ -1,10 +1,12 @@
 #include "Engine/Renderer/VkRenderer.h"
+#include "Engine/Renderer/VkGraphicsPipeline.h"
 #include "Engine/Renderer/VkMemory.h"
 
 
 namespace VkRenderer
 {
     VkMemory memory_ref;
+    VkGPipeline pipeline_ref;
     void Renderer::InitVulkan()
     {
         createInstance();
@@ -15,8 +17,8 @@ namespace VkRenderer
         createLogicalDevice();
         createSwapChain();
         createImageViews();
-        createRenderPass();
-        createGraphicsPipeline();
+        pipeline_ref.createRenderPass(swapChainImageFormat, device);
+        pipeline_ref.createGraphicsPipeline(device, swapChainExtent);
         createFramebuffers();
         createCommandPool();
         createVertexBuffer();

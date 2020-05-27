@@ -1,3 +1,4 @@
+#include "Engine/Renderer/VkGraphicsPipeline.h"
 #include "Engine/Renderer/VkRenderer.h"
 #include "Engine/Renderer/VkShader.h"
 
@@ -5,7 +6,7 @@
 namespace VkRenderer
 {
     VkShader shader_ref;
-    void Renderer::createGraphicsPipeline()
+    void VkGPipeline::createGraphicsPipeline(VkDevice device, VkExtent2D swapChainExtent)
     {
         auto vertShaderCode = shader_ref.readFile("EngineAssets/Shaders/vert.spv");
         auto fragShaderCode = shader_ref.readFile("EngineAssets/Shaders/frag.spv");  
@@ -124,7 +125,7 @@ namespace VkRenderer
     }
 
 
-    void Renderer::createRenderPass()
+    void VkGPipeline::createRenderPass(VkFormat swapChainImageFormat, VkDevice device)
     {
         VkAttachmentDescription colorAttachment{};
         colorAttachment.format = swapChainImageFormat;
