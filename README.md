@@ -9,12 +9,14 @@ $ cd SpeedEngineVk
 $ git submodule init
 $ git submodule update
 ```
+```
+Download Vulkan-SDK https://vulkan.lunarg.com/
+```
+
+
 #### additional dependencie for Windows
 ```
 Download cmake-gui and install https://cmake.org/download/
-```
-```
-Download Vulkan-SDK https://vulkan.lunarg.com/
 ```
 
 ####  Vulkan-SDK doc provides installation guide for installing SDK succefully
