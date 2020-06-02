@@ -176,8 +176,15 @@ namespace VkRenderer
         for (size_t i = 0; i < swapChainImageViews.size(); i++) {
             vkDestroyImageView(device, swapChainImageViews[i], nullptr);
         }
-
+        
         vkDestroySwapchainKHR(device, swapChain, nullptr); 
+
+        for (size_t i = 0; i < swapChainImages.size(); i++) {
+            vkDestroyBuffer(device, uniformBuffers[i], nullptr);
+            vkFreeMemory(device, uniformBuffersMemory[i], nullptr);
+        }
+
+        vkDestroyDescriptorPool(device, descriptorPool, nullptr);
     }
 
     void Renderer::recreateSwapChain()
@@ -197,6 +204,9 @@ namespace VkRenderer
         pipeline_ref.createRenderPass(swapChainImageFormat, device);
         pipeline_ref.createGraphicsPipeline(device, swapChainExtent);
         createFramebuffers();
+        createUniformBuffers();
+        createDescriptorPool();
+        createDescriptorSets(pipeline_ref.descriptorSetLayout);
         createCommandBuffers();
     }
 }

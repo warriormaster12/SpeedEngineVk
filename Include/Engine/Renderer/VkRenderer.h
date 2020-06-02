@@ -2,7 +2,10 @@
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEFAULT_ALIGNED_GENTYPES
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <iostream>
 #include <stdexcept>
@@ -14,7 +17,7 @@
 #include <algorithm>
 #include <fstream>
 #include <array>
-
+#include <chrono>
 
 namespace VkRenderer
 {
@@ -184,16 +187,29 @@ namespace VkRenderer
 
         std::vector<VkFramebuffer> swapChainFramebuffers;
         void createFramebuffers();
+        void createUniformBuffers();
+        void createDescriptorPool();
         void createVertexBuffer();
         void createCommandPool();
         void createCommandBuffers();
         void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
         void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size); 
         void createIndexBuffer();
+        void createDescriptorSets(VkDescriptorSetLayout descriptorSetLayout);
+
         VkCommandPool commandPool;
+
+        VkDescriptorPool descriptorPool;
+        std::vector<VkDescriptorSet> descriptorSets;
+
         VkBuffer vertexBuffer;
         VkBuffer indexBuffer;
-        
+
+        std::vector<VkBuffer> uniformBuffers;
+        std::vector<VkDeviceMemory> uniformBuffersMemory;
+
+        void updateUniformBuffer(uint32_t currentImage);
+                
 
         std::vector<VkCommandBuffer> commandBuffers;
 

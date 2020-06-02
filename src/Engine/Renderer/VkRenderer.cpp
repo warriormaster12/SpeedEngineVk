@@ -18,11 +18,15 @@ namespace VkRenderer
         createSwapChain();
         createImageViews();
         pipeline_ref.createRenderPass(swapChainImageFormat, device);
+        pipeline_ref.createDescriptorSetLayout(device);
         pipeline_ref.createGraphicsPipeline(device, swapChainExtent);
         createFramebuffers();
         createCommandPool();
         createVertexBuffer();
         createIndexBuffer();
+        createUniformBuffers();
+        createDescriptorPool();
+        createDescriptorSets(pipeline_ref.descriptorSetLayout);
         createCommandBuffers();
         createSyncObjects();
         
@@ -31,6 +35,8 @@ namespace VkRenderer
     void Renderer::DestroyVulkan()
     {  
         cleanupSwapChain();
+
+        vkDestroyDescriptorSetLayout(device, pipeline_ref.descriptorSetLayout, nullptr);
 
         vkDestroyBuffer(device, indexBuffer, nullptr);
         vkFreeMemory(device, memory_ref.indexBufferMemory, nullptr);
