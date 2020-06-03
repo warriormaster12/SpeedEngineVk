@@ -171,19 +171,16 @@ namespace VkRenderer
         std::vector<VkFramebuffer> swapChainFramebuffers;
         void createFramebuffers();
         void createUniformBuffers();
-        void createDescriptorPool();
         void createVertexBuffer();
         void createCommandPool();
         void createCommandBuffers();
         void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
         void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size); 
         void createIndexBuffer();
-        void createDescriptorSets(VkDescriptorSetLayout descriptorSetLayout);
+        
 
         VkCommandPool commandPool;
 
-        VkDescriptorPool descriptorPool;
-        std::vector<VkDescriptorSet> descriptorSets;
 
         VkBuffer vertexBuffer;
         VkBuffer indexBuffer;

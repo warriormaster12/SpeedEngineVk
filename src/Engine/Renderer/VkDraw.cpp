@@ -1,6 +1,7 @@
 #include "Engine/Renderer/VkRenderer.h"
 #include "Engine/Renderer/VkMemory.h"
 #include "Engine/Renderer/VkGraphicsPipeline.h"
+#include "Engine/Renderer/VkUniformBuffers.h"
 
 
 
@@ -8,6 +9,7 @@ namespace VkRenderer
 {
     extern VkMemory memory_ref;
     extern VkGPipeline pipeline_ref;
+    extern VkUBuffer Ubuffer_ref;
     void Renderer::createFramebuffers()
     {
         swapChainFramebuffers.resize(swapChainImageViews.size());
@@ -90,7 +92,7 @@ namespace VkRenderer
 
                 vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT16);
 
-                vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_ref.pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
+                vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_ref.pipelineLayout, 0, 1, &Ubuffer_ref.descriptorSets[i], 0, nullptr);
 
                 vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
 

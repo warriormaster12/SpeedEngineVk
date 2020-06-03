@@ -1,5 +1,6 @@
 #include "Engine/Renderer/VkRenderer.h"
 #include "Engine/Renderer/VkGraphicsPipeline.h"
+#include "Engine/Renderer/VkUniformBuffers.h"
 
 namespace VkRenderer
 {
@@ -7,8 +8,8 @@ namespace VkRenderer
     {
         VkDeviceSize bufferSize = sizeof(UniformBufferObject);
 
-    uniformBuffers.resize(swapChainImages.size());
-    uniformBuffersMemory.resize(swapChainImages.size());
+        uniformBuffers.resize(swapChainImages.size());
+        uniformBuffersMemory.resize(swapChainImages.size());
 
         for (size_t i = 0; i < swapChainImages.size(); i++) {
             createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
@@ -37,7 +38,7 @@ namespace VkRenderer
             memcpy(data, &ubo, sizeof(ubo));
         vkUnmapMemory(device, uniformBuffersMemory[currentImage]);
     }
-    void Renderer::createDescriptorPool()
+    void VkUBuffer::createDescriptorPool(VkDevice device, std::vector<VkImage> swapChainImages)
     {
         VkDescriptorPoolSize poolSize{};
         poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -54,7 +55,7 @@ namespace VkRenderer
             throw std::runtime_error("failed to create descriptor pool!");
         }
     }
-    void Renderer::createDescriptorSets(VkDescriptorSetLayout descriptorSetLayout)
+    void VkUBuffer::createDescriptorSets(VkDescriptorSetLayout descriptorSetLayout, std::vector<VkImage> swapChainImages, VkDevice device, std::vector<VkBuffer> uniformBuffers)
     {
         std::vector<VkDescriptorSetLayout> layouts(swapChainImages.size(), descriptorSetLayout);
         VkDescriptorSetAllocateInfo allocInfo{};

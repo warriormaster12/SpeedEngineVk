@@ -1,12 +1,14 @@
 #include "Engine/Renderer/VkRenderer.h"
 #include "Engine/Renderer/VkGraphicsPipeline.h"
 #include "Engine/Renderer/VkMemory.h"
+#include "Engine/Renderer/VkUniformBuffers.h"
 
 
 namespace VkRenderer
 {
     VkMemory memory_ref;
     VkGPipeline pipeline_ref;
+    VkUBuffer Ubuffer_ref;
     void Renderer::InitVulkan()
     {
         createInstance();
@@ -25,8 +27,8 @@ namespace VkRenderer
         createVertexBuffer();
         createIndexBuffer();
         createUniformBuffers();
-        createDescriptorPool();
-        createDescriptorSets(pipeline_ref.descriptorSetLayout);
+        Ubuffer_ref.createDescriptorPool(device, swapChainImages);
+        Ubuffer_ref.createDescriptorSets(pipeline_ref.descriptorSetLayout, swapChainImages, device, uniformBuffers);
         createCommandBuffers();
         createSyncObjects();
         
