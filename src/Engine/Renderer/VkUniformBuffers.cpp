@@ -17,7 +17,7 @@ namespace VkRenderer
         }
     }
 
-    void Renderer::updateUniformBuffer(uint32_t currentImage)
+    void VkUBuffer::updateUniformBuffer(uint32_t currentImage, std::vector<VkDeviceMemory> uniformBuffersMemory, VkExtent2D swapChainExtent, VkDevice device)
     {
         static auto startTime = std::chrono::high_resolution_clock::now();
 

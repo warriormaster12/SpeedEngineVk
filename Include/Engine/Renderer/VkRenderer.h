@@ -60,6 +60,7 @@ namespace VkRenderer
         0, 1, 2, 2, 3, 0
     };
 
+    
 
     class Renderer
     {
@@ -89,13 +90,15 @@ namespace VkRenderer
         void InitVulkan();
         void drawFrame();
         void DestroyVulkan();
+        void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 
+        VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
         
     private: 
         VkInstance instance;
         VkDebugUtilsMessengerEXT debugMessenger;
         VkPhysicalDeviceFeatures deviceFeatures{};
-        VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
+        
         VkQueue graphicsQueue;
         void createInstance(); 
         void setupDebugMessenger();
@@ -174,7 +177,7 @@ namespace VkRenderer
         void createVertexBuffer();
         void createCommandPool();
         void createCommandBuffers();
-        void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+        
         void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size); 
         void createIndexBuffer();
         
@@ -188,7 +191,7 @@ namespace VkRenderer
         std::vector<VkBuffer> uniformBuffers;
         std::vector<VkDeviceMemory> uniformBuffersMemory;
 
-        void updateUniformBuffer(uint32_t currentImage);
+        
                 
 
         std::vector<VkCommandBuffer> commandBuffers;
