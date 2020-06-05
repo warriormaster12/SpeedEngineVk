@@ -188,7 +188,7 @@ namespace VkRenderer
         createFramebuffers();
         createUniformBuffers();
         Ubuffer_ref.createDescriptorPool(device, swapChainImages);
-        Ubuffer_ref.createDescriptorSets(pipeline_ref.descriptorSetLayout, swapChainImages, device);
+        Ubuffer_ref.createDescriptorSets(pipeline_ref.descriptorSetLayout, swapChainImages, device, textureImageView, textureSampler);
         createCommandBuffers();
     }
 }

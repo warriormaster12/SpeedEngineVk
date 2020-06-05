@@ -31,7 +31,7 @@ namespace VkRenderer
         createIndexBuffer();
         createUniformBuffers();
         Ubuffer_ref.createDescriptorPool(device, swapChainImages);
-        Ubuffer_ref.createDescriptorSets(pipeline_ref.descriptorSetLayout, swapChainImages, device);
+        Ubuffer_ref.createDescriptorSets(pipeline_ref.descriptorSetLayout, swapChainImages, device, textureImageView, textureSampler);
         createCommandBuffers();
         createSyncObjects();
         
@@ -42,8 +42,6 @@ namespace VkRenderer
         cleanupSwapChain();
 
         vkDestroySampler(device, textureSampler, nullptr);
-        vkDestroyImageView(device, textureImageView, nullptr);
-
         vkDestroyImageView(device, textureImageView, nullptr);
 
         vkDestroyImage(device, textureImage, nullptr);
