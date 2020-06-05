@@ -24,6 +24,7 @@ namespace VkRenderer
         pipeline_ref.createGraphicsPipeline(device, swapChainExtent);
         createFramebuffers();
         createCommandPool();
+        createTextureImage();
         createVertexBuffer();
         createIndexBuffer();
         createUniformBuffers();
@@ -37,6 +38,9 @@ namespace VkRenderer
     void Renderer::DestroyVulkan()
     {  
         cleanupSwapChain();
+
+        vkDestroyImage(device, textureImage, nullptr);
+        vkFreeMemory(device, textureImageMemory, nullptr);
 
         vkDestroyDescriptorSetLayout(device, pipeline_ref.descriptorSetLayout, nullptr);
 
