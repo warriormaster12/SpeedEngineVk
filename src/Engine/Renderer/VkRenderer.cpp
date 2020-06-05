@@ -28,7 +28,7 @@ namespace VkRenderer
         createIndexBuffer();
         createUniformBuffers();
         Ubuffer_ref.createDescriptorPool(device, swapChainImages);
-        Ubuffer_ref.createDescriptorSets(pipeline_ref.descriptorSetLayout, swapChainImages, device, uniformBuffers);
+        Ubuffer_ref.createDescriptorSets(pipeline_ref.descriptorSetLayout, swapChainImages, device);
         createCommandBuffers();
         createSyncObjects();
         

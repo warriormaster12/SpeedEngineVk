@@ -182,8 +182,8 @@ namespace VkRenderer
         vkDestroySwapchainKHR(device, swapChain, nullptr); 
 
         for (size_t i = 0; i < swapChainImages.size(); i++) {
-            vkDestroyBuffer(device, uniformBuffers[i], nullptr);
-            vkFreeMemory(device, uniformBuffersMemory[i], nullptr);
+            vkDestroyBuffer(device, Ubuffer_ref.uniformBuffers[i], nullptr);
+            vkFreeMemory(device, Ubuffer_ref.uniformBuffersMemory[i], nullptr);
         }
 
         vkDestroyDescriptorPool(device, Ubuffer_ref.descriptorPool, nullptr);
@@ -208,7 +208,7 @@ namespace VkRenderer
         createFramebuffers();
         createUniformBuffers();
         Ubuffer_ref.createDescriptorPool(device, swapChainImages);
-        Ubuffer_ref.createDescriptorSets(pipeline_ref.descriptorSetLayout, swapChainImages, device, uniformBuffers);
+        Ubuffer_ref.createDescriptorSets(pipeline_ref.descriptorSetLayout, swapChainImages, device);
         createCommandBuffers();
     }
 }

@@ -188,8 +188,7 @@ namespace VkRenderer
         VkBuffer vertexBuffer;
         VkBuffer indexBuffer;
 
-        std::vector<VkBuffer> uniformBuffers;
-        std::vector<VkDeviceMemory> uniformBuffersMemory;
+        
 
         
                 

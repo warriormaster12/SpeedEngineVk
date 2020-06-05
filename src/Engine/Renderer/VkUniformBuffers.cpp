@@ -4,20 +4,21 @@
 
 namespace VkRenderer
 {
+    extern VkUBuffer Ubuffer_ref;
     void Renderer::createUniformBuffers()
     {
         VkDeviceSize bufferSize = sizeof(UniformBufferObject);
 
-        uniformBuffers.resize(swapChainImages.size());
-        uniformBuffersMemory.resize(swapChainImages.size());
+        Ubuffer_ref.uniformBuffers.resize(swapChainImages.size());
+        Ubuffer_ref.uniformBuffersMemory.resize(swapChainImages.size());
 
         for (size_t i = 0; i < swapChainImages.size(); i++) {
-            createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
+            createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, Ubuffer_ref.uniformBuffers[i], Ubuffer_ref.uniformBuffersMemory[i]);
             
         }
     }
 
-    void VkUBuffer::updateUniformBuffer(uint32_t currentImage, std::vector<VkDeviceMemory> uniformBuffersMemory, VkExtent2D swapChainExtent, VkDevice device)
+    void VkUBuffer::updateUniformBuffer(uint32_t currentImage, VkExtent2D swapChainExtent, VkDevice device)
     {
         static auto startTime = std::chrono::high_resolution_clock::now();
 
@@ -55,7 +56,7 @@ namespace VkRenderer
             throw std::runtime_error("failed to create descriptor pool!");
         }
     }
-    void VkUBuffer::createDescriptorSets(VkDescriptorSetLayout descriptorSetLayout, std::vector<VkImage> swapChainImages, VkDevice device, std::vector<VkBuffer> uniformBuffers)
+    void VkUBuffer::createDescriptorSets(VkDescriptorSetLayout descriptorSetLayout, std::vector<VkImage> swapChainImages, VkDevice device)
     {
         std::vector<VkDescriptorSetLayout> layouts(swapChainImages.size(), descriptorSetLayout);
         VkDescriptorSetAllocateInfo allocInfo{};
