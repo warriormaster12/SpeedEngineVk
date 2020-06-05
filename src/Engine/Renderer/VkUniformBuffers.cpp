@@ -5,7 +5,6 @@
 namespace VkRenderer
 {
     extern VkUBuffer Ubuffer_ref;
-    Renderer renderer_ref;
     void Renderer::createUniformBuffers()
     {
         VkDeviceSize bufferSize = sizeof(UniformBufferObject);
