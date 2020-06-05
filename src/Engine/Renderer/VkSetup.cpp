@@ -21,7 +21,8 @@ namespace VkRenderer
             queueCreateInfos.push_back(queueCreateInfo);
         }
         
-        
+        VkPhysicalDeviceFeatures deviceFeatures{};
+        deviceFeatures.samplerAnisotropy = VK_TRUE;
         
         VkDeviceQueueCreateInfo queueCreateInfo{};
         queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
@@ -56,6 +57,9 @@ namespace VkRenderer
 
         vkGetDeviceQueue(device, indices.graphicsFamily.value(), 0, &graphicsQueue);
         vkGetDeviceQueue(device, indices.presentFamily.value(), 0, &presentQueue);
+
+        
+
 
     }
 
@@ -106,6 +110,11 @@ namespace VkRenderer
         }
         return indices.isComplete() && extensionsSupported && swapChainAdequate;
         return indices.graphicsFamily.has_value();
+        
+        VkPhysicalDeviceFeatures supportedFeatures;
+        vkGetPhysicalDeviceFeatures(device, &supportedFeatures);
+
+        return indices.isComplete() && extensionsSupported && swapChainAdequate && supportedFeatures.samplerAnisotropy;
     }
 
     bool Renderer::checkDeviceExtensionSupport (VkPhysicalDevice device)
