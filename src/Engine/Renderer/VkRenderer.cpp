@@ -2,6 +2,7 @@
 #include "Engine/Renderer/VkGraphicsPipeline.h"
 #include "Engine/Renderer/VkMemory.h"
 #include "Engine/Renderer/VkUniformBuffers.h"
+#include "Engine/Renderer/VkTextureManager.h"
 
 
 namespace VkRenderer
@@ -9,6 +10,7 @@ namespace VkRenderer
     VkMemory memory_ref;
     VkGPipeline pipeline_ref;
     VkUBuffer Ubuffer_ref;
+    VkTextureManager texture_ref;
     void Renderer::InitVulkan()
     {
         createInstance();
@@ -26,12 +28,12 @@ namespace VkRenderer
         createCommandPool();
         createTextureImage();
         createTextureImageView();
-        createTextureSampler();
+        texture_ref.createTextureSampler(device);
         createVertexBuffer();
         createIndexBuffer();
         createUniformBuffers();
         Ubuffer_ref.createDescriptorPool(device, swapChainImages);
-        Ubuffer_ref.createDescriptorSets(pipeline_ref.descriptorSetLayout, swapChainImages, device, textureImageView, textureSampler);
+        Ubuffer_ref.createDescriptorSets(pipeline_ref.descriptorSetLayout, swapChainImages, device, textureImageView, texture_ref.textureSampler);
         createCommandBuffers();
         createSyncObjects();
         
@@ -41,7 +43,7 @@ namespace VkRenderer
     {  
         cleanupSwapChain();
 
-        vkDestroySampler(device, textureSampler, nullptr);
+        vkDestroySampler(device, texture_ref.textureSampler, nullptr);
         vkDestroyImageView(device, textureImageView, nullptr);
 
         vkDestroyImage(device, textureImage, nullptr);

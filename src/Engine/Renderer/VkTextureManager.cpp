@@ -1,5 +1,6 @@
 #include "Engine/Renderer/VkRenderer.h"
 #include "Engine/Renderer/VkMemory.h"
+#include "Engine/Renderer/VkTextureManager.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "Engine/Renderer/stb_image/stb_image.h"
 
@@ -61,7 +62,7 @@ namespace VkRenderer
         return imageView;
     }
 
-    void Renderer::createTextureSampler()
+    void VkTextureManager::createTextureSampler(VkDevice device)
     {
         VkSamplerCreateInfo samplerInfo{};
         samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;

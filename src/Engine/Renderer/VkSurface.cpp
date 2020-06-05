@@ -1,12 +1,14 @@
 #include "Engine/Renderer/VkRenderer.h"
 #include "Engine/Renderer/VkGraphicsPipeline.h"
 #include "Engine/Renderer/VkUniformBuffers.h"
+#include "Engine/Renderer/VkTextureManager.h"
 
 
 namespace VkRenderer
 {
     extern VkGPipeline pipeline_ref;
     extern VkUBuffer Ubuffer_ref;
+    extern VkTextureManager texture_ref;
     void Renderer::createSurface()
     {
         if (glfwCreateWindowSurface(instance, window, nullptr, &surface) != VK_SUCCESS)
@@ -188,7 +190,7 @@ namespace VkRenderer
         createFramebuffers();
         createUniformBuffers();
         Ubuffer_ref.createDescriptorPool(device, swapChainImages);
-        Ubuffer_ref.createDescriptorSets(pipeline_ref.descriptorSetLayout, swapChainImages, device, textureImageView, textureSampler);
+        Ubuffer_ref.createDescriptorSets(pipeline_ref.descriptorSetLayout, swapChainImages, device, textureImageView, texture_ref.textureSampler);
         createCommandBuffers();
     }
 }
