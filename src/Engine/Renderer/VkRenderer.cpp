@@ -3,6 +3,7 @@
 #include "Engine/Renderer/VkMemory.h"
 #include "Engine/Renderer/VkUniformBuffers.h"
 #include "Engine/Renderer/VkTextureManager.h"
+#include "Engine/Renderer/VkDepthBuffer.h"
 
 
 namespace VkRenderer
@@ -11,6 +12,7 @@ namespace VkRenderer
     VkGPipeline pipeline_ref;
     VkUBuffer Ubuffer_ref;
     VkTextureManager texture_ref;
+    VkDepthBuffer DBuffer_ref;
     void Renderer::InitVulkan()
     {
         createInstance();
@@ -21,11 +23,12 @@ namespace VkRenderer
         createLogicalDevice();
         createSwapChain();
         createImageViews();
-        pipeline_ref.createRenderPass(swapChainImageFormat, device);
+        pipeline_ref.createRenderPass(swapChainImageFormat, device, physicalDevice);
         pipeline_ref.createDescriptorSetLayout(device);
         pipeline_ref.createGraphicsPipeline(device, swapChainExtent);
-        createFramebuffers();
         createCommandPool();
+        createDepthResources();
+        createFramebuffers();
         createTextureImage();
         createTextureImageView();
         texture_ref.createTextureSampler(device);

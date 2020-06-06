@@ -19,7 +19,7 @@ namespace VkRenderer
         VkDescriptorSetLayout descriptorSetLayout;
         VkPipelineLayout pipelineLayout;
         VkPipeline graphicsPipeline;
-        void createRenderPass(VkFormat swapChainImageFormat, VkDevice device);
+        void createRenderPass(VkFormat swapChainImageFormat, VkDevice device, VkPhysicalDevice physicalDevice);
         VkRenderPass renderPass;
     };
 }

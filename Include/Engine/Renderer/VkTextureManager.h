@@ -1,3 +1,4 @@
+#pragma once 
 #include "VkIncludes.h"
 
 namespace VkRenderer

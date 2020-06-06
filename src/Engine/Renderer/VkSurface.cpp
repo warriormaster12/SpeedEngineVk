@@ -2,6 +2,7 @@
 #include "Engine/Renderer/VkGraphicsPipeline.h"
 #include "Engine/Renderer/VkUniformBuffers.h"
 #include "Engine/Renderer/VkTextureManager.h"
+#include "Engine/Renderer/VkDepthBuffer.h"
 
 
 namespace VkRenderer
@@ -9,6 +10,8 @@ namespace VkRenderer
     extern VkGPipeline pipeline_ref;
     extern VkUBuffer Ubuffer_ref;
     extern VkTextureManager texture_ref;
+    extern VkDepthBuffer DBuffer_ref;
+
     void Renderer::createSurface()
     {
         if (glfwCreateWindowSurface(instance, window, nullptr, &surface) != VK_SUCCESS)
@@ -141,12 +144,16 @@ namespace VkRenderer
         swapChainImageViews.resize(swapChainImages.size());
 
         for (uint32_t i = 0; i < swapChainImages.size(); i++) {
-            swapChainImageViews[i] = createImageView(swapChainImages[i], swapChainImageFormat);
+            swapChainImageViews[i] = createImageView(swapChainImages[i], swapChainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT);
         }
     }
 
     void Renderer::cleanupSwapChain()
     {
+        vkDestroyImageView(device, DBuffer_ref.depthImageView, nullptr);
+        vkDestroyImage(device, DBuffer_ref.depthImage, nullptr);
+        vkFreeMemory(device, DBuffer_ref.depthImageMemory, nullptr);
+
         for (auto framebuffer : swapChainFramebuffers) {
                 vkDestroyFramebuffer(device, framebuffer, nullptr);
         }
@@ -185,8 +192,9 @@ namespace VkRenderer
 
         createSwapChain();
         createImageViews();
-        pipeline_ref.createRenderPass(swapChainImageFormat, device);
+        pipeline_ref.createRenderPass(swapChainImageFormat, device, physicalDevice);
         pipeline_ref.createGraphicsPipeline(device, swapChainExtent);
+        createDepthResources();
         createFramebuffers();
         createUniformBuffers();
         Ubuffer_ref.createDescriptorPool(device, swapChainImages);
