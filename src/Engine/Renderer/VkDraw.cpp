@@ -97,7 +97,7 @@ namespace VkRenderer
                 VkDeviceSize offsets[] = {0};
                 vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
 
-                vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT16);
+                vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
                 vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_ref.pipelineLayout, 0, 1, &Ubuffer_ref.descriptorSets[i], 0, nullptr);
 
@@ -224,7 +224,7 @@ namespace VkRenderer
             throw std::runtime_error("failed to allocate buffer memory!");
         }
 
-        vkBindBufferMemory(device, buffer, bufferMemory, 0);    
+        vkBindBufferMemory(device, buffer, bufferMemory, 0);   
     }
 
 

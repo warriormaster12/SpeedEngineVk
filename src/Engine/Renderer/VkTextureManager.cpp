@@ -1,16 +1,18 @@
 #include "Engine/Renderer/VkRenderer.h"
 #include "Engine/Renderer/VkMemory.h"
 #include "Engine/Renderer/VkTextureManager.h"
+#include "Engine/ModelLoader/ModelLoader.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "Engine/Renderer/stb_image/stb_image.h"
 
 namespace VkRenderer
 {
     extern VkMemory memory_ref;
+    extern ModelLoader::Model model_ref;
     void Renderer::createTextureImage()
     {
         int texWidth, texHeight, texChannels;
-        stbi_uc* pixels = stbi_load("EngineAssets/Textures/Turtle.jpg", &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+        stbi_uc* pixels = stbi_load(TEXTURE_PATH.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
         VkDeviceSize imageSize = texWidth * texHeight * 4;
 
         if (!pixels) {

@@ -4,7 +4,7 @@
 #include "Engine/Renderer/VkUniformBuffers.h"
 #include "Engine/Renderer/VkTextureManager.h"
 #include "Engine/Renderer/VkDepthBuffer.h"
-
+#include "Engine/ModelLoader/ModelLoader.h"
 
 namespace VkRenderer
 {
@@ -13,6 +13,7 @@ namespace VkRenderer
     VkUBuffer Ubuffer_ref;
     VkTextureManager texture_ref;
     VkDepthBuffer DBuffer_ref;
+    ModelLoader::Model model_ref;
     void Renderer::InitVulkan()
     {
         createInstance();
@@ -32,6 +33,7 @@ namespace VkRenderer
         createTextureImage();
         createTextureImageView();
         texture_ref.createTextureSampler(device);
+        loadModel();
         createVertexBuffer();
         createIndexBuffer();
         createUniformBuffers();

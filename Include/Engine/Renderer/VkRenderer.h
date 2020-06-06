@@ -19,7 +19,7 @@ namespace VkRenderer
     };
 
 
-   struct Vertex {
+    struct Vertex {
         glm::vec3 pos;
         glm::vec3 color;
         glm::vec2 texCoord;
@@ -53,24 +53,26 @@ namespace VkRenderer
 
             return attributeDescriptions;
         }
+
+        bool operator==(const Vertex& other) const {
+            return pos == other.pos && color == other.color && texCoord == other.texCoord;
+        }
     };
 
-  const std::vector<Vertex> vertices = {
-        {{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
-        {{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-        {{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
-        {{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
 
-        {{-0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
-        {{0.5f, -0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-        {{0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
-        {{-0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}}
-    };
 
-    const std::vector<uint16_t> indices = {
-        0, 1, 2, 2, 3, 0,
-        4, 5, 6, 6, 7, 4
-    };
+    
+
+    
+    
+    
+
+
+
+
+
+
+    
 
     
 
@@ -196,6 +198,8 @@ namespace VkRenderer
 
         VkCommandPool commandPool;
 
+        std::vector<Vertex> vertices;
+        std::vector<uint32_t> indices;
 
         VkBuffer vertexBuffer;
         VkBuffer indexBuffer;
@@ -230,6 +234,11 @@ namespace VkRenderer
         //depthBuffer
         void createDepthResources();
         
+
+        //load model
+        const std::string MODEL_PATH = "EngineAssets/Models/viking_room.obj";
+        const std::string TEXTURE_PATH = "EngineAssets/Textures/viking_room.png";
+        void loadModel();
 
 
 

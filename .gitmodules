@@ -4,6 +4,3 @@
 [submodule "lib/glfw"]
 	path = lib/glfw
 	url = https://github.com/glfw/glfw.git
-[submodule "lib/tinyobjloader"]
-	path = lib/tinyobjloader
-	url = https://github.com/tinyobjloader/tinyobjloader.git

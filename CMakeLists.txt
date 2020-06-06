@@ -47,9 +47,5 @@ target_link_libraries(VulkanEngine PRIVATE glfw)
 add_subdirectory(lib/glm EXCLUDE_FROM_ALL)
 target_link_libraries(VulkanEngine PRIVATE glm)
 
-#tinyobjloader
-add_subdirectory(lib/tinyobjloader EXCLUDE_FROM_ALL)
-target_link_libraries(VulkanEngine PRIVATE tinyobjloader)
-
 file(COPY ${PROJECT_SOURCE_DIR}/EngineAssets DESTINATION ${PROJECT_BINARY_DIR})
 
