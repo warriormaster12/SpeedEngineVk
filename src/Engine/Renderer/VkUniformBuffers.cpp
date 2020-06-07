@@ -18,17 +18,18 @@ namespace VkRenderer
         }
     }
 
-    void VkUBuffer::updateUniformBuffer(uint32_t currentImage, VkExtent2D swapChainExtent, VkDevice device)
+    void VkUBuffer::updateUniformBuffer(uint32_t currentImage, VkExtent2D swapChainExtent, VkDevice device, GLFWwindow *window)
     {
         static auto startTime = std::chrono::high_resolution_clock::now();
 
         auto currentTime = std::chrono::high_resolution_clock::now();
-        float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();   
+        float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count(); 
+        ProcessInput(window);  
 
         UniformBufferObject ubo{};
-        ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(50.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
-        ubo.view = glm::lookAt(Pos++* time*0.001f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        ubo.view = glm::lookAt(Pos, Pos + Front, Up);
 
         ubo.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float) swapChainExtent.height, 0.1f, 10.0f);
 
@@ -105,5 +106,29 @@ namespace VkRenderer
             vkUpdateDescriptorSets(device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
 
         }
+    }
+
+    void VkUBuffer::ProcessInput(GLFWwindow *window)
+    {
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+            glfwSetWindowShouldClose(window, true);
+
+        float Speed = 5.0;
+        Speed = Speed * deltaTime;
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+            Pos += Speed * Front;
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+            Pos -= Speed * Front;
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+            Pos -= glm::normalize(glm::cross(Front, Up)) * Speed;
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+            Pos += glm::normalize(glm::cross(Front, Up)) * Speed;
+        if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+            Pos += Speed * Up;
+        if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+            Pos -= Speed * Up;
     }
 }

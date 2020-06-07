@@ -147,7 +147,7 @@ namespace VkRenderer
             throw std::runtime_error("failed to acquire swap chain image!");
         }
 
-        Ubuffer_ref.updateUniformBuffer(imageIndex, swapChainExtent, device);
+        Ubuffer_ref.updateUniformBuffer(imageIndex, swapChainExtent, device, window);
 
         if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) {
             vkWaitForFences(device, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
