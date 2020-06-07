@@ -15,5 +15,6 @@ namespace VkRenderer
         std::vector<VkDescriptorSet> descriptorSets;
         std::vector<VkBuffer> uniformBuffers;
         std::vector<VkDeviceMemory> uniformBuffersMemory;
+        glm::vec3 Pos{ glm::vec3(1.5f, 1.5f, 3.0f) };
     };
 }

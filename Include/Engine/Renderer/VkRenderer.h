@@ -240,7 +240,7 @@ namespace VkRenderer
         const std::string TEXTURE_PATH = "EngineAssets/Textures/viking_room.png";
         void loadModel();
 
-
+        
 
 
     };
