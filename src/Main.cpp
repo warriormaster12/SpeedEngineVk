@@ -6,7 +6,7 @@ public:
     void run()
     {
         initWindow();
-        renderer_ref.InitVulkan();
+        renderer_ref.InitVulkan(window);
         mainLoop();
         cleanup();
     }
@@ -23,25 +23,24 @@ private:
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         window = glfwCreateWindow(WIDTH, HEIGHT, "VulkanEngine", nullptr, nullptr);
         glfwSetWindowUserPointer(window, this);
-        renderer_ref.window = window; 
 
 
-        glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
+        //glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
 
     }
-    static void framebufferResizeCallback(GLFWwindow* window, int width, int height)
-    {
-        auto app = reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window));
-        app->renderer_ref.framebufferResized = true; 
-    }
+    //static void framebufferResizeCallback(GLFWwindow* window, int width, int height)
+    //{
+    //    auto app = reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window));
+    //    app->renderer_ref.framebufferResized = true; 
+    //}
     void mainLoop()
     {
         while (!glfwWindowShouldClose(window))
         {
             glfwPollEvents();
-            renderer_ref.drawFrame();
+            //renderer_ref.drawFrame();
         }
-        vkDeviceWaitIdle(renderer_ref.device);
+        //vkDeviceWaitIdle(renderer_ref.device);
     }
     void cleanup()
     {
