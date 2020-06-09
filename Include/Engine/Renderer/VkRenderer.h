@@ -7,8 +7,6 @@
 namespace VkRenderer
 {
    
-    
-
     class Renderer
     {
     public: 
