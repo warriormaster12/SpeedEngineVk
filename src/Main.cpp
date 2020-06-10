@@ -27,9 +27,9 @@ private:
         while (!glfwWindowShouldClose(glfw_win_ref.window))
         {
             glfwPollEvents();
-            //renderer_ref.drawFrame();
+            renderer_ref.UpdateVulkan();
         }
-        //vkDeviceWaitIdle(renderer_ref.device);
+        vkDeviceWaitIdle(renderer_ref.setup_ref.device);
     }
     void cleanup()
     {

@@ -6,6 +6,7 @@
 #include "VkGraphicsPipeline.h"
 #include "Buffers/VkFramebuffers.h"
 #include "Buffers/VkCommandbuffers.h"
+#include "VkDraw.h"
 
 namespace VkRenderer
 {
@@ -14,13 +15,15 @@ namespace VkRenderer
     {
     public: 
         void InitVulkan(GLFWwindow *window);
+        void UpdateVulkan();
         void DestroyVulkan();
-    private: 
         VkSetup setup_ref;
+    private:  
         VkSwapChain swap_ref;
         VkGPipeline gpipeline_ref;
         VkframeBuffer Fbuffer_ref;
         VkcommandBuffer Cbuffer_ref;
+        VkDraw draw_ref;
     };
 }
 

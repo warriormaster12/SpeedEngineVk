@@ -17,10 +17,19 @@ namespace VkRenderer
         Fbuffer_ref.createFramebuffers(setup_ref.device, swap_ref.swapChainImageViews, swap_ref.swapChainExtent, gpipeline_ref.renderPass);
         Cbuffer_ref.createCommandPool(setup_ref, swap_ref.surface);
         Cbuffer_ref.createCommandBuffers(setup_ref.device, Fbuffer_ref.swapChainFramebuffers, swap_ref.swapChainExtent, gpipeline_ref);
+        draw_ref.createSyncObjects(setup_ref, swap_ref.swapChainImages);
     }
-    
+    void Renderer::UpdateVulkan()
+    {
+        draw_ref.drawFrame(setup_ref,swap_ref.swapChain,Cbuffer_ref.commandBuffers);
+    }
     void Renderer::DestroyVulkan()
     {  
+        for (size_t i = 0; i < draw_ref.MAX_FRAMES_IN_FLIGHT; i++) {
+            vkDestroySemaphore(setup_ref.device, draw_ref.renderFinishedSemaphores[i], nullptr);
+            vkDestroySemaphore(setup_ref.device, draw_ref.imageAvailableSemaphores[i], nullptr);
+            vkDestroyFence(setup_ref.device, draw_ref.inFlightFences[i], nullptr);
+        }
         vkDestroyCommandPool(setup_ref.device, Cbuffer_ref.commandPool, nullptr);
         for (auto framebuffer : Fbuffer_ref.swapChainFramebuffers) {
             vkDestroyFramebuffer(setup_ref.device, framebuffer, nullptr);
