@@ -4,6 +4,8 @@
 #include "VkSetup.h"
 #include "VkSwapChain.h"
 #include "VkGraphicsPipeline.h"
+#include "Buffers/VkFramebuffers.h"
+#include "Buffers/VkCommandbuffers.h"
 
 namespace VkRenderer
 {
@@ -17,7 +19,8 @@ namespace VkRenderer
         VkSetup setup_ref;
         VkSwapChain swap_ref;
         VkGPipeline gpipeline_ref;
-        
+        VkframeBuffer Fbuffer_ref;
+        VkcommandBuffer Cbuffer_ref;
     };
 }
 

@@ -14,11 +14,17 @@ namespace VkRenderer
         swap_ref.createImageViews(setup_ref.device);
         gpipeline_ref.createRenderPass(setup_ref.device, swap_ref.swapChainImageFormat);
         gpipeline_ref.createGraphicsPipeline(setup_ref.device, swap_ref.swapChainExtent);
-        
+        Fbuffer_ref.createFramebuffers(setup_ref.device, swap_ref.swapChainImageViews, swap_ref.swapChainExtent, gpipeline_ref.renderPass);
+        Cbuffer_ref.createCommandPool(setup_ref, swap_ref.surface);
+        Cbuffer_ref.createCommandBuffers(setup_ref.device, Fbuffer_ref.swapChainFramebuffers, swap_ref.swapChainExtent, gpipeline_ref);
     }
     
     void Renderer::DestroyVulkan()
     {  
+        vkDestroyCommandPool(setup_ref.device, Cbuffer_ref.commandPool, nullptr);
+        for (auto framebuffer : Fbuffer_ref.swapChainFramebuffers) {
+            vkDestroyFramebuffer(setup_ref.device, framebuffer, nullptr);
+        }
         vkDestroyPipeline(setup_ref.device, gpipeline_ref.graphicsPipeline, nullptr);
         vkDestroyPipelineLayout(setup_ref.device, gpipeline_ref.pipelineLayout, nullptr);
         vkDestroyRenderPass(setup_ref.device, gpipeline_ref.renderPass, nullptr);
