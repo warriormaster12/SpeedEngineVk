@@ -12,11 +12,16 @@ namespace VkRenderer
         setup_ref.createLogicalDevice(swap_ref.surface);
         swap_ref.createSwapChain(setup_ref.physicalDevice, setup_ref.device, setup_ref);
         swap_ref.createImageViews(setup_ref.device);
+        gpipeline_ref.createRenderPass(setup_ref.device, swap_ref.swapChainImageFormat);
+        gpipeline_ref.createGraphicsPipeline(setup_ref.device, swap_ref.swapChainExtent);
         
     }
     
     void Renderer::DestroyVulkan()
     {  
+        vkDestroyPipeline(setup_ref.device, gpipeline_ref.graphicsPipeline, nullptr);
+        vkDestroyPipelineLayout(setup_ref.device, gpipeline_ref.pipelineLayout, nullptr);
+        vkDestroyRenderPass(setup_ref.device, gpipeline_ref.renderPass, nullptr);
         for (auto imageView : swap_ref.swapChainImageViews) {
             vkDestroyImageView(setup_ref.device, imageView, nullptr);
         }
