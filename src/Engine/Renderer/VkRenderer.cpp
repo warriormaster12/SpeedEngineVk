@@ -10,7 +10,7 @@ namespace VkRenderer
         swap_ref.createSurface(window, setup_ref.instance);
         setup_ref.pickPhysicalDevice(swap_ref.surface);
         setup_ref.createLogicalDevice(swap_ref.surface);
-        swap_ref.createSwapChain(setup_ref.physicalDevice, setup_ref.device, &setup_ref);
+        swap_ref.createSwapChain(setup_ref.physicalDevice, setup_ref.device, setup_ref);
         swap_ref.createImageViews(setup_ref.device);
         
     }

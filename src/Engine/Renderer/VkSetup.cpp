@@ -43,7 +43,7 @@ namespace VkRenderer
             throw std::runtime_error("failed to create instance!");
         }
     }
-    void VkSetup::pickPhysicalDevice(VkSurfaceKHR surface) {
+    void VkSetup::pickPhysicalDevice(VkSurfaceKHR& surface) {
         uint32_t deviceCount = 0;
         vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
 
@@ -65,7 +65,7 @@ namespace VkRenderer
             throw std::runtime_error("failed to find a suitable GPU!");
         }
     }
-    void VkSetup::createLogicalDevice(VkSurfaceKHR surface)
+    void VkSetup::createLogicalDevice(VkSurfaceKHR& surface)
     {
         QueueFamilyIndices indices = findQueueFamilies(physicalDevice, surface);
 
@@ -109,7 +109,7 @@ namespace VkRenderer
         vkGetDeviceQueue(device, indices.graphicsFamily.value(), 0, &graphicsQueue);
         vkGetDeviceQueue(device, indices.presentFamily.value(), 0, &presentQueue);
     }
-    QueueFamilyIndices VkSetup::findQueueFamilies(VkPhysicalDevice device, VkSurfaceKHR surface)
+    QueueFamilyIndices VkSetup::findQueueFamilies(VkPhysicalDevice& device, VkSurfaceKHR& surface)
     {
         QueueFamilyIndices indices;
 
@@ -142,14 +142,14 @@ namespace VkRenderer
         return indices;
     }
 
-    bool VkSetup::isDeviceSuitable(VkPhysicalDevice device, VkSurfaceKHR surface) {
+    bool VkSetup::isDeviceSuitable(VkPhysicalDevice device, VkSurfaceKHR& surface) {
         QueueFamilyIndices indices = findQueueFamilies(device, surface);
 
         bool extensionsSupported = checkDeviceExtensionSupport(device);
 
         return indices.isComplete() && extensionsSupported;
     }
-        bool VkSetup::checkDeviceExtensionSupport(VkPhysicalDevice device) {
+        bool VkSetup::checkDeviceExtensionSupport(VkPhysicalDevice& device) {
         uint32_t extensionCount;
         vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
 
@@ -222,7 +222,7 @@ namespace VkRenderer
         createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
         createInfo.pfnUserCallback = debugCallback;
     }
-    VkResult VkSetup::CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger)
+    VkResult VkSetup::CreateDebugUtilsMessengerEXT(VkInstance& instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger)
     {
         auto func = (PFN_vkCreateDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
         if (func != nullptr) {

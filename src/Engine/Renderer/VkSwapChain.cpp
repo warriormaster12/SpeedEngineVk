@@ -4,13 +4,13 @@
 
 namespace VkRenderer
 {
-   void VkSwapChain::createSurface(GLFWwindow *window, VkInstance instance)
+   void VkSwapChain::createSurface(GLFWwindow *window, VkInstance& instance)
    {
        if (glfwCreateWindowSurface(instance, window, nullptr, &surface) != VK_SUCCESS) {
             throw std::runtime_error("failed to create window surface!");
         }
    } 
-   void VkSwapChain::createSwapChain(VkPhysicalDevice physicalDevice, VkDevice device, VkSetup *setup_ref)
+   void VkSwapChain::createSwapChain(VkPhysicalDevice& physicalDevice, VkDevice& device, VkSetup& setup_ref)
    {
              SwapChainSupportDetails swapChainSupport = querySwapChainSupport(physicalDevice);
 
@@ -34,7 +34,7 @@ namespace VkRenderer
         createInfo.imageArrayLayers = 1;
         createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-        QueueFamilyIndices indices = setup_ref->findQueueFamilies(physicalDevice, surface);
+        QueueFamilyIndices indices = setup_ref.findQueueFamilies(physicalDevice, surface);
         uint32_t queueFamilyIndices[] = {indices.graphicsFamily.value(), indices.presentFamily.value()};
 
         if (indices.graphicsFamily != indices.presentFamily) {
@@ -63,7 +63,7 @@ namespace VkRenderer
         swapChainImageFormat = surfaceFormat.format;
         swapChainExtent = extent;
    }
-   void VkSwapChain::createImageViews(VkDevice device)
+   void VkSwapChain::createImageViews(VkDevice& device)
    {
         swapChainImageViews.resize(swapChainImages.size());
 
@@ -89,7 +89,7 @@ namespace VkRenderer
         }   
    }
 
-   SwapChainSupportDetails VkSwapChain::querySwapChainSupport(VkPhysicalDevice device) {
+   SwapChainSupportDetails VkSwapChain::querySwapChainSupport(VkPhysicalDevice& device) {
         SwapChainSupportDetails details;
 
         vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &details.capabilities);
