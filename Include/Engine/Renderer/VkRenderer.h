@@ -7,6 +7,7 @@
 #include "Buffers/VkFramebuffers.h"
 #include "Buffers/VkCommandbuffers.h"
 #include "VkDraw.h"
+#include "../Window/Window.h"
 
 namespace VkRenderer
 {
@@ -24,6 +25,7 @@ namespace VkRenderer
         VkframeBuffer Fbuffer_ref;
         VkcommandBuffer Cbuffer_ref;
         VkDraw draw_ref;
+        AppWindow win_ref;
     };
 }
 
