@@ -6,7 +6,6 @@
 #include "VkGraphicsPipeline.h"
 #include "Buffers/VkFramebuffers.h"
 #include "Buffers/VkCommandbuffers.h"
-#include "VkDraw.h"
 #include "../Window/Window.h"
 
 namespace VkRenderer
@@ -16,7 +15,8 @@ namespace VkRenderer
     {
     public: 
         void InitVulkan(GLFWwindow *window);
-        void UpdateVulkan();
+        void drawFrame();
+        void createSyncObjects();
         void DestroyVulkan();
         VkSetup setup_ref;
     private:  
@@ -24,8 +24,14 @@ namespace VkRenderer
         VkGPipeline gpipeline_ref;
         VkframeBuffer Fbuffer_ref;
         VkcommandBuffer Cbuffer_ref;
-        VkDraw draw_ref;
         AppWindow win_ref;
+        
+        std::vector<VkSemaphore> imageAvailableSemaphores;
+        std::vector<VkSemaphore> renderFinishedSemaphores;
+        std::vector<VkFence> inFlightFences;
+        std::vector<VkFence> imagesInFlight;
+        size_t currentFrame = 0;
+        const int MAX_FRAMES_IN_FLIGHT = 2;
     };
 }
 
