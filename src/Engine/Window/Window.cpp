@@ -1,4 +1,5 @@
 #include "Engine/Window/Window.h"
+#include "Engine/Renderer/VkRenderer.h"
 
 
  void AppWindow::initWindow()
@@ -7,13 +8,20 @@
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     window = glfwCreateWindow(WIDTH, HEIGHT, "VulkanEngine", nullptr, nullptr);
     glfwSetWindowUserPointer(window, this);
+    glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
 
 
-    //glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
+    
 }
 
 void AppWindow::cleanupWindow()
 {
     glfwDestroyWindow(window);
     glfwTerminate();
+}
+
+void AppWindow::framebufferResizeCallback(GLFWwindow* window, int width, int height)
+{
+    auto app = reinterpret_cast<VkRenderer::Renderer*>(glfwGetWindowUserPointer(window));
+    app->framebufferResized = true;
 }

@@ -10,13 +10,13 @@ namespace VkRenderer
             throw std::runtime_error("failed to create window surface!");
         }
    } 
-   void VkSwapChain::createSwapChain(VkPhysicalDevice& physicalDevice, VkDevice& device, VkSetup& setup_ref, unsigned int& WIDTH, unsigned int& HEIGHT)
+   void VkSwapChain::createSwapChain(VkPhysicalDevice& physicalDevice, VkDevice& device, VkSetup& setup_ref, AppWindow& win_ref)
    {
              SwapChainSupportDetails swapChainSupport = querySwapChainSupport(physicalDevice);
 
         VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
         VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
-        VkExtent2D extent = chooseSwapExtent(swapChainSupport.capabilities, WIDTH, HEIGHT);
+        VkExtent2D extent = chooseSwapExtent(swapChainSupport.capabilities, win_ref);
 
         uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
         if (swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount) {
@@ -132,12 +132,18 @@ namespace VkRenderer
 
         return VK_PRESENT_MODE_FIFO_KHR; 
     }
-    VkExtent2D VkSwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities, unsigned int& WIDTH, unsigned int& HEIGHT)
+    VkExtent2D VkSwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities, AppWindow& win_ref)
     {
         if (capabilities.currentExtent.width != UINT32_MAX) {
             return capabilities.currentExtent;
         } else {
-            VkExtent2D actualExtent = {WIDTH, HEIGHT};
+            int width, height;
+            glfwGetFramebufferSize(win_ref.window, &width, &height);
+
+            VkExtent2D actualExtent = {
+                static_cast<uint32_t>(width),
+                static_cast<uint32_t>(height)
+            };
 
             actualExtent.width = std::max(capabilities.minImageExtent.width, std::min(capabilities.maxImageExtent.width, actualExtent.width));
             actualExtent.height = std::max(capabilities.minImageExtent.height, std::min(capabilities.maxImageExtent.height, actualExtent.height));

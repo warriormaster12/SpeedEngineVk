@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 
 
+
 class AppWindow
 {
 public: 
@@ -13,4 +14,6 @@ public:
 
     void initWindow();
     void cleanupWindow();
+    static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
+    
 };

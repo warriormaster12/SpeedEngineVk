@@ -17,11 +17,7 @@ private:
     VkRenderer::Renderer renderer_ref;
     AppWindow glfw_win_ref;
    
-    //static void framebufferResizeCallback(GLFWwindow* window, int width, int height)
-    //{
-    //    auto app = reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window));
-    //    app->renderer_ref.framebufferResized = true; 
-    //}
+    
     void mainLoop()
     {
         while (!glfwWindowShouldClose(glfw_win_ref.window))

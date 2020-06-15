@@ -17,8 +17,11 @@ namespace VkRenderer
         void InitVulkan(GLFWwindow *window);
         void drawFrame();
         void createSyncObjects();
+        void recreateSwapChain();
+        void cleanupSwapChain();
         void DestroyVulkan();
         VkSetup setup_ref;
+        bool framebufferResized = false;
     private:  
         VkSwapChain swap_ref;
         VkGPipeline gpipeline_ref;
@@ -31,7 +34,11 @@ namespace VkRenderer
         std::vector<VkFence> inFlightFences;
         std::vector<VkFence> imagesInFlight;
         size_t currentFrame = 0;
+        
         const int MAX_FRAMES_IN_FLIGHT = 2;
+
+
+    
     };
 }
 

@@ -16,12 +16,12 @@ namespace VkRenderer
     public:
         VkSurfaceKHR surface;
         void createSurface(GLFWwindow *window, VkInstance& instance);
-        void createSwapChain(VkPhysicalDevice& physicalDevice, VkDevice& device, VkSetup& setup_ref, unsigned int& WIDTH, unsigned int& HEIGHT);
+        void createSwapChain(VkPhysicalDevice& physicalDevice, VkDevice& device, VkSetup& setup_ref, AppWindow& win_ref);
         void createImageViews(VkDevice& device);
         SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice& device);
         VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
         VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
-        VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities, unsigned int& WIDTH, unsigned int& HEIGHT);
+        VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities, AppWindow& win_ref);
 
         VkSwapchainKHR swapChain;
         std::vector<VkImage> swapChainImages;
