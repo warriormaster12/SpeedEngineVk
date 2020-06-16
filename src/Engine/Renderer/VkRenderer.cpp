@@ -19,12 +19,12 @@ namespace VkRenderer
         Cbuffer_ref.createCommandBuffers(setup_ref.device, Fbuffer_ref.swapChainFramebuffers, swap_ref.swapChainExtent, gpipeline_ref);
         createSyncObjects();
     }
-    void Renderer::recreateSwapChain()
+    void Renderer::recreateSwapChain(GLFWwindow *window)
     {
         int width = 0, height = 0;
-        glfwGetFramebufferSize(win_ref.window, &width, &height);
+        glfwGetFramebufferSize(window, &width, &height);
         while (width == 0 || height == 0) {
-            glfwGetFramebufferSize(win_ref.window, &width, &height);
+            glfwGetFramebufferSize(window, &width, &height);
             glfwWaitEvents();
         }
         vkDeviceWaitIdle(setup_ref.device);
@@ -77,7 +77,7 @@ namespace VkRenderer
     }
 
 
-     void Renderer::drawFrame()
+     void Renderer::drawFrame(GLFWwindow *window)
     {
         vkWaitForFences(setup_ref.device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
@@ -85,7 +85,7 @@ namespace VkRenderer
         VkResult result = vkAcquireNextImageKHR(setup_ref.device, swap_ref.swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
 
         if (result == VK_ERROR_OUT_OF_DATE_KHR) {
-            recreateSwapChain();
+            recreateSwapChain(window);
             return;
         } else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
             throw std::runtime_error("failed to acquire swap chain image!");
@@ -134,7 +134,7 @@ namespace VkRenderer
 
         if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || framebufferResized) {
             framebufferResized = false;
-            recreateSwapChain();
+            recreateSwapChain(window);
         } else if (result != VK_SUCCESS) {
             throw std::runtime_error("failed to present swap chain image!");
         }

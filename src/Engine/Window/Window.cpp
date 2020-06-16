@@ -22,6 +22,7 @@ void AppWindow::cleanupWindow()
 
 void AppWindow::framebufferResizeCallback(GLFWwindow* window, int width, int height)
 {
-    auto app = reinterpret_cast<VkRenderer::Renderer*>(glfwGetWindowUserPointer(window));
-    app->framebufferResized = true;
+    VkRenderer::Renderer renderer_ref;
+    glfwGetWindowUserPointer(window);
+    renderer_ref.framebufferResized = true;
 }
