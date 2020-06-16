@@ -10,7 +10,7 @@ namespace VkRenderer
         swap_ref.createSurface(window, setup_ref.instance);
         setup_ref.pickPhysicalDevice(swap_ref.surface);
         setup_ref.createLogicalDevice(swap_ref.surface);
-        swap_ref.createSwapChain(setup_ref.physicalDevice, setup_ref.device, setup_ref, win_ref);
+        swap_ref.createSwapChain(setup_ref, win_ref);
         swap_ref.createImageViews(setup_ref.device);
         gpipeline_ref.createRenderPass(setup_ref.device, swap_ref.swapChainImageFormat);
         gpipeline_ref.createGraphicsPipeline(setup_ref.device, swap_ref.swapChainExtent);
@@ -31,7 +31,7 @@ namespace VkRenderer
 
         cleanupSwapChain();
 
-        swap_ref.createSwapChain(setup_ref.physicalDevice, setup_ref.device, setup_ref, win_ref);
+        swap_ref.createSwapChain(setup_ref, win_ref);
         swap_ref.createImageViews(setup_ref.device);
         gpipeline_ref.createRenderPass(setup_ref.device, swap_ref.swapChainImageFormat);
         gpipeline_ref.createGraphicsPipeline(setup_ref.device, swap_ref.swapChainExtent);

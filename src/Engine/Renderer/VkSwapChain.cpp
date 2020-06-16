@@ -10,9 +10,9 @@ namespace VkRenderer
             throw std::runtime_error("failed to create window surface!");
         }
    } 
-   void VkSwapChain::createSwapChain(VkPhysicalDevice& physicalDevice, VkDevice& device, VkSetup& setup_ref, AppWindow& win_ref)
+   void VkSwapChain::createSwapChain(VkSetup& setup_ref, AppWindow& win_ref)
    {
-             SwapChainSupportDetails swapChainSupport = querySwapChainSupport(physicalDevice);
+        SwapChainSupportDetails swapChainSupport = querySwapChainSupport(setup_ref.physicalDevice);
 
         VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
         VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
@@ -34,7 +34,7 @@ namespace VkRenderer
         createInfo.imageArrayLayers = 1;
         createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-        QueueFamilyIndices indices = setup_ref.findQueueFamilies(physicalDevice, surface);
+        QueueFamilyIndices indices = setup_ref.findQueueFamilies(setup_ref.physicalDevice, surface);
         uint32_t queueFamilyIndices[] = {indices.graphicsFamily.value(), indices.presentFamily.value()};
 
         if (indices.graphicsFamily != indices.presentFamily) {
@@ -52,13 +52,13 @@ namespace VkRenderer
 
         createInfo.oldSwapchain = VK_NULL_HANDLE;
 
-        if (vkCreateSwapchainKHR(device, &createInfo, nullptr, &swapChain) != VK_SUCCESS) {
+        if (vkCreateSwapchainKHR(setup_ref.device, &createInfo, nullptr, &swapChain) != VK_SUCCESS) {
             throw std::runtime_error("failed to create swap chain!");
         }
 
-        vkGetSwapchainImagesKHR(device, swapChain, &imageCount, nullptr);
+        vkGetSwapchainImagesKHR(setup_ref.device, swapChain, &imageCount, nullptr);
         swapChainImages.resize(imageCount);
-        vkGetSwapchainImagesKHR(device, swapChain, &imageCount, swapChainImages.data());
+        vkGetSwapchainImagesKHR(setup_ref.device, swapChain, &imageCount, swapChainImages.data());
 
         swapChainImageFormat = surfaceFormat.format;
         swapChainExtent = extent;
