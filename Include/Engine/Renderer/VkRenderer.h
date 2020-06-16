@@ -6,6 +6,8 @@
 #include "VkGraphicsPipeline.h"
 #include "Buffers/VkFramebuffers.h"
 #include "Buffers/VkCommandbuffers.h"
+#include "Buffers/VkVertexbuffers.h"
+#include "VkMemory.h"
 #include "../Window/Window.h"
 
 namespace VkRenderer
@@ -27,7 +29,9 @@ namespace VkRenderer
         VkGPipeline gpipeline_ref;
         VkframeBuffer Fbuffer_ref;
         VkcommandBuffer Cbuffer_ref;
+        VkVbuffer Vbuffer_ref;
         AppWindow win_ref;
+        VkMemory memory_ref;
         
         std::vector<VkSemaphore> imageAvailableSemaphores;
         std::vector<VkSemaphore> renderFinishedSemaphores;

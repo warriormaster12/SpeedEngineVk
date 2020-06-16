@@ -2,6 +2,7 @@
 
 #include "VkIncludes.h"
 #include "VkShaderManager.h"
+#include "Buffers/VkVertexbuffers.h"
 
 namespace VkRenderer
 {

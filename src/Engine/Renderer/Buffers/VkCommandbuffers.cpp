@@ -14,7 +14,7 @@ namespace VkRenderer
             throw std::runtime_error("failed to create command pool!");
         }    
     }
-    void VkcommandBuffer::createCommandBuffers(VkDevice& device, std::vector<VkFramebuffer> swapChainFramebuffers, VkExtent2D& swapChainExtent, VkGPipeline& Gpipeline_ref)
+    void VkcommandBuffer::createCommandBuffers(VkDevice& device, std::vector<VkFramebuffer> swapChainFramebuffers, VkExtent2D& swapChainExtent, VkGPipeline& Gpipeline_ref, VkVbuffer& Vbuffer_ref)
     {
         commandBuffers.resize(swapChainFramebuffers.size());
 
@@ -51,7 +51,11 @@ namespace VkRenderer
 
                 vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, Gpipeline_ref.graphicsPipeline);
 
-                vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
+                VkBuffer vertexBuffers[] = {Vbuffer_ref.vertexBuffer};
+                VkDeviceSize offsets[] = {0};
+                vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
+
+                vkCmdDraw(commandBuffers[i], static_cast<uint32_t>(vertices.size()), 1, 0, 0);
 
             vkCmdEndRenderPass(commandBuffers[i]);
 

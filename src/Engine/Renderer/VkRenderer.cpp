@@ -16,7 +16,8 @@ namespace VkRenderer
         gpipeline_ref.createGraphicsPipeline(setup_ref.device, swap_ref.swapChainExtent);
         Fbuffer_ref.createFramebuffers(setup_ref.device, swap_ref.swapChainImageViews, swap_ref.swapChainExtent, gpipeline_ref.renderPass);
         Cbuffer_ref.createCommandPool(setup_ref, swap_ref.surface);
-        Cbuffer_ref.createCommandBuffers(setup_ref.device, Fbuffer_ref.swapChainFramebuffers, swap_ref.swapChainExtent, gpipeline_ref);
+        Vbuffer_ref.createVertexBuffer(setup_ref, memory_ref);
+        Cbuffer_ref.createCommandBuffers(setup_ref.device, Fbuffer_ref.swapChainFramebuffers, swap_ref.swapChainExtent, gpipeline_ref, Vbuffer_ref);
         createSyncObjects();
     }
     void Renderer::recreateSwapChain(GLFWwindow *window)
@@ -36,7 +37,7 @@ namespace VkRenderer
         gpipeline_ref.createRenderPass(setup_ref.device, swap_ref.swapChainImageFormat);
         gpipeline_ref.createGraphicsPipeline(setup_ref.device, swap_ref.swapChainExtent);
         Fbuffer_ref.createFramebuffers(setup_ref.device, swap_ref.swapChainImageViews, swap_ref.swapChainExtent, gpipeline_ref.renderPass);
-        Cbuffer_ref.createCommandBuffers(setup_ref.device, Fbuffer_ref.swapChainFramebuffers, swap_ref.swapChainExtent, gpipeline_ref);
+        Cbuffer_ref.createCommandBuffers(setup_ref.device, Fbuffer_ref.swapChainFramebuffers, swap_ref.swapChainExtent, gpipeline_ref, Vbuffer_ref);
 
     }
     void Renderer::cleanupSwapChain()
@@ -60,6 +61,9 @@ namespace VkRenderer
     void Renderer::DestroyVulkan()
     {  
         cleanupSwapChain();
+
+        vkDestroyBuffer(setup_ref.device, Vbuffer_ref.vertexBuffer, nullptr);
+        vkFreeMemory(setup_ref.device, Vbuffer_ref.vertexBufferMemory, nullptr);
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
             vkDestroySemaphore(setup_ref.device, renderFinishedSemaphores[i], nullptr);
