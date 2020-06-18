@@ -4,6 +4,7 @@
 #include "../Window/Window.h"
 #include "VkSetup.h"
 
+
 namespace VkRenderer
 {
     struct SwapChainSupportDetails {
@@ -28,9 +29,6 @@ namespace VkRenderer
         VkFormat swapChainImageFormat;
         VkExtent2D swapChainExtent;
         std::vector<VkImageView> swapChainImageViews;
-
-    private:
-        AppWindow glfw_win_ref;
 
     };
 }

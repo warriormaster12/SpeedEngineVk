@@ -3,6 +3,7 @@
 #include "../VkIncludes.h"
 #include "../VkSetup.h"
 #include "../VkMemory.h"
+#include "VkBufferCreation.h"
 
 namespace VkRenderer
 {
@@ -35,14 +36,15 @@ namespace VkRenderer
         }
     };
     const std::vector<Vertex> vertices = {
-        {{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-        {{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
+        {{-0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+        {{0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}},
+        {{0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}},
         {{-0.5f, 0.5f}, {1.0f, 1.0f, 1.0f}}
     };
     class VkVbuffer
     {
     public: 
-        void createVertexBuffer(VkSetup& setup_ref, VkMemory& memory_ref);
+        void createVertexBuffer(VkSetup& setup_ref,VkMemory& memory_ref, VkBufferCreation& buffer_ref, VkCommandPool& commandPool);
         VkBuffer vertexBuffer;
         VkDeviceMemory vertexBufferMemory;
     };

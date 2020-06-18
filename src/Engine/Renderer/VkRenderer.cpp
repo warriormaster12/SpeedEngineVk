@@ -16,8 +16,9 @@ namespace VkRenderer
         gpipeline_ref.createGraphicsPipeline(setup_ref.device, swap_ref.swapChainExtent);
         Fbuffer_ref.createFramebuffers(setup_ref.device, swap_ref.swapChainImageViews, swap_ref.swapChainExtent, gpipeline_ref.renderPass);
         Cbuffer_ref.createCommandPool(setup_ref, swap_ref.surface);
-        Vbuffer_ref.createVertexBuffer(setup_ref, memory_ref);
-        Cbuffer_ref.createCommandBuffers(setup_ref.device, Fbuffer_ref.swapChainFramebuffers, swap_ref.swapChainExtent, gpipeline_ref, Vbuffer_ref);
+        Vbuffer_ref.createVertexBuffer(setup_ref, memory_ref, buffer_ref, Cbuffer_ref.commandPool);
+        Ibuffer_ref.createIndexBuffer(setup_ref, buffer_ref, memory_ref, Cbuffer_ref.commandPool);
+        Cbuffer_ref.createCommandBuffers(setup_ref.device, Fbuffer_ref.swapChainFramebuffers, swap_ref.swapChainExtent, gpipeline_ref, Vbuffer_ref.vertexBuffer, Ibuffer_ref.indexBuffer);
         createSyncObjects();
     }
     void Renderer::recreateSwapChain(GLFWwindow *window)
@@ -37,7 +38,7 @@ namespace VkRenderer
         gpipeline_ref.createRenderPass(setup_ref.device, swap_ref.swapChainImageFormat);
         gpipeline_ref.createGraphicsPipeline(setup_ref.device, swap_ref.swapChainExtent);
         Fbuffer_ref.createFramebuffers(setup_ref.device, swap_ref.swapChainImageViews, swap_ref.swapChainExtent, gpipeline_ref.renderPass);
-        Cbuffer_ref.createCommandBuffers(setup_ref.device, Fbuffer_ref.swapChainFramebuffers, swap_ref.swapChainExtent, gpipeline_ref, Vbuffer_ref);
+        Cbuffer_ref.createCommandBuffers(setup_ref.device, Fbuffer_ref.swapChainFramebuffers, swap_ref.swapChainExtent, gpipeline_ref, Vbuffer_ref.vertexBuffer, Ibuffer_ref.indexBuffer);
 
     }
     void Renderer::cleanupSwapChain()
@@ -61,6 +62,9 @@ namespace VkRenderer
     void Renderer::DestroyVulkan()
     {  
         cleanupSwapChain();
+
+        vkDestroyBuffer(setup_ref.device, Ibuffer_ref.indexBuffer, nullptr);
+        vkFreeMemory(setup_ref.device, Ibuffer_ref.indexBufferMemory, nullptr);
 
         vkDestroyBuffer(setup_ref.device, Vbuffer_ref.vertexBuffer, nullptr);
         vkFreeMemory(setup_ref.device, Vbuffer_ref.vertexBufferMemory, nullptr);

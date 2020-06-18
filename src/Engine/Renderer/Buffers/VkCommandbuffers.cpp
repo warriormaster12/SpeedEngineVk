@@ -1,4 +1,5 @@
 #include "Engine/Renderer/Buffers/VkCommandbuffers.h"
+#include "Engine/Renderer/Buffers/VkIndexbuffers.h"
 
 namespace VkRenderer
 {
@@ -14,7 +15,7 @@ namespace VkRenderer
             throw std::runtime_error("failed to create command pool!");
         }    
     }
-    void VkcommandBuffer::createCommandBuffers(VkDevice& device, std::vector<VkFramebuffer> swapChainFramebuffers, VkExtent2D& swapChainExtent, VkGPipeline& Gpipeline_ref, VkVbuffer& Vbuffer_ref)
+    void VkcommandBuffer::createCommandBuffers(VkDevice& device, std::vector<VkFramebuffer> swapChainFramebuffers, VkExtent2D& swapChainExtent, VkGPipeline& Gpipeline_ref, VkBuffer& vertexBuffer, VkBuffer& indexBuffer)
     {
         commandBuffers.resize(swapChainFramebuffers.size());
 
@@ -51,11 +52,13 @@ namespace VkRenderer
 
                 vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, Gpipeline_ref.graphicsPipeline);
 
-                VkBuffer vertexBuffers[] = {Vbuffer_ref.vertexBuffer};
+                VkBuffer vertexBuffers[] = {vertexBuffer};
                 VkDeviceSize offsets[] = {0};
                 vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
 
-                vkCmdDraw(commandBuffers[i], static_cast<uint32_t>(vertices.size()), 1, 0, 0);
+                vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT16);
+
+                vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
 
             vkCmdEndRenderPass(commandBuffers[i]);
 

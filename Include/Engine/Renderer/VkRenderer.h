@@ -7,6 +7,8 @@
 #include "Buffers/VkFramebuffers.h"
 #include "Buffers/VkCommandbuffers.h"
 #include "Buffers/VkVertexbuffers.h"
+#include "Buffers/VkBufferCreation.h"
+#include "Buffers/VkIndexbuffers.h"
 #include "VkMemory.h"
 #include "../Window/Window.h"
 
@@ -30,8 +32,10 @@ namespace VkRenderer
         VkframeBuffer Fbuffer_ref;
         VkcommandBuffer Cbuffer_ref;
         VkVbuffer Vbuffer_ref;
+        VkindexBuffer Ibuffer_ref;
         AppWindow win_ref;
         VkMemory memory_ref;
+        VkBufferCreation buffer_ref;
         
         std::vector<VkSemaphore> imageAvailableSemaphores;
         std::vector<VkSemaphore> renderFinishedSemaphores;
