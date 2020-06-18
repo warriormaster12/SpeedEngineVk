@@ -13,12 +13,16 @@ namespace VkRenderer
         swap_ref.createSwapChain(setup_ref, win_ref);
         swap_ref.createImageViews(setup_ref.device);
         gpipeline_ref.createRenderPass(setup_ref.device, swap_ref.swapChainImageFormat);
-        gpipeline_ref.createGraphicsPipeline(setup_ref.device, swap_ref.swapChainExtent);
+        Ubuffer_ref.createDescriptorSetLayout(setup_ref);
+        gpipeline_ref.createGraphicsPipeline(setup_ref.device, swap_ref.swapChainExtent, Ubuffer_ref);
         Fbuffer_ref.createFramebuffers(setup_ref.device, swap_ref.swapChainImageViews, swap_ref.swapChainExtent, gpipeline_ref.renderPass);
         Cbuffer_ref.createCommandPool(setup_ref, swap_ref.surface);
         Vbuffer_ref.createVertexBuffer(setup_ref, memory_ref, buffer_ref, Cbuffer_ref.commandPool);
         Ibuffer_ref.createIndexBuffer(setup_ref, buffer_ref, memory_ref, Cbuffer_ref.commandPool);
-        Cbuffer_ref.createCommandBuffers(setup_ref.device, Fbuffer_ref.swapChainFramebuffers, swap_ref.swapChainExtent, gpipeline_ref, Vbuffer_ref.vertexBuffer, Ibuffer_ref.indexBuffer);
+        Ubuffer_ref.createUniformBuffers(swap_ref.swapChainImages, buffer_ref, setup_ref, memory_ref);
+        Ubuffer_ref.createDescriptorPool(setup_ref, swap_ref.swapChainImages);
+        Ubuffer_ref.createDescriptorSets(setup_ref, swap_ref.swapChainImages);
+        Cbuffer_ref.createCommandBuffers(setup_ref.device, Fbuffer_ref.swapChainFramebuffers, swap_ref.swapChainExtent, gpipeline_ref, Ubuffer_ref.descriptorSets,Vbuffer_ref.vertexBuffer, Ibuffer_ref.indexBuffer);
         createSyncObjects();
     }
     void Renderer::recreateSwapChain(GLFWwindow *window)
@@ -36,9 +40,12 @@ namespace VkRenderer
         swap_ref.createSwapChain(setup_ref, win_ref);
         swap_ref.createImageViews(setup_ref.device);
         gpipeline_ref.createRenderPass(setup_ref.device, swap_ref.swapChainImageFormat);
-        gpipeline_ref.createGraphicsPipeline(setup_ref.device, swap_ref.swapChainExtent);
+        gpipeline_ref.createGraphicsPipeline(setup_ref.device, swap_ref.swapChainExtent, Ubuffer_ref);
         Fbuffer_ref.createFramebuffers(setup_ref.device, swap_ref.swapChainImageViews, swap_ref.swapChainExtent, gpipeline_ref.renderPass);
-        Cbuffer_ref.createCommandBuffers(setup_ref.device, Fbuffer_ref.swapChainFramebuffers, swap_ref.swapChainExtent, gpipeline_ref, Vbuffer_ref.vertexBuffer, Ibuffer_ref.indexBuffer);
+        Ubuffer_ref.createUniformBuffers(swap_ref.swapChainImages, buffer_ref, setup_ref, memory_ref);
+        Ubuffer_ref.createDescriptorPool(setup_ref, swap_ref.swapChainImages);
+        Ubuffer_ref.createDescriptorSets(setup_ref, swap_ref.swapChainImages);
+        Cbuffer_ref.createCommandBuffers(setup_ref.device, Fbuffer_ref.swapChainFramebuffers, swap_ref.swapChainExtent, gpipeline_ref, Ubuffer_ref.descriptorSets, Vbuffer_ref.vertexBuffer, Ibuffer_ref.indexBuffer);
 
     }
     void Renderer::cleanupSwapChain()
@@ -58,10 +65,19 @@ namespace VkRenderer
         }
 
         vkDestroySwapchainKHR(setup_ref.device, swap_ref.swapChain, nullptr);
+
+        for (size_t i = 0; i < swap_ref.swapChainImages.size(); i++) {
+            vkDestroyBuffer(setup_ref.device, Ubuffer_ref.uniformBuffers[i], nullptr);
+            vkFreeMemory(setup_ref.device, Ubuffer_ref.uniformBuffersMemory[i], nullptr);
+        }
+
+        vkDestroyDescriptorPool(setup_ref.device, Ubuffer_ref.descriptorPool, nullptr);
     }
     void Renderer::DestroyVulkan()
     {  
         cleanupSwapChain();
+
+        vkDestroyDescriptorSetLayout(setup_ref.device, Ubuffer_ref.descriptorSetLayout, nullptr);
 
         vkDestroyBuffer(setup_ref.device, Ibuffer_ref.indexBuffer, nullptr);
         vkFreeMemory(setup_ref.device, Ibuffer_ref.indexBufferMemory, nullptr);
@@ -98,6 +114,8 @@ namespace VkRenderer
         } else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
             throw std::runtime_error("failed to acquire swap chain image!");
         }
+
+        Ubuffer_ref.updateUniformBuffer(imageIndex, swap_ref.swapChainExtent, setup_ref);
 
         if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) {
             vkWaitForFences(setup_ref.device, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);

@@ -3,7 +3,7 @@
 
 namespace VkRenderer
 {
-    void VkGPipeline::createGraphicsPipeline(VkDevice& device, VkExtent2D& swapChainExtent)
+    void VkGPipeline::createGraphicsPipeline(VkDevice& device, VkExtent2D& swapChainExtent, VkUbuffer& Ubuffer_ref)
     {
         auto vertShaderCode = shader_ref.readFile("EngineAssets/Shaders/vert.spv");
         auto fragShaderCode = shader_ref.readFile("EngineAssets/Shaders/frag.spv");
@@ -66,7 +66,7 @@ namespace VkRenderer
         rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
         rasterizer.lineWidth = 1.0f;
         rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
-        rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
+        rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
         rasterizer.depthBiasEnable = VK_FALSE;
 
         VkPipelineMultisampleStateCreateInfo multisampling{};
@@ -91,8 +91,8 @@ namespace VkRenderer
 
         VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
         pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-        pipelineLayoutInfo.setLayoutCount = 0;
-        pipelineLayoutInfo.pushConstantRangeCount = 0;
+        pipelineLayoutInfo.setLayoutCount = 1;
+        pipelineLayoutInfo.pSetLayouts = &Ubuffer_ref.descriptorSetLayout;
 
         if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
             throw std::runtime_error("failed to create pipeline layout!");

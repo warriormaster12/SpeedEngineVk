@@ -9,6 +9,7 @@
 #include "Buffers/VkVertexbuffers.h"
 #include "Buffers/VkBufferCreation.h"
 #include "Buffers/VkIndexbuffers.h"
+#include "Buffers/VkUnfiormbuffers.h"
 #include "VkMemory.h"
 #include "../Window/Window.h"
 
@@ -33,6 +34,7 @@ namespace VkRenderer
         VkcommandBuffer Cbuffer_ref;
         VkVbuffer Vbuffer_ref;
         VkindexBuffer Ibuffer_ref;
+        VkUbuffer Ubuffer_ref;
         AppWindow win_ref;
         VkMemory memory_ref;
         VkBufferCreation buffer_ref;
