@@ -4,19 +4,19 @@
 
 namespace VkRenderer
 {
-   void VkSwapChain::createSurface(GLFWwindow *window, VkInstance& instance)
+   void VkSwapChain::createSurface(GLFWwindow *window)
    {
-       if (glfwCreateWindowSurface(instance, window, nullptr, &surface) != VK_SUCCESS) {
+       if (glfwCreateWindowSurface(setup_ref->instance, window, nullptr, &surface) != VK_SUCCESS) {
             throw std::runtime_error("failed to create window surface!");
         }
    } 
-   void VkSwapChain::createSwapChain(VkSetup& setup_ref, AppWindow& win_ref)
+   void VkSwapChain::createSwapChain()
    {
-        SwapChainSupportDetails swapChainSupport = querySwapChainSupport(setup_ref.physicalDevice);
+        SwapChainSupportDetails swapChainSupport = querySwapChainSupport(setup_ref->physicalDevice);
 
         VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
         VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
-        VkExtent2D extent = chooseSwapExtent(swapChainSupport.capabilities, win_ref);
+        VkExtent2D extent = chooseSwapExtent(swapChainSupport.capabilities);
 
         uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
         if (swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount) {
@@ -34,7 +34,7 @@ namespace VkRenderer
         createInfo.imageArrayLayers = 1;
         createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-        QueueFamilyIndices indices = setup_ref.findQueueFamilies(setup_ref.physicalDevice, surface);
+        QueueFamilyIndices indices = setup_ref->findQueueFamilies(setup_ref->physicalDevice, surface);
         uint32_t queueFamilyIndices[] = {indices.graphicsFamily.value(), indices.presentFamily.value()};
 
         if (indices.graphicsFamily != indices.presentFamily) {
@@ -52,18 +52,18 @@ namespace VkRenderer
 
         createInfo.oldSwapchain = VK_NULL_HANDLE;
 
-        if (vkCreateSwapchainKHR(setup_ref.device, &createInfo, nullptr, &swapChain) != VK_SUCCESS) {
+        if (vkCreateSwapchainKHR(setup_ref->device, &createInfo, nullptr, &swapChain) != VK_SUCCESS) {
             throw std::runtime_error("failed to create swap chain!");
         }
 
-        vkGetSwapchainImagesKHR(setup_ref.device, swapChain, &imageCount, nullptr);
+        vkGetSwapchainImagesKHR(setup_ref->device, swapChain, &imageCount, nullptr);
         swapChainImages.resize(imageCount);
-        vkGetSwapchainImagesKHR(setup_ref.device, swapChain, &imageCount, swapChainImages.data());
+        vkGetSwapchainImagesKHR(setup_ref->device, swapChain, &imageCount, swapChainImages.data());
 
         swapChainImageFormat = surfaceFormat.format;
         swapChainExtent = extent;
    }
-   void VkSwapChain::createImageViews(VkDevice& device)
+   void VkSwapChain::createImageViews()
    {
         swapChainImageViews.resize(swapChainImages.size());
 
@@ -83,7 +83,7 @@ namespace VkRenderer
             createInfo.subresourceRange.baseArrayLayer = 0;
             createInfo.subresourceRange.layerCount = 1;
 
-            if (vkCreateImageView(device, &createInfo, nullptr, &swapChainImageViews[i]) != VK_SUCCESS) {
+            if (vkCreateImageView(setup_ref->device, &createInfo, nullptr, &swapChainImageViews[i]) != VK_SUCCESS) {
                 throw std::runtime_error("failed to create image views!");
             }
         }   
@@ -132,13 +132,13 @@ namespace VkRenderer
 
         return VK_PRESENT_MODE_FIFO_KHR; 
     }
-    VkExtent2D VkSwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities, AppWindow& win_ref)
+    VkExtent2D VkSwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities)
     {
         if (capabilities.currentExtent.width != UINT32_MAX) {
             return capabilities.currentExtent;
         } else {
             int width, height;
-            glfwGetFramebufferSize(win_ref.window, &width, &height);
+            glfwGetFramebufferSize(win_ref->window, &width, &height);
 
             VkExtent2D actualExtent = {
                 static_cast<uint32_t>(width),

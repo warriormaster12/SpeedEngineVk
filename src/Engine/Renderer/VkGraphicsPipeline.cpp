@@ -3,13 +3,13 @@
 
 namespace VkRenderer
 {
-    void VkGPipeline::createGraphicsPipeline(VkDevice& device, VkExtent2D& swapChainExtent, VkUbuffer& Ubuffer_ref)
+    void VkGPipeline::createGraphicsPipeline()
     {
         auto vertShaderCode = shader_ref.readFile("EngineAssets/Shaders/vert.spv");
         auto fragShaderCode = shader_ref.readFile("EngineAssets/Shaders/frag.spv");
 
-        VkShaderModule vertShaderModule = shader_ref.createShaderModule(vertShaderCode, device);
-        VkShaderModule fragShaderModule = shader_ref.createShaderModule(fragShaderCode, device);
+        VkShaderModule vertShaderModule = shader_ref.createShaderModule(vertShaderCode, setup_ref->device);
+        VkShaderModule fragShaderModule = shader_ref.createShaderModule(fragShaderCode, setup_ref->device);
 
        VkPipelineShaderStageCreateInfo vertShaderStageInfo{};
         vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -43,14 +43,14 @@ namespace VkRenderer
         VkViewport viewport{};
         viewport.x = 0.0f;
         viewport.y = 0.0f;
-        viewport.width = (float) swapChainExtent.width;
-        viewport.height = (float) swapChainExtent.height;
+        viewport.width = (float) swap_ref->swapChainExtent.width;
+        viewport.height = (float) swap_ref->swapChainExtent.height;
         viewport.minDepth = 0.0f;
         viewport.maxDepth = 1.0f;
 
         VkRect2D scissor{};
         scissor.offset = {0, 0};
-        scissor.extent = swapChainExtent;
+        scissor.extent = swap_ref->swapChainExtent;
 
         VkPipelineViewportStateCreateInfo viewportState{};
         viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
@@ -92,9 +92,9 @@ namespace VkRenderer
         VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
         pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
         pipelineLayoutInfo.setLayoutCount = 1;
-        pipelineLayoutInfo.pSetLayouts = &Ubuffer_ref.descriptorSetLayout;
+        pipelineLayoutInfo.pSetLayouts = &Ubuffer_ref->descriptorSetLayout;
 
-        if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
+        if (vkCreatePipelineLayout(setup_ref->device, &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
             throw std::runtime_error("failed to create pipeline layout!");
         }
 
@@ -113,17 +113,17 @@ namespace VkRenderer
         pipelineInfo.subpass = 0;
         pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
-        if (vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS) {
+        if (vkCreateGraphicsPipelines(setup_ref->device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS) {
             throw std::runtime_error("failed to create graphics pipeline!");
         }
 
-        vkDestroyShaderModule(device, fragShaderModule, nullptr);
-        vkDestroyShaderModule(device, vertShaderModule, nullptr);
+        vkDestroyShaderModule(setup_ref->device, fragShaderModule, nullptr);
+        vkDestroyShaderModule(setup_ref->device, vertShaderModule, nullptr);
     }
-    void VkGPipeline::createRenderPass(VkDevice& device, VkFormat& swapChainImageFormat)
+    void VkGPipeline::createRenderPass()
     {
         VkAttachmentDescription colorAttachment{};
-        colorAttachment.format = swapChainImageFormat;
+        colorAttachment.format = swap_ref->swapChainImageFormat;
         colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
         colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
         colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -158,7 +158,7 @@ namespace VkRenderer
         renderPassInfo.dependencyCount = 1;
         renderPassInfo.pDependencies = &dependency;
 
-        if (vkCreateRenderPass(device, &renderPassInfo, nullptr, &renderPass) != VK_SUCCESS) {
+        if (vkCreateRenderPass(setup_ref->device, &renderPassInfo, nullptr, &renderPass) != VK_SUCCESS) {
             throw std::runtime_error("failed to create render pass!");
         }
     }

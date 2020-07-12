@@ -3,18 +3,19 @@
 
 namespace VkRenderer
 {
+    
     void Renderer::InitVulkan(GLFWwindow *window)
     {
         setup_ref.createInstance();
         setup_ref.setupDebugMessenger();
-        swap_ref.createSurface(window, setup_ref.instance);
+        swap_ref.createSurface(window);
         setup_ref.pickPhysicalDevice(swap_ref.surface);
         setup_ref.createLogicalDevice(swap_ref.surface);
-        swap_ref.createSwapChain(setup_ref, win_ref);
-        swap_ref.createImageViews(setup_ref.device);
-        gpipeline_ref.createRenderPass(setup_ref.device, swap_ref.swapChainImageFormat);
+        swap_ref.createSwapChain();
+        swap_ref.createImageViews();
+        gpipeline_ref.createRenderPass();
         Ubuffer_ref.createDescriptorSetLayout(setup_ref);
-        gpipeline_ref.createGraphicsPipeline(setup_ref.device, swap_ref.swapChainExtent, Ubuffer_ref);
+        gpipeline_ref.createGraphicsPipeline();
         Fbuffer_ref.createFramebuffers(setup_ref.device, swap_ref.swapChainImageViews, swap_ref.swapChainExtent, gpipeline_ref.renderPass);
         Cbuffer_ref.createCommandPool(setup_ref, swap_ref.surface);
         Vbuffer_ref.createVertexBuffer(setup_ref, memory_ref, buffer_ref, Cbuffer_ref.commandPool);
@@ -37,10 +38,10 @@ namespace VkRenderer
 
         cleanupSwapChain();
 
-        swap_ref.createSwapChain(setup_ref, win_ref);
-        swap_ref.createImageViews(setup_ref.device);
-        gpipeline_ref.createRenderPass(setup_ref.device, swap_ref.swapChainImageFormat);
-        gpipeline_ref.createGraphicsPipeline(setup_ref.device, swap_ref.swapChainExtent, Ubuffer_ref);
+        swap_ref.createSwapChain();
+        swap_ref.createImageViews();
+        gpipeline_ref.createRenderPass();
+        gpipeline_ref.createGraphicsPipeline();
         Fbuffer_ref.createFramebuffers(setup_ref.device, swap_ref.swapChainImageViews, swap_ref.swapChainExtent, gpipeline_ref.renderPass);
         Ubuffer_ref.createUniformBuffers(swap_ref.swapChainImages, buffer_ref, setup_ref, memory_ref);
         Ubuffer_ref.createDescriptorPool(setup_ref, swap_ref.swapChainImages);

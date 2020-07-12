@@ -19,6 +19,8 @@ namespace VkRenderer
     class Renderer
     {
     public: 
+        Renderer();
+
         void InitVulkan(GLFWwindow *window);
         void drawFrame(GLFWwindow *window);
         void createSyncObjects();
