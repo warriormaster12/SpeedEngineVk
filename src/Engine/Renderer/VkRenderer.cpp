@@ -16,7 +16,7 @@ namespace VkRenderer
         gpipeline_ref.createRenderPass();
         Ubuffer_ref.createDescriptorSetLayout();
         gpipeline_ref.createGraphicsPipeline();
-        Fbuffer_ref.createFramebuffers(setup_ref.device, swap_ref.swapChainImageViews, swap_ref.swapChainExtent, gpipeline_ref.renderPass);
+        Fbuffer_ref.createFramebuffers();
         Cbuffer_ref.createCommandPool();
         Vbuffer_ref.createVertexBuffer(Cbuffer_ref.commandPool);
         Ibuffer_ref.createIndexBuffer(Cbuffer_ref.commandPool);
@@ -42,7 +42,7 @@ namespace VkRenderer
         swap_ref.createImageViews();
         gpipeline_ref.createRenderPass();
         gpipeline_ref.createGraphicsPipeline();
-        Fbuffer_ref.createFramebuffers(setup_ref.device, swap_ref.swapChainImageViews, swap_ref.swapChainExtent, gpipeline_ref.renderPass);
+        Fbuffer_ref.createFramebuffers();
         Ubuffer_ref.createUniformBuffers(buffer_ref);
         Ubuffer_ref.createDescriptorPool();
         Ubuffer_ref.createDescriptorSets();

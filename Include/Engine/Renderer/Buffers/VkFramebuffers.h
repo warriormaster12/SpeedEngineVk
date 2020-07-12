@@ -1,6 +1,9 @@
 #pragma once 
 
 #include "../VkIncludes.h"
+#include "../VkSetup.h"
+#include "../VkGraphicsPipeline.h"
+#include "../VkSwapChain.h"
 
 namespace VkRenderer
 {
@@ -8,6 +11,10 @@ namespace VkRenderer
     {
     public: 
         std::vector<VkFramebuffer> swapChainFramebuffers;
-        void createFramebuffers(VkDevice& device, std::vector<VkImageView> swapChainImageViews, VkExtent2D& swapChainExtent, VkRenderPass& renderPass);
+        void createFramebuffers();
+
+        VkSetup *setup_ref;
+        VkSwapChain *swap_ref;
+        VkGPipeline *gpipeline_ref;
     };
 }

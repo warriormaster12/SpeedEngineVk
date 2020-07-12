@@ -34,5 +34,10 @@ namespace VkRenderer
         Cbuffer_ref.setup_ref = &setup_ref;
         Cbuffer_ref.swap_ref = &swap_ref;
         Cbuffer_ref.Gpipeline_ref = &gpipeline_ref;
+
+        //FrameBuffer
+        Fbuffer_ref.setup_ref = &setup_ref;
+        Fbuffer_ref.swap_ref = &swap_ref;
+        Fbuffer_ref.gpipeline_ref = &gpipeline_ref;
     }
 }
