@@ -14,15 +14,15 @@ namespace VkRenderer
         swap_ref.createSwapChain();
         swap_ref.createImageViews();
         gpipeline_ref.createRenderPass();
-        Ubuffer_ref.createDescriptorSetLayout(setup_ref);
+        Ubuffer_ref.createDescriptorSetLayout();
         gpipeline_ref.createGraphicsPipeline();
         Fbuffer_ref.createFramebuffers(setup_ref.device, swap_ref.swapChainImageViews, swap_ref.swapChainExtent, gpipeline_ref.renderPass);
         Cbuffer_ref.createCommandPool(setup_ref, swap_ref.surface);
         Vbuffer_ref.createVertexBuffer(setup_ref, memory_ref, buffer_ref, Cbuffer_ref.commandPool);
         Ibuffer_ref.createIndexBuffer(setup_ref, buffer_ref, memory_ref, Cbuffer_ref.commandPool);
-        Ubuffer_ref.createUniformBuffers(swap_ref.swapChainImages, buffer_ref, setup_ref, memory_ref);
-        Ubuffer_ref.createDescriptorPool(setup_ref, swap_ref.swapChainImages);
-        Ubuffer_ref.createDescriptorSets(setup_ref, swap_ref.swapChainImages);
+        Ubuffer_ref.createUniformBuffers(buffer_ref);
+        Ubuffer_ref.createDescriptorPool();
+        Ubuffer_ref.createDescriptorSets();
         Cbuffer_ref.createCommandBuffers(setup_ref.device, Fbuffer_ref.swapChainFramebuffers, swap_ref.swapChainExtent, gpipeline_ref, Ubuffer_ref.descriptorSets,Vbuffer_ref.vertexBuffer, Ibuffer_ref.indexBuffer);
         createSyncObjects();
     }
@@ -43,9 +43,9 @@ namespace VkRenderer
         gpipeline_ref.createRenderPass();
         gpipeline_ref.createGraphicsPipeline();
         Fbuffer_ref.createFramebuffers(setup_ref.device, swap_ref.swapChainImageViews, swap_ref.swapChainExtent, gpipeline_ref.renderPass);
-        Ubuffer_ref.createUniformBuffers(swap_ref.swapChainImages, buffer_ref, setup_ref, memory_ref);
-        Ubuffer_ref.createDescriptorPool(setup_ref, swap_ref.swapChainImages);
-        Ubuffer_ref.createDescriptorSets(setup_ref, swap_ref.swapChainImages);
+        Ubuffer_ref.createUniformBuffers(buffer_ref);
+        Ubuffer_ref.createDescriptorPool();
+        Ubuffer_ref.createDescriptorSets();
         Cbuffer_ref.createCommandBuffers(setup_ref.device, Fbuffer_ref.swapChainFramebuffers, swap_ref.swapChainExtent, gpipeline_ref, Ubuffer_ref.descriptorSets, Vbuffer_ref.vertexBuffer, Ibuffer_ref.indexBuffer);
 
     }
@@ -116,7 +116,7 @@ namespace VkRenderer
             throw std::runtime_error("failed to acquire swap chain image!");
         }
 
-        Ubuffer_ref.updateUniformBuffer(imageIndex, swap_ref.swapChainExtent, setup_ref);
+        Ubuffer_ref.updateUniformBuffer(imageIndex);
 
         if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) {
             vkWaitForFences(setup_ref.device, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
