@@ -3,19 +3,19 @@
 
 namespace VkRenderer
 {
-    void VkcommandBuffer::createCommandPool(VkSetup& setup_ref, VkSurfaceKHR& surface)
+    void VkcommandBuffer::createCommandPool()
     {
-        QueueFamilyIndices queueFamilyIndices = setup_ref.findQueueFamilies(setup_ref.physicalDevice, surface);
+        QueueFamilyIndices queueFamilyIndices = setup_ref->findQueueFamilies(setup_ref->physicalDevice, swap_ref->surface);
 
         VkCommandPoolCreateInfo poolInfo{};
         poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
         poolInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily.value();
 
-        if (vkCreateCommandPool(setup_ref.device, &poolInfo, nullptr, &commandPool) != VK_SUCCESS) {
+        if (vkCreateCommandPool(setup_ref->device, &poolInfo, nullptr, &commandPool) != VK_SUCCESS) {
             throw std::runtime_error("failed to create command pool!");
         }    
     }
-    void VkcommandBuffer::createCommandBuffers(VkDevice& device, std::vector<VkFramebuffer> swapChainFramebuffers, VkExtent2D& swapChainExtent, VkGPipeline& Gpipeline_ref, std::vector<VkDescriptorSet> descriptorSets, VkBuffer& vertexBuffer, VkBuffer& indexBuffer)
+    void VkcommandBuffer::createCommandBuffers(std::vector<VkFramebuffer> swapChainFramebuffers, std::vector<VkDescriptorSet> descriptorSets, VkBuffer& vertexBuffer, VkBuffer& indexBuffer)
     {
         commandBuffers.resize(swapChainFramebuffers.size());
 
@@ -25,7 +25,7 @@ namespace VkRenderer
         allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
         allocInfo.commandBufferCount = (uint32_t) commandBuffers.size();
 
-        if (vkAllocateCommandBuffers(device, &allocInfo, commandBuffers.data()) != VK_SUCCESS) {
+        if (vkAllocateCommandBuffers(setup_ref->device, &allocInfo, commandBuffers.data()) != VK_SUCCESS) {
             throw std::runtime_error("failed to allocate command buffers!");
         }
 
@@ -39,10 +39,10 @@ namespace VkRenderer
 
             VkRenderPassBeginInfo renderPassInfo{};
             renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-            renderPassInfo.renderPass = Gpipeline_ref.renderPass;
+            renderPassInfo.renderPass = Gpipeline_ref->renderPass;
             renderPassInfo.framebuffer = swapChainFramebuffers[i];
             renderPassInfo.renderArea.offset = {0, 0};
-            renderPassInfo.renderArea.extent = swapChainExtent;
+            renderPassInfo.renderArea.extent = swap_ref->swapChainExtent;
 
             VkClearValue clearColor = {0.0f, 0.0f, 0.0f, 1.0f};
             renderPassInfo.clearValueCount = 1;
@@ -50,7 +50,7 @@ namespace VkRenderer
 
             vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-                vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, Gpipeline_ref.graphicsPipeline);
+                vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, Gpipeline_ref->graphicsPipeline);
 
                 VkBuffer vertexBuffers[] = {vertexBuffer};
                 VkDeviceSize offsets[] = {0};
@@ -58,7 +58,7 @@ namespace VkRenderer
 
                 vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT16);
 
-                vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, Gpipeline_ref.pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
+                vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, Gpipeline_ref->pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
 
                 vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
 

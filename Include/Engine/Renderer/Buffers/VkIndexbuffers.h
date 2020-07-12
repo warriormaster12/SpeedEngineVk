@@ -17,6 +17,9 @@ namespace VkRenderer
         VkBuffer indexBuffer;
         VkDeviceMemory indexBufferMemory;
 
-        void createIndexBuffer(VkSetup& setup_ref, VkBufferCreation& buffer_ref, VkMemory& memory_ref, VkCommandPool& commandPool);
+        void createIndexBuffer(VkCommandPool& commandPool);
+
+        VkSetup *setup_ref;
+        VkBufferCreation *buffer_ref;
     };
 }

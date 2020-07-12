@@ -22,5 +22,17 @@ namespace VkRenderer
         buffer_ref.setup_ref = &setup_ref;
         buffer_ref.memory_ref = &memory_ref;
         
+        //IndexBuffer
+        Ibuffer_ref.setup_ref = &setup_ref;
+        Ibuffer_ref.buffer_ref = &buffer_ref;
+
+        //VertexBuffer
+        Vbuffer_ref.setup_ref = &setup_ref;
+        Vbuffer_ref.buffer_ref = &buffer_ref;
+
+        //CommandBuffer
+        Cbuffer_ref.setup_ref = &setup_ref;
+        Cbuffer_ref.swap_ref = &swap_ref;
+        Cbuffer_ref.Gpipeline_ref = &gpipeline_ref;
     }
 }

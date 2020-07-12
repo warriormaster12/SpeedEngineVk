@@ -44,8 +44,10 @@ namespace VkRenderer
     class VkVbuffer
     {
     public: 
-        void createVertexBuffer(VkSetup& setup_ref,VkMemory& memory_ref, VkBufferCreation& buffer_ref, VkCommandPool& commandPool);
+        void createVertexBuffer(VkCommandPool& commandPool);
         VkBuffer vertexBuffer;
         VkDeviceMemory vertexBufferMemory;
+        VkSetup *setup_ref;
+        VkBufferCreation *buffer_ref;
     };
 }
