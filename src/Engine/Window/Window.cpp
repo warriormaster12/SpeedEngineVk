@@ -8,10 +8,6 @@
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     window = glfwCreateWindow(WIDTH, HEIGHT, "VulkanEngine", nullptr, nullptr);
     glfwSetWindowUserPointer(window, this);
-    glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
-
-
-    
 }
 
 void AppWindow::cleanupWindow()
@@ -20,9 +16,4 @@ void AppWindow::cleanupWindow()
     glfwTerminate();
 }
 
-void AppWindow::framebufferResizeCallback(GLFWwindow* window, int width, int height)
-{
-    VkRenderer::Renderer renderer_ref;
-    glfwGetWindowUserPointer(window);
-    renderer_ref.framebufferResized = true;
-}
+

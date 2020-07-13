@@ -51,8 +51,8 @@ namespace VkRenderer
     }
     void Renderer::cleanupSwapChain()
     {
-        for (size_t i = 0; i <  Fbuffer_ref.swapChainFramebuffers.size(); i++) {
-            vkDestroyFramebuffer(setup_ref.device, Fbuffer_ref.swapChainFramebuffers[i], nullptr);
+        for (auto framebuffer : Fbuffer_ref.swapChainFramebuffers) {
+            vkDestroyFramebuffer(setup_ref.device, framebuffer, nullptr);
         }
 
         vkFreeCommandBuffers(setup_ref.device, Cbuffer_ref.commandPool, static_cast<uint32_t>(Cbuffer_ref.commandBuffers.size()), Cbuffer_ref.commandBuffers.data());
@@ -61,8 +61,8 @@ namespace VkRenderer
         vkDestroyPipelineLayout(setup_ref.device, gpipeline_ref.pipelineLayout, nullptr);
         vkDestroyRenderPass(setup_ref.device, gpipeline_ref.renderPass, nullptr);
 
-        for (size_t i = 0; i < swap_ref.swapChainImageViews.size(); i++) {
-            vkDestroyImageView(setup_ref.device, swap_ref.swapChainImageViews[i], nullptr);
+        for (auto imageView : swap_ref.swapChainImageViews) {
+            vkDestroyImageView(setup_ref.device, imageView, nullptr);
         }
 
         vkDestroySwapchainKHR(setup_ref.device, swap_ref.swapChain, nullptr);

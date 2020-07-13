@@ -5,7 +5,7 @@ namespace VkRenderer
     Renderer::Renderer()
     {
         //SwapChain
-        swap_ref.win_ref = &win_ref;
+        swap_ref.win_ref = win_ref;
         swap_ref.setup_ref = &setup_ref;
 
         //GraphicsPipeline

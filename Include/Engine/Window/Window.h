@@ -14,6 +14,5 @@ public:
 
     void initWindow();
     void cleanupWindow();
-    static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
     
 };

@@ -11,7 +11,7 @@ namespace VkRenderer
         VkShaderModule vertShaderModule = shader_ref.createShaderModule(vertShaderCode, setup_ref->device);
         VkShaderModule fragShaderModule = shader_ref.createShaderModule(fragShaderCode, setup_ref->device);
 
-       VkPipelineShaderStageCreateInfo vertShaderStageInfo{};
+        VkPipelineShaderStageCreateInfo vertShaderStageInfo{};
         vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
         vertShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
         vertShaderStageInfo.module = vertShaderModule;

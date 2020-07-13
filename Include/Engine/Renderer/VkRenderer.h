@@ -28,6 +28,7 @@ namespace VkRenderer
         void cleanupSwapChain();
         void DestroyVulkan();
         VkSetup setup_ref;
+        AppWindow *win_ref;
         bool framebufferResized = false;
     private:  
         VkSwapChain swap_ref;
@@ -37,7 +38,6 @@ namespace VkRenderer
         VkVbuffer Vbuffer_ref;
         VkindexBuffer Ibuffer_ref;
         VkUbuffer Ubuffer_ref;
-        AppWindow win_ref;
         VkMemory memory_ref;
         VkBufferCreation buffer_ref;
         

@@ -7,19 +7,26 @@ public:
     void run()
     {
         glfw_win_ref.initWindow();
+        glfwSetFramebufferSizeCallback(glfw_win_ref.window, framebufferResizeCallback);
         renderer_ref.InitVulkan(glfw_win_ref.window);
         mainLoop();
         cleanup();
+    }
+    static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
+        auto app = reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window));
+        app->renderer_ref.framebufferResized = true;
     }
     
 
 private: 
     VkRenderer::Renderer renderer_ref;
     AppWindow glfw_win_ref;
+    
    
     
     void mainLoop()
     {
+        renderer_ref.win_ref = &glfw_win_ref;
         while (!glfwWindowShouldClose(glfw_win_ref.window))
         {
             glfwPollEvents();
@@ -32,6 +39,7 @@ private:
         renderer_ref.DestroyVulkan();
         glfw_win_ref.cleanupWindow();
     }
+    
 };
 
 int main()
