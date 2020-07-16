@@ -3,7 +3,7 @@
 
 namespace VkRenderer
 {
-    void VkGPipeline::createGraphicsPipeline()
+    void VkGPipeline::createGraphicsPipeline(VkExtent2D& swapChainExtent)
     {
         auto vertShaderCode = shader_ref.readFile("EngineAssets/Shaders/vert.spv");
         auto fragShaderCode = shader_ref.readFile("EngineAssets/Shaders/frag.spv");
@@ -43,14 +43,14 @@ namespace VkRenderer
         VkViewport viewport{};
         viewport.x = 0.0f;
         viewport.y = 0.0f;
-        viewport.width = (float) swap_ref->swapChainExtent.width;
-        viewport.height = (float) swap_ref->swapChainExtent.height;
+        viewport.width = (float) swapChainExtent.width;
+        viewport.height = (float) swapChainExtent.height;
         viewport.minDepth = 0.0f;
         viewport.maxDepth = 1.0f;
 
         VkRect2D scissor{};
         scissor.offset = {0, 0};
-        scissor.extent = swap_ref->swapChainExtent;
+        scissor.extent = swapChainExtent;
 
         VkPipelineViewportStateCreateInfo viewportState{};
         viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
@@ -120,10 +120,10 @@ namespace VkRenderer
         vkDestroyShaderModule(setup_ref->device, fragShaderModule, nullptr);
         vkDestroyShaderModule(setup_ref->device, vertShaderModule, nullptr);
     }
-    void VkGPipeline::createRenderPass()
+    void VkGPipeline::createRenderPass(VkFormat& swapChainImageFormat)
     {
         VkAttachmentDescription colorAttachment{};
-        colorAttachment.format = swap_ref->swapChainImageFormat;
+        colorAttachment.format = swapChainImageFormat;
         colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
         colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
         colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;

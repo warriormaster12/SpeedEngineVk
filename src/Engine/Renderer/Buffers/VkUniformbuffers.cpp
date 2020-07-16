@@ -2,19 +2,19 @@
 
 namespace VkRenderer
 {
-    void VkUbuffer::createUniformBuffers(VkBufferCreation& buffer_ref)
+    void VkUbuffer::createUniformBuffers(VkBufferCreation& buffer_ref, std::vector<VkImage>& swapChainImages)
     {
         VkDeviceSize bufferSize = sizeof(UniformBufferObject);
 
-        uniformBuffers.resize(swap_ref->swapChainImages.size());
-        uniformBuffersMemory.resize(swap_ref->swapChainImages.size());
+        uniformBuffers.resize(swapChainImages.size());
+        uniformBuffersMemory.resize(swapChainImages.size());
 
-        for (size_t i = 0; i < swap_ref->swapChainImages.size(); i++) {
+        for (size_t i = 0; i < swapChainImages.size(); i++) {
             buffer_ref.createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
         }
     }
 
-    void VkUbuffer::updateUniformBuffer(uint32_t currentImage)
+    void VkUbuffer::updateUniformBuffer(uint32_t currentImage, VkExtent2D& swapChainExtent)
     {
         static auto startTime = std::chrono::high_resolution_clock::now();
 
@@ -24,7 +24,7 @@ namespace VkRenderer
         UniformBufferObject ubo{};
         ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
         ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        ubo.proj = glm::perspective(glm::radians(45.0f), swap_ref->swapChainExtent.width / (float) swap_ref->swapChainExtent.height, 0.1f, 10.0f);
+        ubo.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float) swapChainExtent.height, 0.1f, 10.0f);
         ubo.proj[1][1] *= -1;
 
         void* data;
@@ -33,37 +33,37 @@ namespace VkRenderer
         vkUnmapMemory(setup_ref->device, uniformBuffersMemory[currentImage]);
     }
 
-    void VkUbuffer::createDescriptorPool()
+    void VkUbuffer::createDescriptorPool(std::vector<VkImage>& swapChainImages)
     {
         VkDescriptorPoolSize poolSize{};
         poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        poolSize.descriptorCount = static_cast<uint32_t>(swap_ref->swapChainImages.size());
+        poolSize.descriptorCount = static_cast<uint32_t>(swapChainImages.size());
 
         VkDescriptorPoolCreateInfo poolInfo{};
         poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
         poolInfo.poolSizeCount = 1;
         poolInfo.pPoolSizes = &poolSize;
-        poolInfo.maxSets = static_cast<uint32_t>(swap_ref->swapChainImages.size());
+        poolInfo.maxSets = static_cast<uint32_t>(swapChainImages.size());
 
         if (vkCreateDescriptorPool(setup_ref->device, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
             throw std::runtime_error("failed to create descriptor pool!");
         }   
     }
-    void VkUbuffer::createDescriptorSets()
+    void VkUbuffer::createDescriptorSets(std::vector<VkImage>& swapChainImages)
     {
-        std::vector<VkDescriptorSetLayout> layouts(swap_ref->swapChainImages.size(), descriptorSetLayout);
+        std::vector<VkDescriptorSetLayout> layouts(swapChainImages.size(), descriptorSetLayout);
         VkDescriptorSetAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
         allocInfo.descriptorPool = descriptorPool;
-        allocInfo.descriptorSetCount = static_cast<uint32_t>(swap_ref->swapChainImages.size());
+        allocInfo.descriptorSetCount = static_cast<uint32_t>(swapChainImages.size());
         allocInfo.pSetLayouts = layouts.data();
 
-        descriptorSets.resize(swap_ref->swapChainImages.size());
+        descriptorSets.resize(swapChainImages.size());
         if (vkAllocateDescriptorSets(setup_ref->device, &allocInfo, descriptorSets.data()) != VK_SUCCESS) {
             throw std::runtime_error("failed to allocate descriptor sets!");
         }
 
-        for (size_t i = 0; i < swap_ref->swapChainImages.size(); i++) {
+        for (size_t i = 0; i < swapChainImages.size(); i++) {
             VkDescriptorBufferInfo bufferInfo{};
             bufferInfo.buffer = uniformBuffers[i];
             bufferInfo.offset = 0;

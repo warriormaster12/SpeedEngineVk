@@ -32,6 +32,16 @@ namespace VkRenderer
 
     void VkBufferCreation::copyBuffer(VkCommandPool& commandPool, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
     {
+        VkCommandBuffer commandBuffer = beginSingleTimeCommands(commandPool);
+
+        VkBufferCopy copyRegion{};
+        copyRegion.size = size;
+        vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
+
+        endSingleTimeCommands(commandBuffer, commandPool);
+    }
+
+    VkCommandBuffer VkBufferCreation::beginSingleTimeCommands(VkCommandPool& commandPool) {
         VkCommandBufferAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
         allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
@@ -47,10 +57,9 @@ namespace VkRenderer
 
         vkBeginCommandBuffer(commandBuffer, &beginInfo);
 
-            VkBufferCopy copyRegion{};
-            copyRegion.size = size;
-            vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
-
+        return commandBuffer;
+    }
+    void  VkBufferCreation::endSingleTimeCommands(VkCommandBuffer commandBuffer, VkCommandPool& commandPool) {
         vkEndCommandBuffer(commandBuffer);
 
         VkSubmitInfo submitInfo{};
@@ -63,4 +72,5 @@ namespace VkRenderer
 
         vkFreeCommandBuffers(setup_ref->device, commandPool, 1, &commandBuffer);
     }
+
 }

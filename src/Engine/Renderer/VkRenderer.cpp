@@ -13,17 +13,19 @@ namespace VkRenderer
         setup_ref.createLogicalDevice(swap_ref.surface);
         swap_ref.createSwapChain();
         swap_ref.createImageViews();
-        gpipeline_ref.createRenderPass();
+        gpipeline_ref.createRenderPass(swap_ref.swapChainImageFormat);
         Ubuffer_ref.createDescriptorSetLayout();
-        gpipeline_ref.createGraphicsPipeline();
+        gpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent);
         Fbuffer_ref.createFramebuffers();
-        Cbuffer_ref.createCommandPool();
+        Cbuffer_ref.createCommandPool(swap_ref.surface);
+        texture_m_ref.createTextureImage();
+        texture_m_ref.createTextureImageView();
         Vbuffer_ref.createVertexBuffer(Cbuffer_ref.commandPool);
         Ibuffer_ref.createIndexBuffer(Cbuffer_ref.commandPool);
-        Ubuffer_ref.createUniformBuffers(buffer_ref);
-        Ubuffer_ref.createDescriptorPool();
-        Ubuffer_ref.createDescriptorSets();
-        Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers, Ubuffer_ref.descriptorSets,Vbuffer_ref.vertexBuffer, Ibuffer_ref.indexBuffer);
+        Ubuffer_ref.createUniformBuffers(buffer_ref,swap_ref.swapChainImages);
+        Ubuffer_ref.createDescriptorPool(swap_ref.swapChainImages);
+        Ubuffer_ref.createDescriptorSets(swap_ref.swapChainImages);
+        Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, Ubuffer_ref.descriptorSets,Vbuffer_ref.vertexBuffer, Ibuffer_ref.indexBuffer);
         createSyncObjects();
     }
     void Renderer::recreateSwapChain(GLFWwindow *window)
@@ -40,13 +42,13 @@ namespace VkRenderer
 
         swap_ref.createSwapChain();
         swap_ref.createImageViews();
-        gpipeline_ref.createRenderPass();
-        gpipeline_ref.createGraphicsPipeline();
+        gpipeline_ref.createRenderPass(swap_ref.swapChainImageFormat);
+        gpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent);
         Fbuffer_ref.createFramebuffers();
-        Ubuffer_ref.createUniformBuffers(buffer_ref);
-        Ubuffer_ref.createDescriptorPool();
-        Ubuffer_ref.createDescriptorSets();
-        Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers, Ubuffer_ref.descriptorSets, Vbuffer_ref.vertexBuffer, Ibuffer_ref.indexBuffer);
+        Ubuffer_ref.createUniformBuffers(buffer_ref,swap_ref.swapChainImages);
+        Ubuffer_ref.createDescriptorPool(swap_ref.swapChainImages);
+        Ubuffer_ref.createDescriptorSets(swap_ref.swapChainImages);
+        Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, Ubuffer_ref.descriptorSets, Vbuffer_ref.vertexBuffer, Ibuffer_ref.indexBuffer);
 
     }
     void Renderer::cleanupSwapChain()
@@ -77,6 +79,11 @@ namespace VkRenderer
     void Renderer::DestroyVulkan()
     {  
         cleanupSwapChain();
+
+        vkDestroyImageView(setup_ref.device, texture_m_ref.textureImageView, nullptr);
+
+        vkDestroyImage(setup_ref.device, texture_m_ref.textureImage, nullptr);
+        vkFreeMemory(setup_ref.device, texture_m_ref.textureImageMemory, nullptr);
 
         vkDestroyDescriptorSetLayout(setup_ref.device, Ubuffer_ref.descriptorSetLayout, nullptr);
 
@@ -116,7 +123,7 @@ namespace VkRenderer
             throw std::runtime_error("failed to acquire swap chain image!");
         }
 
-        Ubuffer_ref.updateUniformBuffer(imageIndex);
+        Ubuffer_ref.updateUniformBuffer(imageIndex, swap_ref.swapChainExtent);
 
         if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) {
             vkWaitForFences(setup_ref.device, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);

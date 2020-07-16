@@ -3,6 +3,7 @@
 #include "VkIncludes.h"
 #include "../Window/Window.h"
 #include "VkSetup.h"
+#include "VkTextureManager.h"
 
 
 namespace VkRenderer
@@ -33,6 +34,7 @@ namespace VkRenderer
 
         AppWindow *win_ref;
         VkSetup *setup_ref;
+        VkTextureManager *texture_m_ref;
 
     };
 }

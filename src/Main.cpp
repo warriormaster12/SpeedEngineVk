@@ -6,6 +6,7 @@ class Engine
 public: 
     void run()
     {
+        renderer_ref.win_ref = &glfw_win_ref;
         glfw_win_ref.initWindow();
         glfwSetFramebufferSizeCallback(glfw_win_ref.window, framebufferResizeCallback);
         renderer_ref.InitVulkan(glfw_win_ref.window);
@@ -26,7 +27,6 @@ private:
     
     void mainLoop()
     {
-        renderer_ref.win_ref = &glfw_win_ref;
         while (!glfwWindowShouldClose(glfw_win_ref.window))
         {
             glfwPollEvents();

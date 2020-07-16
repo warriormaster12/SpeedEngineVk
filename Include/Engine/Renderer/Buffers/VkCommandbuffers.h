@@ -5,18 +5,19 @@
 #include "../VkGraphicsPipeline.h"
 
 
+
 namespace VkRenderer
 {
     class VkcommandBuffer
     {
     public: 
         VkCommandPool commandPool;
-        void createCommandPool();
-        void createCommandBuffers(std::vector<VkFramebuffer> swapChainFramebuffers, std::vector<VkDescriptorSet> descriptorSets, VkBuffer& vertexBuffer, VkBuffer& indexBuffer);
+        void createCommandPool(VkSurfaceKHR& surface);
+        void createCommandBuffers(std::vector<VkFramebuffer> swapChainFramebuffers, VkExtent2D& swapChainExtent,std::vector<VkDescriptorSet> descriptorSets, VkBuffer& vertexBuffer, VkBuffer& indexBuffer);
         std::vector<VkCommandBuffer> commandBuffers;
 
         VkSetup *setup_ref;
-        VkSwapChain *swap_ref;
-        VkGPipeline *Gpipeline_ref;
+        VkGPipeline *gpipeline_ref;
+
     };
 }

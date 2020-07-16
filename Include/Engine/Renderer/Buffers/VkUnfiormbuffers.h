@@ -2,9 +2,9 @@
 
 #include "../VkIncludes.h"
 #include "../VkSetup.h"
-#include "../VkSwapChain.h"
 #include "../VkMemory.h"
 #include "VkBufferCreation.h"
+
 
 
 namespace VkRenderer
@@ -18,10 +18,10 @@ namespace VkRenderer
     {
     public: 
         void createDescriptorSetLayout();
-        void createDescriptorPool();
-        void createDescriptorSets();
-        void createUniformBuffers(VkBufferCreation& buffer_ref);
-        void updateUniformBuffer(uint32_t currentImage);
+        void createDescriptorPool(std::vector<VkImage>& swapChainImages);
+        void createDescriptorSets(std::vector<VkImage>& swapChainImages);
+        void createUniformBuffers(VkBufferCreation& buffer_ref, std::vector<VkImage>& swapChainImages);
+        void updateUniformBuffer(uint32_t currentImage, VkExtent2D& swapChainExtent);
 
         VkDescriptorSetLayout descriptorSetLayout;
         VkDescriptorPool descriptorPool;
@@ -30,7 +30,6 @@ namespace VkRenderer
         std::vector<VkDeviceMemory> uniformBuffersMemory;
 
         VkSetup *setup_ref;
-        VkSwapChain *swap_ref;
         VkMemory *memory_ref;
     };
 }
