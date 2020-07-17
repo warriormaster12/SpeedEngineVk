@@ -1,25 +1,29 @@
 #pragma once 
 
 #include "VkIncludes.h"
+#include "VkShaderManager.h"
+#include "VkSetup.h"
+#include "Buffers/VkDepthBuffer.h"
+#include "Buffers/VkUnfiormbuffers.h"
 
 
 namespace VkRenderer
 {
-    struct UniformBufferObject {
-        glm::mat4 model;
-        glm::mat4 view;
-        glm::mat4 proj;
-    };
-
     class VkGPipeline
     {
     public: 
-        void createDescriptorSetLayout(VkDevice device);
-        void createGraphicsPipeline(VkDevice device, VkExtent2D swapChainExtent);
-        VkDescriptorSetLayout descriptorSetLayout;
+        void createGraphicsPipeline(VkExtent2D& swapChainExtent);  
+        void createRenderPass(VkFormat& swapChainImageFormat);
+        
         VkPipelineLayout pipelineLayout;
-        VkPipeline graphicsPipeline;
-        void createRenderPass(VkFormat swapChainImageFormat, VkDevice device, VkPhysicalDevice physicalDevice);
         VkRenderPass renderPass;
+        VkPipeline graphicsPipeline;
+
+        VkSetup *setup_ref;
+        VkUbuffer *Ubuffer_ref;
+        VkDepthBuffer *Dbuffer_ref;
+
+    private: 
+        VkShader shader_ref;
     };
 }

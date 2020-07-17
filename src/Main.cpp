@@ -1,55 +1,45 @@
 #include "../Include/Engine/Renderer/VkRenderer.h"
+#include "../Include/Engine/Window/Window.h"
 
 class Engine 
 {
 public: 
     void run()
     {
-        initWindow();
-        renderer_ref.InitVulkan();
+        renderer_ref.win_ref = &glfw_win_ref;
+        glfw_win_ref.initWindow();
+        glfwSetFramebufferSizeCallback(glfw_win_ref.window, framebufferResizeCallback);
+        renderer_ref.InitVulkan(glfw_win_ref.window);
         mainLoop();
         cleanup();
     }
-    GLFWwindow* window;
-    unsigned int WIDTH =1280;
-    unsigned int HEIGHT = 720;
+    static void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
+        auto app = reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window));
+        app->renderer_ref.framebufferResized = true;
+    }
     
 
 private: 
     VkRenderer::Renderer renderer_ref;
-    void initWindow()
-    {
-        glfwInit();
-        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-        window = glfwCreateWindow(WIDTH, HEIGHT, "VulkanEngine", nullptr, nullptr);
-        glfwSetWindowUserPointer(window, this);
-        renderer_ref.window = window; 
-
-
-        glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
-
-    }
-    static void framebufferResizeCallback(GLFWwindow* window, int width, int height)
-    {
-        auto app = reinterpret_cast<Engine*>(glfwGetWindowUserPointer(window));
-        app->renderer_ref.framebufferResized = true; 
-    }
+    AppWindow glfw_win_ref;
+    
+   
+    
     void mainLoop()
     {
-        while (!glfwWindowShouldClose(window))
+        while (!glfwWindowShouldClose(glfw_win_ref.window))
         {
             glfwPollEvents();
-            renderer_ref.drawFrame();
+            renderer_ref.drawFrame(glfw_win_ref.window);
         }
-        vkDeviceWaitIdle(renderer_ref.device);
+        vkDeviceWaitIdle(renderer_ref.setup_ref.device);
     }
     void cleanup()
     {
         renderer_ref.DestroyVulkan();
-
-        glfwDestroyWindow(window);
-        glfwTerminate();
+        glfw_win_ref.cleanupWindow();
     }
+    
 };
 
 int main()

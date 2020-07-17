@@ -19,3 +19,4 @@ void main() {
     fragColor = inColor;
     fragTexCoord = inTexCoord;
 }
+
