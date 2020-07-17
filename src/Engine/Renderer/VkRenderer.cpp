@@ -19,9 +19,10 @@ namespace VkRenderer
         Cbuffer_ref.createCommandPool(swap_ref.surface);
         Dbuffer_ref.createDepthResources(swap_ref.swapChainExtent);
         Fbuffer_ref.createFramebuffers();
-        texture_m_ref.createTextureImage(Cbuffer_ref.commandPool);
+        texture_m_ref.createTextureImage(model_ref.TEXTURE_PATH,Cbuffer_ref.commandPool);
         texture_m_ref.createTextureImageView();
         texture_m_ref.createTextureSampler();
+        model_ref.loadModel();
         Vbuffer_ref.createVertexBuffer(Cbuffer_ref.commandPool);
         Ibuffer_ref.createIndexBuffer(Cbuffer_ref.commandPool);
         Ubuffer_ref.createUniformBuffers(buffer_ref,swap_ref.swapChainImages);

@@ -4,10 +4,10 @@
 
 namespace VkRenderer
 {
-    void VkTextureManager::createTextureImage(VkCommandPool& commandPool)
+    void VkTextureManager::createTextureImage(const std::string TEXTURE_PATH, VkCommandPool& commandPool)
     {
         int texWidth, texHeight, texChannels;
-        stbi_uc* pixels = stbi_load("EngineAssets/Textures/awesomeface.png", &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+        stbi_uc* pixels = stbi_load(TEXTURE_PATH.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
         VkDeviceSize imageSize = texWidth * texHeight * 4;
 
         if (!pixels) {

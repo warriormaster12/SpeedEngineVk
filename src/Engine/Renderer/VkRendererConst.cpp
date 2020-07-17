@@ -33,6 +33,7 @@ namespace VkRenderer
         //CommandBuffer
         Cbuffer_ref.setup_ref = &setup_ref;
         Cbuffer_ref.gpipeline_ref = &gpipeline_ref;
+        Cbuffer_ref.Ibuffer_ref = &Ibuffer_ref;
 
         //FrameBuffer
         Fbuffer_ref.setup_ref = &setup_ref;
@@ -48,5 +49,9 @@ namespace VkRenderer
         //DepthBuffer
         Dbuffer_ref.setup_ref = &setup_ref;
         Dbuffer_ref.texture_m_ref = &texture_m_ref;
+
+        //ModelLoader
+        model_ref.Ibuffer_ref = &Ibuffer_ref;
+        model_ref.Vbuffer_ref = &Vbuffer_ref;
     }
 }

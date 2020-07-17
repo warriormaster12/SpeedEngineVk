@@ -42,18 +42,13 @@ namespace VkRenderer
 
             return attributeDescriptions;
         }
+        bool operator==(const Vertex& other) const {
+            return pos == other.pos && color == other.color && texCoord == other.texCoord;
+        }
     };
-    const std::vector<Vertex> vertices = {
-        {{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
-        {{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-        {{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
-        {{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}},
 
-        {{-0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
-        {{0.5f, -0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
-        {{0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
-        {{-0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {1.0f, 1.0f}}
-    };
+    
+    
     class VkVbuffer
     {
     public: 
@@ -62,5 +57,6 @@ namespace VkRenderer
         VkDeviceMemory vertexBufferMemory;
         VkSetup *setup_ref;
         VkBufferCreation *buffer_ref;
+        std::vector<Vertex> vertices;
     };
 }

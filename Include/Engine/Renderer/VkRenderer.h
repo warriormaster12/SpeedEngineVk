@@ -13,6 +13,7 @@
 #include "Buffers/VkDepthBuffer.h"
 #include "VkMemory.h"
 #include "VkTextureManager.h"
+#include "VkModelLoader.h"
 #include "../Window/Window.h"
 
 namespace VkRenderer
@@ -44,6 +45,7 @@ namespace VkRenderer
         VkBufferCreation buffer_ref;
         VkTextureManager texture_m_ref;
         VkDepthBuffer Dbuffer_ref;
+        ModelLoader model_ref;
         
         std::vector<VkSemaphore> imageAvailableSemaphores;
         std::vector<VkSemaphore> renderFinishedSemaphores;

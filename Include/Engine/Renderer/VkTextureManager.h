@@ -11,7 +11,7 @@ namespace VkRenderer
     class VkTextureManager
     {
     public: 
-        void createTextureImage(VkCommandPool& commandPool);
+        void createTextureImage(const std::string TEXTURE_PATH, VkCommandPool& commandPool);
         void createTextureImageView();
         void createTextureSampler();
         VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags);
