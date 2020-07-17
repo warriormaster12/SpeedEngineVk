@@ -6,6 +6,7 @@
 
 
 
+
 namespace VkRenderer
 {
     const std::vector<const char*> validationLayers = {
@@ -41,13 +42,12 @@ namespace VkRenderer
         void setupDebugMessenger();
         void DestroyDebugUtilsMessengerEXT(VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);
         void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
-        void pickPhysicalDevice(VkSurfaceKHR& surface);
+        
         void createLogicalDevice(VkSurfaceKHR& surface);
         QueueFamilyIndices findQueueFamilies(VkPhysicalDevice& device, VkSurfaceKHR& surface);
 
         VkResult CreateDebugUtilsMessengerEXT(VkInstance& instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger);
         bool checkValidationLayerSupport();
-        bool isDeviceSuitable(VkPhysicalDevice device, VkSurfaceKHR& surface);
         bool checkDeviceExtensionSupport(VkPhysicalDevice& device);
         std::vector<const char*> getRequiredExtensions();
         VkDebugUtilsMessengerEXT debugMessenger;

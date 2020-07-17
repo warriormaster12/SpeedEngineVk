@@ -21,10 +21,12 @@ namespace VkRenderer
         void createSurface(GLFWwindow *window);
         void createSwapChain();
         void createImageViews();
+        void pickPhysicalDevice();
         SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice& device);
         VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
         VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
         VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+        bool isDeviceSuitable(VkPhysicalDevice device);
 
         VkSwapchainKHR swapChain;
         std::vector<VkImage> swapChainImages;

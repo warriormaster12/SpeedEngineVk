@@ -13,6 +13,7 @@ namespace VkRenderer
     public: 
         void createTextureImage();
         void createTextureImageView();
+        void createTextureSampler();
         VkImageView createImageView(VkImage image, VkFormat format);
         void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
         void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
@@ -26,5 +27,6 @@ namespace VkRenderer
         VkImage textureImage;
         VkDeviceMemory textureImageMemory;
         VkImageView textureImageView;
+        VkSampler textureSampler;
     };
 }

@@ -9,7 +9,7 @@ namespace VkRenderer
         setup_ref.createInstance();
         setup_ref.setupDebugMessenger();
         swap_ref.createSurface(window);
-        setup_ref.pickPhysicalDevice(swap_ref.surface);
+        swap_ref.pickPhysicalDevice();
         setup_ref.createLogicalDevice(swap_ref.surface);
         swap_ref.createSwapChain();
         swap_ref.createImageViews();
@@ -20,6 +20,7 @@ namespace VkRenderer
         Cbuffer_ref.createCommandPool(swap_ref.surface);
         texture_m_ref.createTextureImage();
         texture_m_ref.createTextureImageView();
+        texture_m_ref.createTextureSampler();
         Vbuffer_ref.createVertexBuffer(Cbuffer_ref.commandPool);
         Ibuffer_ref.createIndexBuffer(Cbuffer_ref.commandPool);
         Ubuffer_ref.createUniformBuffers(buffer_ref,swap_ref.swapChainImages);
@@ -80,6 +81,7 @@ namespace VkRenderer
     {  
         cleanupSwapChain();
 
+        vkDestroySampler(setup_ref.device, texture_m_ref.textureSampler, nullptr);
         vkDestroyImageView(setup_ref.device, texture_m_ref.textureImageView, nullptr);
 
         vkDestroyImage(setup_ref.device, texture_m_ref.textureImage, nullptr);
