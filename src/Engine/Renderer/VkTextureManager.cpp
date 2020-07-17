@@ -4,7 +4,7 @@
 
 namespace VkRenderer
 {
-    void VkTextureManager::createTextureImage()
+    void VkTextureManager::createTextureImage(VkCommandPool& commandPool)
     {
         int texWidth, texHeight, texChannels;
         stbi_uc* pixels = stbi_load("EngineAssets/Textures/awesomeface.png", &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
@@ -27,24 +27,24 @@ namespace VkRenderer
 
         createImage(texWidth, texHeight, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, textureImage, textureImageMemory);
 
-        transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-            copyBufferToImage(stagingBuffer, textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight));
-        transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+        transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, commandPool);
+            copyBufferToImage(stagingBuffer, textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight), commandPool);
+        transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, commandPool);
 
         vkDestroyBuffer(setup_ref->device, stagingBuffer, nullptr);
         vkFreeMemory(setup_ref->device, stagingBufferMemory, nullptr);
     }
     void VkTextureManager::createTextureImageView() {
-        textureImageView = createImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB);
+        textureImageView = createImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT);
     }
-    VkImageView VkTextureManager::createImageView(VkImage image, VkFormat format)
+    VkImageView VkTextureManager::createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags)
     {
         VkImageViewCreateInfo viewInfo{};
         viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
         viewInfo.image = image;
         viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
         viewInfo.format = format;
-        viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        viewInfo.subresourceRange.aspectMask = aspectFlags;
         viewInfo.subresourceRange.baseMipLevel = 0;
         viewInfo.subresourceRange.levelCount = 1;
         viewInfo.subresourceRange.baseArrayLayer = 0;
@@ -114,9 +114,9 @@ namespace VkRenderer
             throw std::runtime_error("failed to create texture sampler!");
         }
     }
-    void VkTextureManager::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height)
+    void VkTextureManager::copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, VkCommandPool& commandPool)
     {
-        VkCommandBuffer commandBuffer = buffer_ref->beginSingleTimeCommands(Cbuffer_ref->commandPool);
+        VkCommandBuffer commandBuffer = buffer_ref->beginSingleTimeCommands(commandPool);
 
         VkBufferImageCopy region{};
         region.bufferOffset = 0;
@@ -135,12 +135,12 @@ namespace VkRenderer
 
         vkCmdCopyBufferToImage(commandBuffer, buffer, image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
 
-        buffer_ref->endSingleTimeCommands(commandBuffer,Cbuffer_ref->commandPool);
+        buffer_ref->endSingleTimeCommands(commandBuffer,commandPool);
     }
 
-    void VkTextureManager::transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout) 
+    void VkTextureManager::transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, VkCommandPool& commandPool) 
     {
-        VkCommandBuffer commandBuffer = buffer_ref->beginSingleTimeCommands(Cbuffer_ref->commandPool);
+        VkCommandBuffer commandBuffer = buffer_ref->beginSingleTimeCommands(commandPool);
 
         VkImageMemoryBarrier barrier{};
         barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -183,6 +183,6 @@ namespace VkRenderer
             1, &barrier
         );
 
-        buffer_ref->endSingleTimeCommands(commandBuffer,Cbuffer_ref->commandPool);
+        buffer_ref->endSingleTimeCommands(commandBuffer,commandPool);
     }
 }

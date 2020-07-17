@@ -68,7 +68,7 @@ namespace VkRenderer
         swapChainImageViews.resize(swapChainImages.size());
 
         for (size_t i = 0; i < swapChainImages.size(); i++) {
-            swapChainImageViews[i] = texture_m_ref->createImageView(swapChainImages[i], swapChainImageFormat);
+            swapChainImageViews[i] = texture_m_ref->createImageView(swapChainImages[i], swapChainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT);
         } 
    }
 

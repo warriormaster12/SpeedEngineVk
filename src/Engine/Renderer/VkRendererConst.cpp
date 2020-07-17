@@ -12,6 +12,7 @@ namespace VkRenderer
         //GraphicsPipeline
         gpipeline_ref.setup_ref = &setup_ref;
         gpipeline_ref.Ubuffer_ref = &Ubuffer_ref;
+        gpipeline_ref.Dbuffer_ref = &Dbuffer_ref;
 
         //UniformBuffer
         Ubuffer_ref.setup_ref = &setup_ref;
@@ -37,11 +38,15 @@ namespace VkRenderer
         Fbuffer_ref.setup_ref = &setup_ref;
         Fbuffer_ref.swap_ref = &swap_ref;
         Fbuffer_ref.gpipeline_ref = &gpipeline_ref;
+        Fbuffer_ref.Dbuffer_ref = &Dbuffer_ref;
 
         //TextureManager
         texture_m_ref.setup_ref = &setup_ref;
         texture_m_ref.buffer_ref = &buffer_ref;
-        texture_m_ref.Cbuffer_ref = &Cbuffer_ref;
         texture_m_ref.memory_ref = &memory_ref;
+
+        //DepthBuffer
+        Dbuffer_ref.setup_ref = &setup_ref;
+        Dbuffer_ref.texture_m_ref = &texture_m_ref;
     }
 }

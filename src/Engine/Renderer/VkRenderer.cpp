@@ -16,9 +16,10 @@ namespace VkRenderer
         gpipeline_ref.createRenderPass(swap_ref.swapChainImageFormat);
         Ubuffer_ref.createDescriptorSetLayout();
         gpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent);
-        Fbuffer_ref.createFramebuffers();
         Cbuffer_ref.createCommandPool(swap_ref.surface);
-        texture_m_ref.createTextureImage();
+        Dbuffer_ref.createDepthResources(swap_ref.swapChainExtent);
+        Fbuffer_ref.createFramebuffers();
+        texture_m_ref.createTextureImage(Cbuffer_ref.commandPool);
         texture_m_ref.createTextureImageView();
         texture_m_ref.createTextureSampler();
         Vbuffer_ref.createVertexBuffer(Cbuffer_ref.commandPool);
@@ -45,6 +46,7 @@ namespace VkRenderer
         swap_ref.createImageViews();
         gpipeline_ref.createRenderPass(swap_ref.swapChainImageFormat);
         gpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent);
+        Dbuffer_ref.createDepthResources(swap_ref.swapChainExtent);
         Fbuffer_ref.createFramebuffers();
         Ubuffer_ref.createUniformBuffers(buffer_ref,swap_ref.swapChainImages);
         Ubuffer_ref.createDescriptorPool(swap_ref.swapChainImages);
@@ -54,6 +56,9 @@ namespace VkRenderer
     }
     void Renderer::cleanupSwapChain()
     {
+        vkDestroyImageView(setup_ref.device, Dbuffer_ref.depthImageView, nullptr);
+        vkDestroyImage(setup_ref.device, Dbuffer_ref.depthImage, nullptr);
+        vkFreeMemory(setup_ref.device, Dbuffer_ref.depthImageMemory, nullptr);
         for (auto framebuffer : Fbuffer_ref.swapChainFramebuffers) {
             vkDestroyFramebuffer(setup_ref.device, framebuffer, nullptr);
         }

@@ -4,6 +4,7 @@
 #include "../VkSetup.h"
 #include "../VkGraphicsPipeline.h"
 #include "../VkSwapChain.h"
+#include "VkDepthBuffer.h"
 
 namespace VkRenderer
 {
@@ -16,5 +17,6 @@ namespace VkRenderer
         VkSetup *setup_ref;
         VkSwapChain *swap_ref;
         VkGPipeline *gpipeline_ref;
+        VkDepthBuffer *Dbuffer_ref;
     };
 }
