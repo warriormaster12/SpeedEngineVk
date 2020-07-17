@@ -25,7 +25,7 @@ namespace VkRenderer
         Ibuffer_ref.createIndexBuffer(Cbuffer_ref.commandPool);
         Ubuffer_ref.createUniformBuffers(buffer_ref,swap_ref.swapChainImages);
         Ubuffer_ref.createDescriptorPool(swap_ref.swapChainImages);
-        Ubuffer_ref.createDescriptorSets(swap_ref.swapChainImages);
+        Ubuffer_ref.createDescriptorSets(swap_ref.swapChainImages, texture_m_ref.textureImageView, texture_m_ref.textureSampler);
         Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, Ubuffer_ref.descriptorSets,Vbuffer_ref.vertexBuffer, Ibuffer_ref.indexBuffer);
         createSyncObjects();
     }
@@ -48,7 +48,7 @@ namespace VkRenderer
         Fbuffer_ref.createFramebuffers();
         Ubuffer_ref.createUniformBuffers(buffer_ref,swap_ref.swapChainImages);
         Ubuffer_ref.createDescriptorPool(swap_ref.swapChainImages);
-        Ubuffer_ref.createDescriptorSets(swap_ref.swapChainImages);
+        Ubuffer_ref.createDescriptorSets(swap_ref.swapChainImages, texture_m_ref.textureImageView, texture_m_ref.textureSampler);
         Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, Ubuffer_ref.descriptorSets, Vbuffer_ref.vertexBuffer, Ibuffer_ref.indexBuffer);
 
     }
