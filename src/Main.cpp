@@ -1,5 +1,7 @@
 #include "../Include/Engine/Renderer/VkRenderer.h"
 #include "../Include/Engine/Window/Window.h"
+#include "../Include/Engine/Components/Mesh.h"
+
 
 class Engine 
 {

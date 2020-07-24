@@ -2,4 +2,6 @@ SpeedEngineVk
 .vscode/
 SpeedEngineVk.code-workspace
 build/*
+debug/*
+release/*
 *.spv

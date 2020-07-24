@@ -20,7 +20,7 @@ namespace VkRenderer
         void createDescriptorSetLayout();
         void createDescriptorPool(std::vector<VkImage>& swapChainImages);
         void createDescriptorSets(std::vector<VkImage>& swapChainImages, VkImageView& textureImageView, VkSampler& textureSampler);
-        void createUniformBuffers(VkBufferCreation& buffer_ref, std::vector<VkImage>& swapChainImages);
+        void createUniformBuffers( std::vector<VkImage>& swapChainImages);
         void updateUniformBuffer(uint32_t currentImage, VkExtent2D& swapChainExtent);
 
         VkDescriptorSetLayout descriptorSetLayout;
@@ -31,6 +31,7 @@ namespace VkRenderer
 
         VkSetup *setup_ref;
         VkMemory *memory_ref;
+        VkBufferCreation *buffer_ref;
         
     };
 }

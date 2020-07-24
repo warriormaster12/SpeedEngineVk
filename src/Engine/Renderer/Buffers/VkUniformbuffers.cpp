@@ -2,7 +2,7 @@
 
 namespace VkRenderer
 {
-    void VkUbuffer::createUniformBuffers(VkBufferCreation& buffer_ref, std::vector<VkImage>& swapChainImages)
+    void VkUbuffer::createUniformBuffers(std::vector<VkImage>& swapChainImages)
     {
         VkDeviceSize bufferSize = sizeof(UniformBufferObject);
 
@@ -10,7 +10,7 @@ namespace VkRenderer
         uniformBuffersMemory.resize(swapChainImages.size());
 
         for (size_t i = 0; i < swapChainImages.size(); i++) {
-            buffer_ref.createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
+            buffer_ref->createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
         }
     }
 

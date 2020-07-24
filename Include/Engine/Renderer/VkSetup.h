@@ -57,5 +57,6 @@ namespace VkRenderer
         VkDevice device;
         VkQueue graphicsQueue;
         VkQueue presentQueue;
+
     };
 }

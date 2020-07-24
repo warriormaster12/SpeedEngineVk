@@ -19,16 +19,11 @@ namespace VkRenderer
         Cbuffer_ref.createCommandPool(swap_ref.surface);
         Dbuffer_ref.createDepthResources(swap_ref.swapChainExtent);
         Fbuffer_ref.createFramebuffers();
-        texture_m_ref.createTextureImage(model_ref.TEXTURE_PATH,Cbuffer_ref.commandPool);
-        texture_m_ref.createTextureImageView();
-        texture_m_ref.createTextureSampler();
-        model_ref.loadModel();
-        Vbuffer_ref.createVertexBuffer(Cbuffer_ref.commandPool);
-        Ibuffer_ref.createIndexBuffer(Cbuffer_ref.commandPool);
-        Ubuffer_ref.createUniformBuffers(buffer_ref,swap_ref.swapChainImages);
+        mesh_ref.init_mesh(swap_ref.swapChainImages, Cbuffer_ref.commandPool);
+        Ubuffer_ref.createUniformBuffers(swap_ref.swapChainImages); 
         Ubuffer_ref.createDescriptorPool(swap_ref.swapChainImages);
-        Ubuffer_ref.createDescriptorSets(swap_ref.swapChainImages, texture_m_ref.textureImageView, texture_m_ref.textureSampler);
-        Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, Ubuffer_ref.descriptorSets,Vbuffer_ref.vertexBuffer, Ibuffer_ref.indexBuffer);
+        Ubuffer_ref.createDescriptorSets(swap_ref.swapChainImages, mesh_ref.texture_m_ref.textureImageView,  mesh_ref.texture_m_ref.textureSampler);
+        Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, Ubuffer_ref.descriptorSets,mesh_ref.Vbuffer_ref.vertexBuffer, mesh_ref.Ibuffer_ref.indexBuffer);
         createSyncObjects();
     }
     void Renderer::recreateSwapChain(GLFWwindow *window)
@@ -49,10 +44,10 @@ namespace VkRenderer
         gpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent);
         Dbuffer_ref.createDepthResources(swap_ref.swapChainExtent);
         Fbuffer_ref.createFramebuffers();
-        Ubuffer_ref.createUniformBuffers(buffer_ref,swap_ref.swapChainImages);
+        Ubuffer_ref.createUniformBuffers(swap_ref.swapChainImages);
         Ubuffer_ref.createDescriptorPool(swap_ref.swapChainImages);
-        Ubuffer_ref.createDescriptorSets(swap_ref.swapChainImages, texture_m_ref.textureImageView, texture_m_ref.textureSampler);
-        Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, Ubuffer_ref.descriptorSets, Vbuffer_ref.vertexBuffer, Ibuffer_ref.indexBuffer);
+        Ubuffer_ref.createDescriptorSets(swap_ref.swapChainImages, mesh_ref.texture_m_ref.textureImageView, mesh_ref.texture_m_ref.textureSampler);
+        Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, Ubuffer_ref.descriptorSets, mesh_ref.Vbuffer_ref.vertexBuffer, mesh_ref.Ibuffer_ref.indexBuffer);
 
     }
     void Renderer::cleanupSwapChain()
@@ -87,19 +82,19 @@ namespace VkRenderer
     {  
         cleanupSwapChain();
 
-        vkDestroySampler(setup_ref.device, texture_m_ref.textureSampler, nullptr);
-        vkDestroyImageView(setup_ref.device, texture_m_ref.textureImageView, nullptr);
+        vkDestroySampler(setup_ref.device, mesh_ref.texture_m_ref.textureSampler, nullptr);
+        vkDestroyImageView(setup_ref.device, mesh_ref.texture_m_ref.textureImageView, nullptr);
 
-        vkDestroyImage(setup_ref.device, texture_m_ref.textureImage, nullptr);
-        vkFreeMemory(setup_ref.device, texture_m_ref.textureImageMemory, nullptr);
+        vkDestroyImage(setup_ref.device, mesh_ref.texture_m_ref.textureImage, nullptr);
+        vkFreeMemory(setup_ref.device, mesh_ref.texture_m_ref.textureImageMemory, nullptr);
 
         vkDestroyDescriptorSetLayout(setup_ref.device, Ubuffer_ref.descriptorSetLayout, nullptr);
 
-        vkDestroyBuffer(setup_ref.device, Ibuffer_ref.indexBuffer, nullptr);
-        vkFreeMemory(setup_ref.device, Ibuffer_ref.indexBufferMemory, nullptr);
+        vkDestroyBuffer(setup_ref.device, mesh_ref.Ibuffer_ref.indexBuffer, nullptr);
+        vkFreeMemory(setup_ref.device, mesh_ref.Ibuffer_ref.indexBufferMemory, nullptr);
 
-        vkDestroyBuffer(setup_ref.device, Vbuffer_ref.vertexBuffer, nullptr);
-        vkFreeMemory(setup_ref.device, Vbuffer_ref.vertexBufferMemory, nullptr);
+        vkDestroyBuffer(setup_ref.device, mesh_ref.Vbuffer_ref.vertexBuffer, nullptr);
+        vkFreeMemory(setup_ref.device, mesh_ref.Vbuffer_ref.vertexBufferMemory, nullptr);
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
             vkDestroySemaphore(setup_ref.device, renderFinishedSemaphores[i], nullptr);

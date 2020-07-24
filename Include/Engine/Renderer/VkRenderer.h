@@ -6,14 +6,11 @@
 #include "VkGraphicsPipeline.h"
 #include "Buffers/VkFramebuffers.h"
 #include "Buffers/VkCommandbuffers.h"
-#include "Buffers/VkVertexbuffers.h"
 #include "Buffers/VkBufferCreation.h"
-#include "Buffers/VkIndexbuffers.h"
-#include "Buffers/VkUnfiormbuffers.h"
 #include "Buffers/VkDepthBuffer.h"
+#include "Buffers/VkUnfiormbuffers.h"
 #include "VkMemory.h"
-#include "VkTextureManager.h"
-#include "VkModelLoader.h"
+#include "../Components/Mesh.h"
 #include "../Window/Window.h"
 
 namespace VkRenderer
@@ -38,14 +35,14 @@ namespace VkRenderer
         VkGPipeline gpipeline_ref;
         VkframeBuffer Fbuffer_ref;
         VkcommandBuffer Cbuffer_ref;
-        VkVbuffer Vbuffer_ref;
-        VkindexBuffer Ibuffer_ref;
-        VkUbuffer Ubuffer_ref;
+        
         VkMemory memory_ref;
         VkBufferCreation buffer_ref;
-        VkTextureManager texture_m_ref;
+        VkUbuffer Ubuffer_ref;
         VkDepthBuffer Dbuffer_ref;
-        ModelLoader model_ref;
+
+        Mesh mesh_ref;
+        
         
         std::vector<VkSemaphore> imageAvailableSemaphores;
         std::vector<VkSemaphore> renderFinishedSemaphores;
