@@ -169,8 +169,8 @@ namespace VkRenderer
 
         result = vkQueuePresentKHR(setup_ref.presentQueue, &presentInfo);
 
-        if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || framebufferResized) {
-            framebufferResized = false;
+        if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || win_ref->framebufferResized) {
+            win_ref->framebufferResized = false;
             recreateSwapChain(window);
         } else if (result != VK_SUCCESS) {
             throw std::runtime_error("failed to present swap chain image!");

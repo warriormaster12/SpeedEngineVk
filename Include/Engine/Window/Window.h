@@ -14,5 +14,7 @@ public:
 
     void initWindow();
     void cleanupWindow();
+
+    bool framebufferResized = false;
     
 };

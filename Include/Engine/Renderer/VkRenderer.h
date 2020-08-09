@@ -29,7 +29,7 @@ namespace VkRenderer
         void DestroyVulkan();
         VkSetup setup_ref;
         AppWindow *win_ref;
-        bool framebufferResized = false;
+        
     private:  
         VkSwapChain swap_ref;
         VkGPipeline gpipeline_ref;
