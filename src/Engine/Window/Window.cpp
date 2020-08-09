@@ -10,7 +10,7 @@ void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
 {
     glfwInit();
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-    window = glfwCreateWindow(WIDTH, HEIGHT, "VulkanEngine", nullptr, nullptr);
+    window = glfwCreateWindow(WIDTH, HEIGHT, "SpeedEngineVk", nullptr, nullptr);
     glfwSetWindowUserPointer(window, this);
     glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
 

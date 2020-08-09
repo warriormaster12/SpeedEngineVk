@@ -13,9 +13,9 @@ namespace VkRenderer
 
         VkApplicationInfo appInfo{};
         appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-        appInfo.pApplicationName = "VulkanEngine";
+        appInfo.pApplicationName = "SpeedEngineVk";
         appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-        appInfo.pEngineName = "VulkanEngine";
+        appInfo.pEngineName = "SpeedEngineVk";
         appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
         appInfo.apiVersion = VK_API_VERSION_1_0;
 
