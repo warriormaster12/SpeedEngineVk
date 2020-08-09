@@ -21,10 +21,10 @@ namespace VkRenderer
     public: 
         Renderer();
 
-        void InitVulkan(GLFWwindow *window);
-        void drawFrame(GLFWwindow *window);
+        void InitVulkan();
+        void drawFrame();
         void createSyncObjects();
-        void recreateSwapChain(GLFWwindow *window);
+        void recreateSwapChain();
         void cleanupSwapChain();
         void DestroyVulkan();
         VkSetup setup_ref;

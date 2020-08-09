@@ -10,7 +10,7 @@ public:
     {
         renderer_ref.win_ref = &glfw_win_ref;
         glfw_win_ref.initWindow();
-        renderer_ref.InitVulkan(glfw_win_ref.window);
+        renderer_ref.InitVulkan();
         mainLoop();
         cleanup();
     }
@@ -28,7 +28,7 @@ private:
         while (!glfwWindowShouldClose(glfw_win_ref.window))
         {
             glfwPollEvents();
-            renderer_ref.drawFrame(glfw_win_ref.window);
+            renderer_ref.drawFrame();
         }
         vkDeviceWaitIdle(renderer_ref.setup_ref.device);
     }

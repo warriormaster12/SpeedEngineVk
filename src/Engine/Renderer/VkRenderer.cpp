@@ -4,11 +4,11 @@
 namespace VkRenderer
 {
     
-    void Renderer::InitVulkan(GLFWwindow *window)
+    void Renderer::InitVulkan()
     {
         setup_ref.createInstance();
         setup_ref.setupDebugMessenger();
-        swap_ref.createSurface(window);
+        swap_ref.createSurface(win_ref->window);
         swap_ref.pickPhysicalDevice();
         setup_ref.createLogicalDevice(swap_ref.surface);
         swap_ref.createSwapChain();
@@ -26,12 +26,12 @@ namespace VkRenderer
         Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, Ubuffer_ref.descriptorSets,mesh_ref.Vbuffer_ref.vertexBuffer, mesh_ref.Ibuffer_ref.indexBuffer);
         createSyncObjects();
     }
-    void Renderer::recreateSwapChain(GLFWwindow *window)
+    void Renderer::recreateSwapChain()
     {
         int width = 0, height = 0;
-        glfwGetFramebufferSize(window, &width, &height);
+        glfwGetFramebufferSize(win_ref->window, &width, &height);
         while (width == 0 || height == 0) {
-            glfwGetFramebufferSize(window, &width, &height);
+            glfwGetFramebufferSize(win_ref->window, &width, &height);
             glfwWaitEvents();
         }
         vkDeviceWaitIdle(setup_ref.device);
@@ -112,7 +112,7 @@ namespace VkRenderer
     }
 
 
-     void Renderer::drawFrame(GLFWwindow *window)
+     void Renderer::drawFrame()
     {
         vkWaitForFences(setup_ref.device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
@@ -120,7 +120,7 @@ namespace VkRenderer
         VkResult result = vkAcquireNextImageKHR(setup_ref.device, swap_ref.swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
 
         if (result == VK_ERROR_OUT_OF_DATE_KHR) {
-            recreateSwapChain(window);
+            recreateSwapChain();
             return;
         } else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
             throw std::runtime_error("failed to acquire swap chain image!");
@@ -171,7 +171,7 @@ namespace VkRenderer
 
         if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || win_ref->framebufferResized) {
             win_ref->framebufferResized = false;
-            recreateSwapChain(window);
+            recreateSwapChain();
         } else if (result != VK_SUCCESS) {
             throw std::runtime_error("failed to present swap chain image!");
         }
