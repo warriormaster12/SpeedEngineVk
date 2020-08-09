@@ -6,9 +6,12 @@
 namespace std {
     template<> struct hash<VkRenderer::Vertex> {
         size_t operator()(VkRenderer::Vertex const& vertex) const {
-            return ((hash<glm::vec3>()(vertex.pos) ^
-                   (hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^
-                   (hash<glm::vec2>()(vertex.texCoord) << 1);
+            size_t h1 = hash<glm::vec3>()(vertex.pos);
+            size_t h2 = hash<glm::vec3>()(vertex.color);
+            size_t h3 = hash<glm::vec2>()(vertex.texCoord);
+            size_t h4 = hash<glm::vec3>()(vertex.normal);
+
+            return((((h1 ^ (h2 << 1)) >> 1) ^ h3) << 1) ^ h4;
         }
     };
 }
@@ -38,6 +41,12 @@ namespace VkRenderer
                     attrib.vertices[3 * index.vertex_index + 0],
                     attrib.vertices[3 * index.vertex_index + 1],
                     attrib.vertices[3 * index.vertex_index + 2]
+                };
+                vertex.normal = 
+                {
+                    attrib.normals[3 * index.normal_index + 0],
+                    attrib.normals[3 * index.normal_index + 1],
+                    attrib.normals[3 * index.normal_index + 2]
                 };
 
                 vertex.texCoord = {

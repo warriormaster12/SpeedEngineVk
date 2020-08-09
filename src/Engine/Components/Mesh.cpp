@@ -10,7 +10,5 @@ namespace VkRenderer
         model_ref.loadModel();
         Vbuffer_ref.createVertexBuffer(commandPool);
         Ibuffer_ref.createIndexBuffer(commandPool);
-        
-        
     }
 }
