@@ -3,7 +3,9 @@
 #include "../VkIncludes.h"
 #include "../VkSetup.h"
 #include "../VkGraphicsPipeline.h"
+#include "../VkModelLoader.h"
 #include "VkIndexbuffers.h"
+
 
 
 
@@ -20,6 +22,8 @@ namespace VkRenderer
         VkSetup *setup_ref;
         VkGPipeline *gpipeline_ref;
         VkindexBuffer *Ibuffer_ref;
+        
+        ModelLoader *model_ref;
 
     };
 }

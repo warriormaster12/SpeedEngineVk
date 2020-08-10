@@ -56,11 +56,19 @@ namespace VkRenderer
 
                 vertex.color = {1.0f, 1.0f, 1.0f};
 
+                 if (uniqueVertices.count(vertex) == 0) {
+                    uniqueVertices[vertex] = static_cast<uint32_t>(Vbuffer_ref->vertices.size());
+                    Vbuffer_ref->vertices.push_back(vertex);
+                }
                 
 
-                Vbuffer_ref->vertices.push_back(vertex);
-                Ibuffer_ref->indices.push_back(Ibuffer_ref->indices.size());
+                
+                Ibuffer_ref->indices.push_back(uniqueVertices[vertex]);
+                numIndices++;
+
+                std::cout<<numIndices<<std::endl;
             }
         }
+
     }
 }

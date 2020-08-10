@@ -33,6 +33,7 @@ namespace VkRenderer
         VkSetup *setup_ref;
         VkMemory *memory_ref;
         VkBufferCreation *buffer_ref;
+
         
     };
 }

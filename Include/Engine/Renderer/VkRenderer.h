@@ -9,8 +9,11 @@
 #include "Buffers/VkBufferCreation.h"
 #include "Buffers/VkDepthBuffer.h"
 #include "Buffers/VkUnfiormbuffers.h"
+#include "VkTextureManager.h"
+#include "VkModelLoader.h"
+#include "Buffers/VkIndexbuffers.h"
+#include "Buffers/VkVertexbuffers.h"
 #include "VkMemory.h"
-#include "../Components/Mesh.h"
 #include "../Window/Window.h"
 
 namespace VkRenderer
@@ -41,7 +44,12 @@ namespace VkRenderer
         VkUbuffer Ubuffer_ref;
         VkDepthBuffer Dbuffer_ref;
 
-        Mesh mesh_ref;
+        ModelLoader model_ref;
+        VkTextureManager texture_m_ref;
+        VkVbuffer Vbuffer_ref;
+        VkindexBuffer Ibuffer_ref;
+
+        
         
         
         std::vector<VkSemaphore> imageAvailableSemaphores;
