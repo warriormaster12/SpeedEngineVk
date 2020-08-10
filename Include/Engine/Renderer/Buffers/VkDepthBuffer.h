@@ -2,7 +2,7 @@
 
 #include "../VkIncludes.h"
 #include "../VkSetup.h"
-#include "../VkTextureManager.h"
+#include "../../Components/Mesh.h"
 
 namespace VkRenderer
 {
@@ -14,7 +14,7 @@ namespace VkRenderer
         VkImageView depthImageView;
 
         VkSetup *setup_ref;
-        VkTextureManager *texture_m_ref;
+        Mesh *mesh_ref;
 
         void createDepthResources(VkExtent2D& swapChainExtent);
         VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);

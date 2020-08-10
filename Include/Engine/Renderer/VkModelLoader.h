@@ -3,7 +3,7 @@
 #include "VkIncludes.h"
 #include "Buffers/VkVertexbuffers.h"
 #include "Buffers/VkIndexbuffers.h"
-#include "../Components/Mesh.h"
+
 
 namespace VkRenderer
 {
@@ -21,9 +21,6 @@ namespace VkRenderer
         uint32_t startIndex = 0;
         uint32_t numIndices = 0;
         uint32_t startInstance = 0;
-
-        glm::vec3 pos;
         
-        std::vector<InstanceData> instances;
     };
 }

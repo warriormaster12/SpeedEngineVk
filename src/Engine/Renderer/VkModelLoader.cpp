@@ -34,9 +34,6 @@ namespace VkRenderer
         
         std::unordered_map<Vertex, uint32_t> uniqueVertices{};
 
-        startIndex = (uint32_t) Ibuffer_ref->indices.size();
-        startInstance = (uint32_t) instances.size();
-        std::cout<<instances.size()<<std::endl;
         for (const auto& shape : shapes) {
             for (const auto& index : shape.mesh.indices) {
                 Vertex vertex{};
@@ -71,8 +68,6 @@ namespace VkRenderer
 
             }
         }
-        InstanceData instancedata = {};
-        instances.push_back(instancedata);
 
     }
 }

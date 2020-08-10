@@ -64,7 +64,7 @@ namespace VkRenderer
             
                 vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, gpipeline_ref->pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
 
-                vkCmdDrawIndexed(commandBuffers[i], model_ref->numIndices, 1, model_ref->startIndex, 0, model_ref->startInstance);
+                vkCmdDrawIndexed(commandBuffers[i], mesh_ref->model_ref.numIndices, 1, mesh_ref->model_ref.startIndex, 0, mesh_ref->model_ref.startInstance);
                 
 
             vkCmdEndRenderPass(commandBuffers[i]);

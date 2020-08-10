@@ -9,12 +9,9 @@
 #include "Buffers/VkBufferCreation.h"
 #include "Buffers/VkDepthBuffer.h"
 #include "Buffers/VkUnfiormbuffers.h"
-#include "VkTextureManager.h"
-#include "VkModelLoader.h"
-#include "Buffers/VkIndexbuffers.h"
-#include "Buffers/VkVertexbuffers.h"
 #include "VkMemory.h"
 #include "../Window/Window.h"
+#include "../Components/Mesh.h"
 
 namespace VkRenderer
 {
@@ -38,16 +35,12 @@ namespace VkRenderer
         VkGPipeline gpipeline_ref;
         VkframeBuffer Fbuffer_ref;
         VkcommandBuffer Cbuffer_ref;
-        
+        Mesh mesh_ref;
         VkMemory memory_ref;
         VkBufferCreation buffer_ref;
-        VkUbuffer Ubuffer_ref;
         VkDepthBuffer Dbuffer_ref;
 
-        ModelLoader model_ref;
-        VkTextureManager texture_m_ref;
-        VkVbuffer Vbuffer_ref;
-        VkindexBuffer Ibuffer_ref;
+        
 
         
         
