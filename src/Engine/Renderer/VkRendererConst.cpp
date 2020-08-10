@@ -4,37 +4,38 @@ namespace VkRenderer
 {
     Renderer::Renderer()
     {
+        
         //SwapChain
         swap_ref.win_ref = win_ref;
         swap_ref.setup_ref = &setup_ref;
-        swap_ref.texture_m_ref = &mesh_ref.texture_m_ref;
+        swap_ref.texture_m_ref = &m.texture_m_ref;
 
         //GraphicsPipeline
         gpipeline_ref.setup_ref = &setup_ref;
-        gpipeline_ref.Ubuffer_ref = &mesh_ref.Ubuffer_ref;
+        gpipeline_ref.Ubuffer_ref = &m.Ubuffer_ref;
         gpipeline_ref.Dbuffer_ref = &Dbuffer_ref;
 
         //UniformBuffer
-        mesh_ref.Ubuffer_ref.setup_ref = &setup_ref;
-        mesh_ref.Ubuffer_ref.memory_ref = &memory_ref;
-        mesh_ref.Ubuffer_ref.buffer_ref = &buffer_ref;
+        m.Ubuffer_ref.setup_ref = &setup_ref;
+        m.Ubuffer_ref.memory_ref = &memory_ref;
+        m.Ubuffer_ref.buffer_ref = &buffer_ref;
 
         //BufferCreation
         buffer_ref.setup_ref = &setup_ref;
         buffer_ref.memory_ref = &memory_ref;
         
         //IndexBuffer
-        mesh_ref.Ibuffer_ref.setup_ref = &setup_ref;
-        mesh_ref.Ibuffer_ref.buffer_ref = &buffer_ref;
+        m.Ibuffer_ref.setup_ref = &setup_ref;
+        m.Ibuffer_ref.buffer_ref = &buffer_ref;
 
         //VertexBuffer
-        mesh_ref.Vbuffer_ref.setup_ref = &setup_ref;
-        mesh_ref.Vbuffer_ref.buffer_ref = &buffer_ref;
+        m.Vbuffer_ref.setup_ref = &setup_ref;
+        m.Vbuffer_ref.buffer_ref = &buffer_ref;
 
         //CommandBuffer
         Cbuffer_ref.setup_ref = &setup_ref;
         Cbuffer_ref.gpipeline_ref = &gpipeline_ref;
-        Cbuffer_ref.mesh_ref = &mesh_ref;
+        Cbuffer_ref.mesh_ref = &m;
 
         //FrameBuffer
         Fbuffer_ref.setup_ref = &setup_ref;
@@ -43,16 +44,16 @@ namespace VkRenderer
         Fbuffer_ref.Dbuffer_ref = &Dbuffer_ref;
 
         //TextureManager
-        mesh_ref.texture_m_ref.setup_ref = &setup_ref;
-        mesh_ref.texture_m_ref.buffer_ref = &buffer_ref;
-        mesh_ref.texture_m_ref.memory_ref = &memory_ref;
+        m.texture_m_ref.setup_ref = &setup_ref;
+        m.texture_m_ref.buffer_ref = &buffer_ref;
+        m.texture_m_ref.memory_ref = &memory_ref;
 
         //DepthBuffer
         Dbuffer_ref.setup_ref = &setup_ref;
-        Dbuffer_ref.mesh_ref = &mesh_ref;
+        Dbuffer_ref.mesh_ref = &m;
 
         //Mesh
-        mesh_ref.setup_ref = &setup_ref;
-        mesh_ref.swap_ref = &swap_ref;
+        m.setup_ref = &setup_ref;
+        m.swap_ref = &swap_ref;
     }
 }

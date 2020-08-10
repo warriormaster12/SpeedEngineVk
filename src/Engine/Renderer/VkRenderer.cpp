@@ -14,14 +14,19 @@ namespace VkRenderer
         swap_ref.createSwapChain();
         swap_ref.createImageViews();
         gpipeline_ref.createRenderPass(swap_ref.swapChainImageFormat);
-        mesh_ref.Ubuffer_ref.createDescriptorSetLayout();
+        m.Ubuffer_ref.createDescriptorSetLayout();
         gpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent);
         Cbuffer_ref.createCommandPool(swap_ref.surface);
         Dbuffer_ref.createDepthResources(swap_ref.swapChainExtent);
         Fbuffer_ref.createFramebuffers();
-        mesh_ref.InitMesh(Cbuffer_ref.commandPool);
-        Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, mesh_ref.Ubuffer_ref.descriptorSets, mesh_ref.Vbuffer_ref.vertexBuffer, mesh_ref.Ibuffer_ref.indexBuffer);
+        m.InitMesh(Cbuffer_ref.commandPool);
+        meshes.push_back(m);
+        m.InitMesh(Cbuffer_ref.commandPool);
+        meshes.push_back(m);
+        std::cout<<meshes.size()<<std::endl;
+        Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, m.Ubuffer_ref.descriptorSets, m.Vbuffer_ref.vertexBuffer, m.Ibuffer_ref.indexBuffer);
         createSyncObjects();
+        
     }
     void Renderer::recreateSwapChain()
     {
@@ -41,10 +46,13 @@ namespace VkRenderer
         gpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent);
         Dbuffer_ref.createDepthResources(swap_ref.swapChainExtent);
         Fbuffer_ref.createFramebuffers();
-        mesh_ref.Ubuffer_ref.createUniformBuffers(swap_ref.swapChainImages);
-        mesh_ref.Ubuffer_ref.createDescriptorPool(swap_ref.swapChainImages);
-        mesh_ref.Ubuffer_ref.createDescriptorSets(swap_ref.swapChainImages, mesh_ref.texture_m_ref.textureImageView, mesh_ref.texture_m_ref.textureSampler);
-        Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, mesh_ref.Ubuffer_ref.descriptorSets, mesh_ref.Vbuffer_ref.vertexBuffer, mesh_ref.Ibuffer_ref.indexBuffer);
+        for (unsigned int i = 0; i < meshes.size(); i++)
+        {
+            meshes[i].Ubuffer_ref.createUniformBuffers(swap_ref.swapChainImages);
+            meshes[i].Ubuffer_ref.createDescriptorPool(swap_ref.swapChainImages);
+            meshes[i].Ubuffer_ref.createDescriptorSets(swap_ref.swapChainImages, meshes[i].texture_m_ref.textureImageView, meshes[i].texture_m_ref.textureSampler);
+        }
+        Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, m.Ubuffer_ref.descriptorSets, m.Vbuffer_ref.vertexBuffer, m.Ibuffer_ref.indexBuffer);
         
 
     }
@@ -70,17 +78,18 @@ namespace VkRenderer
         vkDestroySwapchainKHR(setup_ref.device, swap_ref.swapChain, nullptr);
 
         for (size_t i = 0; i < swap_ref.swapChainImages.size(); i++) {
-            vkDestroyBuffer(setup_ref.device, mesh_ref.Ubuffer_ref.uniformBuffers[i], nullptr);
-            vkFreeMemory(setup_ref.device, mesh_ref.Ubuffer_ref.uniformBuffersMemory[i], nullptr);
+            vkDestroyBuffer(setup_ref.device, m.Ubuffer_ref.uniformBuffers[i], nullptr);
+            vkFreeMemory(setup_ref.device, m.Ubuffer_ref.uniformBuffersMemory[i], nullptr);
         }
 
-        vkDestroyDescriptorPool(setup_ref.device, mesh_ref.Ubuffer_ref.descriptorPool, nullptr);
+        vkDestroyDescriptorPool(setup_ref.device, m.Ubuffer_ref.descriptorPool, nullptr);
     }
     void Renderer::DestroyVulkan()
     {  
         cleanupSwapChain();
 
-        mesh_ref.DestroyMesh();
+        meshes[2].DestroyMesh();
+        meshes[1].DestroyMesh();
         
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
@@ -112,9 +121,10 @@ namespace VkRenderer
         } else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
             throw std::runtime_error("failed to acquire swap chain image!");
         }
-
-        mesh_ref.update(imageIndex);
-
+        for (unsigned int i = 0; i < meshes.size(); i++)
+        {
+            meshes[i].update(imageIndex);
+        }
         if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) {
             vkWaitForFences(setup_ref.device, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
         }
