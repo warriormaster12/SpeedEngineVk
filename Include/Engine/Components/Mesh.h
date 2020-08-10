@@ -9,4 +9,5 @@ namespace VkRenderer
     struct InstanceData {
         glm::vec3 pos;
     };
+
 }

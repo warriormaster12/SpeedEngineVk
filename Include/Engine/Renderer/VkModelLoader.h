@@ -24,5 +24,6 @@ namespace VkRenderer
 
         glm::vec3 pos;
         
+        std::vector<InstanceData> instances;
     };
 }
