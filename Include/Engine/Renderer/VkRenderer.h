@@ -36,7 +36,6 @@ namespace VkRenderer
         VkframeBuffer Fbuffer_ref;
         VkcommandBuffer Cbuffer_ref;
         Mesh m;
-        std::vector<Mesh> meshes;
         VkMemory memory_ref;
         VkBufferCreation buffer_ref;
         VkDepthBuffer Dbuffer_ref;

@@ -6,6 +6,7 @@ namespace VkRenderer
     {
         model_ref.Ibuffer_ref = &Ibuffer_ref;
         model_ref.Vbuffer_ref = &Vbuffer_ref;
+
     }
 
     void Mesh::InitMesh(VkCommandPool& commandPool)
@@ -22,6 +23,13 @@ namespace VkRenderer
         Ubuffer_ref.createUniformBuffers(swap_ref->swapChainImages); 
         Ubuffer_ref.createDescriptorPool(swap_ref->swapChainImages);
         Ubuffer_ref.createDescriptorSets(swap_ref->swapChainImages, texture_m_ref.textureImageView,  texture_m_ref.textureSampler);
+    }
+
+    void Mesh::RecreateMesh()
+    {
+        Ubuffer_ref.createUniformBuffers(swap_ref->swapChainImages);
+        Ubuffer_ref.createDescriptorPool(swap_ref->swapChainImages);
+        Ubuffer_ref.createDescriptorSets(swap_ref->swapChainImages, texture_m_ref.textureImageView, texture_m_ref.textureSampler);
     }
 
     void Mesh::update(uint32_t imageIndex)

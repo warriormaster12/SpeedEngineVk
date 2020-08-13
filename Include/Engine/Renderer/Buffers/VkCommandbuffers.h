@@ -16,13 +16,13 @@ namespace VkRenderer
     public: 
         VkCommandPool commandPool;
         void createCommandPool(VkSurfaceKHR& surface);
-        void createCommandBuffers(std::vector<VkFramebuffer> swapChainFramebuffers, VkExtent2D& swapChainExtent,std::vector<VkDescriptorSet> descriptorSets, VkBuffer& vertexBuffer, VkBuffer& indexBuffer);
+        void createCommandBuffers(std::vector<VkFramebuffer> swapChainFramebuffers, VkExtent2D& swapChainExtent);
         std::vector<VkCommandBuffer> commandBuffers;
 
         VkSetup *setup_ref;
         VkGPipeline *gpipeline_ref;
         
-        Mesh *mesh_ref;
+        std::vector <Mesh> meshes;
 
     };
 }

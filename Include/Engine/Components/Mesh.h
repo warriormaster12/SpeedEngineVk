@@ -30,6 +30,7 @@ namespace VkRenderer
 
         void InitMesh(VkCommandPool& commandPool);
         void update(uint32_t imageIndex);
+        void RecreateMesh();
         void DestroyMesh();
     };
 

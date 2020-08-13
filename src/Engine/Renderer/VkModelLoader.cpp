@@ -64,7 +64,6 @@ namespace VkRenderer
 
                 
                 Ibuffer_ref->indices.push_back(uniqueVertices[vertex]);
-                numIndices++;
 
             }
         }

@@ -35,7 +35,6 @@ namespace VkRenderer
         //CommandBuffer
         Cbuffer_ref.setup_ref = &setup_ref;
         Cbuffer_ref.gpipeline_ref = &gpipeline_ref;
-        Cbuffer_ref.mesh_ref = &m;
 
         //FrameBuffer
         Fbuffer_ref.setup_ref = &setup_ref;

@@ -20,12 +20,15 @@ namespace VkRenderer
         Dbuffer_ref.createDepthResources(swap_ref.swapChainExtent);
         Fbuffer_ref.createFramebuffers();
         m.InitMesh(Cbuffer_ref.commandPool);
-        meshes.push_back(m);
+        Cbuffer_ref.meshes.push_back(m);
+        Cbuffer_ref.meshes[0].mesh_transform.translate = glm::vec3(0.0f,-1.0f,0.0f);
         m.InitMesh(Cbuffer_ref.commandPool);
-        meshes.push_back(m);
-        std::cout<<meshes.size()<<std::endl;
-        Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, m.Ubuffer_ref.descriptorSets, m.Vbuffer_ref.vertexBuffer, m.Ibuffer_ref.indexBuffer);
+        Cbuffer_ref.meshes.push_back(m);
+        Cbuffer_ref.meshes[1].mesh_transform.translate = glm::vec3(0.0f,1.0f,0.0f);
+        Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent);
         createSyncObjects();
+        
+        std::cout<<Cbuffer_ref.meshes.size()<<std::endl;
         
     }
     void Renderer::recreateSwapChain()
@@ -46,13 +49,12 @@ namespace VkRenderer
         gpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent);
         Dbuffer_ref.createDepthResources(swap_ref.swapChainExtent);
         Fbuffer_ref.createFramebuffers();
-        for (unsigned int i = 0; i < meshes.size(); i++)
+        
+        for(int i = 0; i < Cbuffer_ref.meshes.size(); i++)
         {
-            meshes[i].Ubuffer_ref.createUniformBuffers(swap_ref.swapChainImages);
-            meshes[i].Ubuffer_ref.createDescriptorPool(swap_ref.swapChainImages);
-            meshes[i].Ubuffer_ref.createDescriptorSets(swap_ref.swapChainImages, meshes[i].texture_m_ref.textureImageView, meshes[i].texture_m_ref.textureSampler);
+            Cbuffer_ref.meshes[i].RecreateMesh();
         }
-        Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, m.Ubuffer_ref.descriptorSets, m.Vbuffer_ref.vertexBuffer, m.Ibuffer_ref.indexBuffer);
+        Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent);
         
 
     }
@@ -87,10 +89,10 @@ namespace VkRenderer
     void Renderer::DestroyVulkan()
     {  
         cleanupSwapChain();
-
-        meshes[2].DestroyMesh();
-        meshes[1].DestroyMesh();
-        
+        for(int i = 0; i < Cbuffer_ref.meshes.size(); i++)
+        {
+            Cbuffer_ref.meshes[i].DestroyMesh();
+        }
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
             vkDestroySemaphore(setup_ref.device, renderFinishedSemaphores[i], nullptr);
@@ -121,9 +123,9 @@ namespace VkRenderer
         } else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
             throw std::runtime_error("failed to acquire swap chain image!");
         }
-        for (unsigned int i = 0; i < meshes.size(); i++)
+        for(int i = 0; i < Cbuffer_ref.meshes.size(); i++)
         {
-            meshes[i].update(imageIndex);
+            Cbuffer_ref.meshes[i].update(imageIndex);
         }
         if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) {
             vkWaitForFences(setup_ref.device, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
