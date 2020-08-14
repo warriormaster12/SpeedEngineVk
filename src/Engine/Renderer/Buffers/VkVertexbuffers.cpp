@@ -21,5 +21,6 @@ namespace VkRenderer
 
         vkDestroyBuffer(setup_ref->device, stagingBuffer, nullptr);
         vkFreeMemory(setup_ref->device, stagingBufferMemory, nullptr);
+
     }
 }

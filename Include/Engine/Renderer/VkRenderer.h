@@ -4,6 +4,7 @@
 #include "VkSetup.h"
 #include "VkSwapChain.h"
 #include "VkGraphicsPipeline.h"
+#include "VkTextureManager.h"
 #include "Buffers/VkFramebuffers.h"
 #include "Buffers/VkCommandbuffers.h"
 #include "Buffers/VkBufferCreation.h"
@@ -35,7 +36,9 @@ namespace VkRenderer
         VkGPipeline gpipeline_ref;
         VkframeBuffer Fbuffer_ref;
         VkcommandBuffer Cbuffer_ref;
-        Mesh mesh_object;
+        std::vector <Mesh> meshes;
+        VkUbuffer Ubuffer_ref;
+        VkTextureManager texture_m_ref;
         VkMemory memory_ref;
         VkBufferCreation buffer_ref;
         VkDepthBuffer Dbuffer_ref;

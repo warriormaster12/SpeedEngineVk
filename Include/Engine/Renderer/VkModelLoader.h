@@ -11,8 +11,8 @@ namespace VkRenderer
     class ModelLoader
     {
     public: 
-        std::string MODEL_PATH = "EngineAssets/Models/viking_room.obj";
-        std::string TEXTURE_PATH = "EngineAssets/Textures/viking_room.png";
+        const std::string MODEL_PATH = "EngineAssets/Models/viking_room.obj";
+        const std::string TEXTURE_PATH = "EngineAssets/Textures/viking_room.png";
 
         void loadModel();
         VkindexBuffer *Ibuffer_ref;

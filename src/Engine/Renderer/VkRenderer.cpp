@@ -6,6 +6,8 @@ namespace VkRenderer
     
     void Renderer::InitVulkan()
     {
+        
+
         setup_ref.createInstance();
         setup_ref.setupDebugMessenger();
         swap_ref.createSurface(win_ref->window);
@@ -14,24 +16,46 @@ namespace VkRenderer
         swap_ref.createSwapChain();
         swap_ref.createImageViews();
         gpipeline_ref.createRenderPass(swap_ref.swapChainImageFormat);
-        mesh_object.Ubuffer_ref.createDescriptorSetLayout();
+        Ubuffer_ref.createDescriptorSetLayout();
         gpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent);
         Cbuffer_ref.createCommandPool(swap_ref.surface);
         Dbuffer_ref.createDepthResources(swap_ref.swapChainExtent);
         Fbuffer_ref.createFramebuffers();
-        
-        mesh_object.InitMesh(Cbuffer_ref.commandPool);
-        Cbuffer_ref.meshes.push_back(mesh_object);
-        mesh_object.InitMesh(Cbuffer_ref.commandPool);
-        Cbuffer_ref.meshes.push_back(mesh_object);
-        mesh_object.InitMesh(Cbuffer_ref.commandPool);
-        Cbuffer_ref.meshes.push_back(mesh_object);
-        
-        Cbuffer_ref.meshes[0].mesh_transform.translate = glm::vec3(0.0f,-1.0f,0.0f);
-        Cbuffer_ref.meshes[1].mesh_transform.translate = glm::vec3(0.0f,1.0f,0.0f);
-        Cbuffer_ref.meshes[2].mesh_transform.translate = glm::vec3(0.0f,0.0f,1.0f);
-        
-        Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent);
+    
+        meshes.emplace_back();
+        meshes.emplace_back();
+        meshes.emplace_back();
+
+        texture_m_ref.createTextureImage("EngineAssets/Textures/viking_room.png", Cbuffer_ref.commandPool);
+        texture_m_ref.createTextureImageView();
+        texture_m_ref.createTextureSampler();
+
+        for (int i = 0; i < meshes.size(); i++) {
+            //IndexBuffer
+            meshes[i].Ibuffer_ref.setup_ref = &setup_ref;
+            meshes[i].Ibuffer_ref.buffer_ref = &buffer_ref;
+
+            //VertexBuffer
+            meshes[i].Vbuffer_ref.setup_ref = &setup_ref;
+            meshes[i].Vbuffer_ref.buffer_ref = &buffer_ref;
+            
+            //Mesh
+            meshes[i].setup_ref = &setup_ref;
+            meshes[i].swap_ref = &swap_ref;
+            meshes[i].Ubuffer_ref = &Ubuffer_ref;
+
+
+            meshes[i].InitMesh(Cbuffer_ref.commandPool);
+            Cbuffer_ref.meshes.push_back(&meshes[i]);
+        }
+        meshes[0].mesh_transform.translate=glm::vec3(0.0f,-1.0f,0.0f);
+        meshes[1].mesh_transform.translate=glm::vec3(0.0f,1.0f,0.0f);
+        //meshes[2].mesh_transform.translate=glm::vec3(0.0f,0.0f,1.0f);
+
+        Ubuffer_ref.createUniformBuffers(swap_ref.swapChainImages); 
+        Ubuffer_ref.createDescriptorPool(swap_ref.swapChainImages);
+        Ubuffer_ref.createDescriptorSets(swap_ref.swapChainImages.size(), texture_m_ref.textureImageView,  texture_m_ref.textureSampler);
+        Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, Ubuffer_ref.descriptorSets);
         createSyncObjects();
     }
     void Renderer::recreateSwapChain()
@@ -53,11 +77,12 @@ namespace VkRenderer
         Dbuffer_ref.createDepthResources(swap_ref.swapChainExtent);
         Fbuffer_ref.createFramebuffers();
         
-        for(int i = 0; i < Cbuffer_ref.meshes.size(); i++)
-        {
-            Cbuffer_ref.meshes[i].RecreateMesh();
-        }
-        Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent);
+        Ubuffer_ref.createUniformBuffers(swap_ref.swapChainImages);
+        Ubuffer_ref.createDescriptorPool(swap_ref.swapChainImages);
+        Ubuffer_ref.createDescriptorSets(swap_ref.swapChainImages.size(), texture_m_ref.textureImageView, texture_m_ref.textureSampler);
+        
+
+        Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, Ubuffer_ref.descriptorSets);
         
 
     }
@@ -81,41 +106,43 @@ namespace VkRenderer
         }
 
         vkDestroySwapchainKHR(setup_ref.device, swap_ref.swapChain, nullptr);
-        for(int j=Cbuffer_ref.meshes.size()-1; j > 0 ; j--)
-        {
-            for (size_t i = 0; i < swap_ref.swapChainImages.size(); i++) {
-                vkDestroyBuffer(setup_ref.device, Cbuffer_ref.meshes[j].Ubuffer_ref.uniformBuffers[i], nullptr);
-                vkFreeMemory(setup_ref.device, Cbuffer_ref.meshes[j].Ubuffer_ref.uniformBuffersMemory[i], nullptr);
-            }
-            vkDestroyDescriptorPool(setup_ref.device, Cbuffer_ref.meshes[j].Ubuffer_ref.descriptorPool, nullptr);
+        for (size_t i = 0; i < swap_ref.swapChainImages.size(); i++) {
+            vkDestroyBuffer(setup_ref.device, Ubuffer_ref.uniformBuffers[i], nullptr);
+            vkFreeMemory(setup_ref.device, Ubuffer_ref.uniformBuffersMemory[i], nullptr);
         }
+        vkDestroyDescriptorPool(setup_ref.device, Ubuffer_ref.descriptorPool, nullptr);
     }
     void Renderer::DestroyVulkan()
     {  
         cleanupSwapChain();
-        for(int j = Cbuffer_ref.meshes.size()-1; j > 0 ; j--)
-        {
-            std::cout<<j<<std::endl;
-            Cbuffer_ref.meshes[j].DestroyMesh();
+        
+        vkDestroySampler(setup_ref.device, texture_m_ref.textureSampler, nullptr);
+        vkDestroyImageView(setup_ref.device, texture_m_ref.textureImageView, nullptr);
 
-            if(j < 0)
-            {
-                for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-                    vkDestroySemaphore(setup_ref.device, renderFinishedSemaphores[i], nullptr);
-                    vkDestroySemaphore(setup_ref.device, imageAvailableSemaphores[i], nullptr);
-                    vkDestroyFence(setup_ref.device, inFlightFences[i], nullptr);
-                }
-                vkDestroyCommandPool(setup_ref.device, Cbuffer_ref.commandPool, nullptr);
-                
-                vkDestroyDevice(setup_ref.device, nullptr);
-                if (enableValidationLayers) {
-                    setup_ref.DestroyDebugUtilsMessengerEXT(setup_ref.debugMessenger, nullptr);
-                }
-                vkDestroySurfaceKHR(setup_ref.instance, swap_ref.surface, nullptr);
-                vkDestroyInstance(setup_ref.instance, nullptr);
-            }
+        vkDestroyImage(setup_ref.device, texture_m_ref.textureImage, nullptr);
+        vkFreeMemory(setup_ref.device, texture_m_ref.textureImageMemory, nullptr);
+
+        vkDestroyDescriptorSetLayout(setup_ref.device, Ubuffer_ref.descriptorSetLayout, nullptr);  
+        for (int i=meshes.size()-1; i >= 0; i--)
+        {
+            meshes[i].DestroyMesh();
         }
 
+        
+        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+            vkDestroySemaphore(setup_ref.device, renderFinishedSemaphores[i], nullptr);
+            vkDestroySemaphore(setup_ref.device, imageAvailableSemaphores[i], nullptr);
+            vkDestroyFence(setup_ref.device, inFlightFences[i], nullptr);
+        }
+        vkDestroyCommandPool(setup_ref.device, Cbuffer_ref.commandPool, nullptr);
+        
+        vkDestroyDevice(setup_ref.device, nullptr);
+        if (enableValidationLayers) {
+            setup_ref.DestroyDebugUtilsMessengerEXT(setup_ref.debugMessenger, nullptr);
+        }
+        vkDestroySurfaceKHR(setup_ref.instance, swap_ref.surface, nullptr);
+        vkDestroyInstance(setup_ref.instance, nullptr);
+        
         
     }
 
@@ -133,10 +160,13 @@ namespace VkRenderer
         } else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
             throw std::runtime_error("failed to acquire swap chain image!");
         }
-        for(int i = 0; i < Cbuffer_ref.meshes.size(); i++)
+
+        for (int i=0; i < meshes.size(); i++)
         {
-            Cbuffer_ref.meshes[i].update(imageIndex);
+
+            meshes[i].update(imageIndex);
         }
+
         if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) {
             vkWaitForFences(setup_ref.device, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
         }
