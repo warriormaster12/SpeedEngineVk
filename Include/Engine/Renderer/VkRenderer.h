@@ -35,7 +35,7 @@ namespace VkRenderer
         VkGPipeline gpipeline_ref;
         VkframeBuffer Fbuffer_ref;
         VkcommandBuffer Cbuffer_ref;
-        Mesh m;
+        Mesh mesh_object;
         VkMemory memory_ref;
         VkBufferCreation buffer_ref;
         VkDepthBuffer Dbuffer_ref;
