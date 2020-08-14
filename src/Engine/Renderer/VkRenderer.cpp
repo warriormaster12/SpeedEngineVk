@@ -19,15 +19,18 @@ namespace VkRenderer
         Cbuffer_ref.createCommandPool(swap_ref.surface);
         Dbuffer_ref.createDepthResources(swap_ref.swapChainExtent);
         Fbuffer_ref.createFramebuffers();
+        
         mesh_object.InitMesh(Cbuffer_ref.commandPool);
         Cbuffer_ref.meshes.push_back(mesh_object);
+        mesh_object.InitMesh(Cbuffer_ref.commandPool);
+        Cbuffer_ref.meshes.push_back(mesh_object);
+        mesh_object.InitMesh(Cbuffer_ref.commandPool);
+        Cbuffer_ref.meshes.push_back(mesh_object);
+        
         Cbuffer_ref.meshes[0].mesh_transform.translate = glm::vec3(0.0f,-1.0f,0.0f);
-        mesh_object.InitMesh(Cbuffer_ref.commandPool);
-        Cbuffer_ref.meshes.push_back(mesh_object);
-        mesh_object.InitMesh(Cbuffer_ref.commandPool);
-        Cbuffer_ref.meshes.push_back(mesh_object);
         Cbuffer_ref.meshes[1].mesh_transform.translate = glm::vec3(0.0f,1.0f,0.0f);
         Cbuffer_ref.meshes[2].mesh_transform.translate = glm::vec3(0.0f,0.0f,1.0f);
+        
         Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent);
         createSyncObjects();
     }
