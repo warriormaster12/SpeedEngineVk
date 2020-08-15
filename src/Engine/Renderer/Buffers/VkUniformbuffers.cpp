@@ -2,7 +2,7 @@
 
 namespace VkRenderer
 {
-    void VkUbuffer::createUniformBuffers()
+    void VkUbuffer::createUniformBuffer()
     {
         VkDeviceSize bufferSize = sizeof(UniformBufferObject);
 

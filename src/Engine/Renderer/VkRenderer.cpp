@@ -25,6 +25,8 @@ namespace VkRenderer
         meshes.emplace_back();
         meshes.emplace_back();
         meshes.emplace_back();
+        
+
 
         texture_m_ref.createTextureImage("EngineAssets/Textures/viking_room.png", Cbuffer_ref.commandPool);
         texture_m_ref.createTextureImageView();
@@ -49,8 +51,8 @@ namespace VkRenderer
         
 
        
+        Ubuffer_ref.createUniformBuffer(); 
         
-        Ubuffer_ref.createUniformBuffers(); 
         Ubuffer_ref.createDescriptorPool();
         Ubuffer_ref.createDescriptorSets(texture_m_ref.textureImageView,  texture_m_ref.textureSampler);
         
@@ -62,10 +64,6 @@ namespace VkRenderer
         meshes[0].mesh_transform.translate=glm::vec3(0.0f,-1.0f,0.0f);
         meshes[1].mesh_transform.translate=glm::vec3(0.0f,1.0f,0.0f);
         meshes[2].mesh_transform.translate=glm::vec3(0.0f,0.0f,1.0f);
-
-        Ubuffer_ref.updateUniformBuffer(0, swap_ref.swapChainExtent);
-        Ubuffer_ref.updateUniformBuffer(1, swap_ref.swapChainExtent);
-        Ubuffer_ref.updateUniformBuffer(2, swap_ref.swapChainExtent);
     }
     void Renderer::recreateSwapChain()
     {
@@ -86,7 +84,7 @@ namespace VkRenderer
         Dbuffer_ref.createDepthResources(swap_ref.swapChainExtent);
         Fbuffer_ref.createFramebuffers();
         
-        Ubuffer_ref.createUniformBuffers();
+        Ubuffer_ref.createUniformBuffer();
         Ubuffer_ref.createDescriptorPool();
         Ubuffer_ref.createDescriptorSets(texture_m_ref.textureImageView, texture_m_ref.textureSampler);
         
@@ -170,7 +168,10 @@ namespace VkRenderer
             throw std::runtime_error("failed to acquire swap chain image!");
         }
 
-        
+        for (int i=0; i < meshes.size(); i++)
+        {
+            Ubuffer_ref.updateUniformBuffer(i, swap_ref.swapChainExtent);
+        }
 
         
 
@@ -223,6 +224,7 @@ namespace VkRenderer
         }
 
         currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+        
     }
     void Renderer::createSyncObjects()
     {
