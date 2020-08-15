@@ -2,19 +2,19 @@
 
 namespace VkRenderer
 {
-    void VkUbuffer::createUniformBuffers(std::vector<VkImage>& swapChainImages)
+    void VkUbuffer::createUniformBuffers()
     {
         VkDeviceSize bufferSize = sizeof(UniformBufferObject);
 
-        uniformBuffers.resize(swapChainImages.size());
-        uniformBuffersMemory.resize(swapChainImages.size());
+        uniformBuffers.resize(meshes.size());
+        uniformBuffersMemory.resize(meshes.size());
 
-        for (size_t i = 0; i < swapChainImages.size(); i++) {
+        for (size_t i = 0; i < meshes.size(); i++) {
             buffer_ref->createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
         }
     }
 
-    void VkUbuffer::updateUniformBuffer(uint32_t currentImage, VkExtent2D& swapChainExtent)
+    void VkUbuffer::updateUniformBuffer(uint32_t DescriptorSetIndex, VkExtent2D& swapChainExtent)
     {
         static auto startTime = std::chrono::high_resolution_clock::now();
 
@@ -22,10 +22,11 @@ namespace VkRenderer
         float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
         UniformBufferObject ubo{};
-        
+
         ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(30.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        ubo.model = glm::translate(ubo.model, transform.translate);
-        ubo.model = glm::scale(ubo.model, transform.scale);	
+        ubo.model = glm::translate(ubo.model, meshes[DescriptorSetIndex]->mesh_transform.translate);
+        ubo.model = glm::scale(ubo.model, meshes[DescriptorSetIndex]->mesh_transform.scale);	
+
         ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
         ubo.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float) swapChainExtent.height, 0.1f, 10.0f);
         ubo.proj[1][1] *= -1;
@@ -34,44 +35,46 @@ namespace VkRenderer
     
 
         void* data;
-        vkMapMemory(setup_ref->device, uniformBuffersMemory[currentImage], 0, sizeof(ubo), 0, &data);
+        vkMapMemory(setup_ref->device, uniformBuffersMemory[DescriptorSetIndex], 0, sizeof(ubo), 0, &data);
             memcpy(data, &ubo, sizeof(ubo));
-        vkUnmapMemory(setup_ref->device, uniformBuffersMemory[currentImage]);
+        vkUnmapMemory(setup_ref->device, uniformBuffersMemory[DescriptorSetIndex]);
     }
 
-    void VkUbuffer::createDescriptorPool(std::vector<VkImage>& swapChainImages)
+    void VkUbuffer::createDescriptorPool()
     {
         std::array<VkDescriptorPoolSize, 2> poolSizes{};
         poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        poolSizes[0].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
+        poolSizes[0].descriptorCount = static_cast<uint32_t>(meshes.size());
         poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-        poolSizes[1].descriptorCount = static_cast<uint32_t>(swapChainImages.size());
+        poolSizes[1].descriptorCount = static_cast<uint32_t>(meshes.size());
 
         VkDescriptorPoolCreateInfo poolInfo{};
         poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
         poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
         poolInfo.pPoolSizes = poolSizes.data();
-        poolInfo.maxSets = static_cast<uint32_t>(swapChainImages.size());
+        poolInfo.maxSets = static_cast<uint32_t>(meshes.size());
 
         if (vkCreateDescriptorPool(setup_ref->device, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
             throw std::runtime_error("failed to create descriptor pool!");
         }   
     }
-    void VkUbuffer::createDescriptorSets(int DCount, VkImageView& textureImageView, VkSampler& textureSampler)
+    void VkUbuffer::createDescriptorSets(VkImageView& textureImageView, VkSampler& textureSampler)
     {
-        std::vector<VkDescriptorSetLayout> layouts(DCount, descriptorSetLayout);
-        VkDescriptorSetAllocateInfo allocInfo{};
-        allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-        allocInfo.descriptorPool = descriptorPool;
-        allocInfo.descriptorSetCount = static_cast<uint32_t>(DCount);
-        allocInfo.pSetLayouts = layouts.data();
+        descriptorSets.resize(meshes.size());
+        for (size_t i = 0; i < meshes.size(); i++) {
+            std::vector<VkDescriptorSetLayout> layouts(meshes.size(), descriptorSetLayout);
+            VkDescriptorSetAllocateInfo allocInfo{};
+            allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+            allocInfo.descriptorPool = descriptorPool;
+            allocInfo.descriptorSetCount = static_cast<uint32_t>(1);
+            allocInfo.pSetLayouts = layouts.data();
 
-        descriptorSets.resize(DCount);
-        if (vkAllocateDescriptorSets(setup_ref->device, &allocInfo, descriptorSets.data()) != VK_SUCCESS) {
-            throw std::runtime_error("failed to allocate descriptor sets!");
-        }
+            
+            if (vkAllocateDescriptorSets(setup_ref->device, &allocInfo, &descriptorSets[i]) != VK_SUCCESS) {
+                throw std::runtime_error("failed to allocate descriptor sets!");
+            }
 
-        for (size_t i = 0; i < DCount; i++) {
+        
             VkDescriptorBufferInfo bufferInfo{};
             bufferInfo.buffer = uniformBuffers[i];
             bufferInfo.offset = 0;
@@ -83,7 +86,7 @@ namespace VkRenderer
             imageInfo.sampler = textureSampler;
 
             std::array<VkWriteDescriptorSet, 2> descriptorWrites{};
-
+           
             descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
             descriptorWrites[0].dstSet = descriptorSets[i];
             descriptorWrites[0].dstBinding = 0;
@@ -91,6 +94,7 @@ namespace VkRenderer
             descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
             descriptorWrites[0].descriptorCount = 1;
             descriptorWrites[0].pBufferInfo = &bufferInfo;
+            
 
             descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
             descriptorWrites[1].dstSet = descriptorSets[i];

@@ -4,6 +4,7 @@
 #include "../VkSetup.h"
 #include "../VkMemory.h"
 #include "VkBufferCreation.h"
+#include "../../Components/Mesh.h"
 
 
 
@@ -15,19 +16,15 @@ namespace VkRenderer
         glm::mat4 proj;
         glm::vec3 lightPosition;
     };
-    struct Transform3D
-    {
-        glm::vec3 translate;
-        glm::vec3 scale;
-    };
+    
     class VkUbuffer
     {
     public: 
         void createDescriptorSetLayout();
-        void createDescriptorPool(std::vector<VkImage>& swapChainImages);
-        void createDescriptorSets(int DCount, VkImageView& textureImageView, VkSampler& textureSampler);
-        void createUniformBuffers(std::vector<VkImage>& swapChainImages);
-        void updateUniformBuffer(uint32_t currentImage, VkExtent2D& swapChainExtent);
+        void createDescriptorPool();
+        void createDescriptorSets(VkImageView& textureImageView, VkSampler& textureSampler);
+        void createUniformBuffers();
+        void updateUniformBuffer(uint32_t DescriptorSetIndex, VkExtent2D& swapChainExtent);
 
         VkDescriptorSetLayout descriptorSetLayout;
         VkDescriptorPool descriptorPool;
@@ -35,12 +32,11 @@ namespace VkRenderer
         std::vector<VkBuffer> uniformBuffers;
         std::vector<VkDeviceMemory> uniformBuffersMemory;
 
-        Transform3D transform;
+        
 
         VkSetup *setup_ref;
         VkMemory *memory_ref;
         VkBufferCreation *buffer_ref;
-
-        
+        std::vector <Mesh*> meshes;
     };
 }

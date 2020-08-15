@@ -20,14 +20,6 @@ namespace VkRenderer
     }
 
 
-    void Mesh::update(uint32_t imageIndex)
-    {
-        Ubuffer_ref->transform.translate = mesh_transform.translate;
-        Ubuffer_ref->transform.scale = mesh_transform.scale;
-
-        Ubuffer_ref->updateUniformBuffer(imageIndex, swap_ref->swapChainExtent);
-    }
-
     void Mesh::DestroyMesh()
     {
 

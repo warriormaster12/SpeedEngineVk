@@ -2,10 +2,9 @@
 #include "../Renderer/VkIncludes.h"
 #include "../Renderer/VkModelLoader.h"
 #include "../Renderer/VkSetup.h"
-#include "../Renderer/VkSwapChain.h"
 #include "../Renderer/Buffers/VkVertexbuffers.h"
 #include "../Renderer/Buffers/VkIndexbuffers.h"
-#include "../Renderer/Buffers/VkUnfiormbuffers.h"
+
 
 
 
@@ -13,6 +12,11 @@
 
 namespace VkRenderer
 {
+    struct Transform3D
+    {
+        glm::vec3 translate;
+        glm::vec3 scale;
+    };
     class Mesh 
     {
     public: 
@@ -22,8 +26,6 @@ namespace VkRenderer
 
         
         VkSetup *setup_ref;
-        VkSwapChain *swap_ref;
-        VkUbuffer *Ubuffer_ref; 
         
         Transform3D mesh_transform;
         

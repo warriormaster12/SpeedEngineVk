@@ -62,8 +62,9 @@ namespace VkRenderer
                     
 
                     vkCmdBindIndexBuffer(commandBuffers[i], meshes[j]->Ibuffer_ref.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
-                
-                    vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, gpipeline_ref->pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
+
+
+                    vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, gpipeline_ref->pipelineLayout, 0, 1, &descriptorSets[j], 0, nullptr);
         
                 
                     vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(meshes[j]->Ibuffer_ref.indices.size()), 1, 0, 0, 0);

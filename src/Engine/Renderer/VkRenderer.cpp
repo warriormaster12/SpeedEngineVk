@@ -41,22 +41,31 @@ namespace VkRenderer
             
             //Mesh
             meshes[i].setup_ref = &setup_ref;
-            meshes[i].swap_ref = &swap_ref;
-            meshes[i].Ubuffer_ref = &Ubuffer_ref;
-
 
             meshes[i].InitMesh(Cbuffer_ref.commandPool);
+            Ubuffer_ref.meshes.push_back(&meshes[i]);
             Cbuffer_ref.meshes.push_back(&meshes[i]);
         }
-        meshes[0].mesh_transform.translate=glm::vec3(0.0f,-1.0f,0.0f);
-        meshes[1].mesh_transform.translate=glm::vec3(0.0f,1.0f,0.0f);
-        //meshes[2].mesh_transform.translate=glm::vec3(0.0f,0.0f,1.0f);
+        
 
-        Ubuffer_ref.createUniformBuffers(swap_ref.swapChainImages); 
-        Ubuffer_ref.createDescriptorPool(swap_ref.swapChainImages);
-        Ubuffer_ref.createDescriptorSets(swap_ref.swapChainImages.size(), texture_m_ref.textureImageView,  texture_m_ref.textureSampler);
+       
+        
+        Ubuffer_ref.createUniformBuffers(); 
+        Ubuffer_ref.createDescriptorPool();
+        Ubuffer_ref.createDescriptorSets(texture_m_ref.textureImageView,  texture_m_ref.textureSampler);
+        
+        
+
         Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, Ubuffer_ref.descriptorSets);
         createSyncObjects();
+
+        meshes[0].mesh_transform.translate=glm::vec3(0.0f,-1.0f,0.0f);
+        meshes[1].mesh_transform.translate=glm::vec3(0.0f,1.0f,0.0f);
+        meshes[2].mesh_transform.translate=glm::vec3(0.0f,0.0f,1.0f);
+
+        Ubuffer_ref.updateUniformBuffer(0, swap_ref.swapChainExtent);
+        Ubuffer_ref.updateUniformBuffer(1, swap_ref.swapChainExtent);
+        Ubuffer_ref.updateUniformBuffer(2, swap_ref.swapChainExtent);
     }
     void Renderer::recreateSwapChain()
     {
@@ -77,9 +86,9 @@ namespace VkRenderer
         Dbuffer_ref.createDepthResources(swap_ref.swapChainExtent);
         Fbuffer_ref.createFramebuffers();
         
-        Ubuffer_ref.createUniformBuffers(swap_ref.swapChainImages);
-        Ubuffer_ref.createDescriptorPool(swap_ref.swapChainImages);
-        Ubuffer_ref.createDescriptorSets(swap_ref.swapChainImages.size(), texture_m_ref.textureImageView, texture_m_ref.textureSampler);
+        Ubuffer_ref.createUniformBuffers();
+        Ubuffer_ref.createDescriptorPool();
+        Ubuffer_ref.createDescriptorSets(texture_m_ref.textureImageView, texture_m_ref.textureSampler);
         
 
         Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, Ubuffer_ref.descriptorSets);
@@ -106,7 +115,7 @@ namespace VkRenderer
         }
 
         vkDestroySwapchainKHR(setup_ref.device, swap_ref.swapChain, nullptr);
-        for (size_t i = 0; i < swap_ref.swapChainImages.size(); i++) {
+        for (size_t i = 0; i < meshes.size(); i++) {
             vkDestroyBuffer(setup_ref.device, Ubuffer_ref.uniformBuffers[i], nullptr);
             vkFreeMemory(setup_ref.device, Ubuffer_ref.uniformBuffersMemory[i], nullptr);
         }
@@ -153,7 +162,7 @@ namespace VkRenderer
 
         uint32_t imageIndex;
         VkResult result = vkAcquireNextImageKHR(setup_ref.device, swap_ref.swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
-
+        
         if (result == VK_ERROR_OUT_OF_DATE_KHR) {
             recreateSwapChain();
             return;
@@ -161,11 +170,9 @@ namespace VkRenderer
             throw std::runtime_error("failed to acquire swap chain image!");
         }
 
-        for (int i=0; i < meshes.size(); i++)
-        {
+        
 
-            meshes[i].update(imageIndex);
-        }
+        
 
         if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) {
             vkWaitForFences(setup_ref.device, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
