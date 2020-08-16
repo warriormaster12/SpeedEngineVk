@@ -32,6 +32,8 @@ namespace VkRenderer
         texture_m_ref.createTextureImageView();
         texture_m_ref.createTextureSampler();
 
+        meshes[2].model_ref.MODEL_PATH = "EngineAssets/Models/nanosuit.obj";
+
         for (int i = 0; i < meshes.size(); i++) {
             //IndexBuffer
             meshes[i].Ibuffer_ref.setup_ref = &setup_ref;
@@ -64,6 +66,7 @@ namespace VkRenderer
         meshes[0].mesh_transform.translate=glm::vec3(0.0f,-1.0f,0.0f);
         meshes[1].mesh_transform.translate=glm::vec3(0.0f,1.0f,0.0f);
         meshes[2].mesh_transform.translate=glm::vec3(0.0f,0.0f,1.0f);
+        meshes[2].mesh_transform.scale=glm::vec3(0.1f,0.1f,0.1f);
     }
     void Renderer::recreateSwapChain()
     {
