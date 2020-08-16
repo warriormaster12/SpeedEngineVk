@@ -6,20 +6,43 @@ void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
     app->framebufferResized = true;
 }
 
- void AppWindow::initWindow()
+ void AppWindow::initWindow(int window_mode)
 {
     glfwInit();
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-    window = glfwCreateWindow(WIDTH, HEIGHT, "SpeedEngineVk", nullptr, nullptr);
+    
+    set_window_mode(window_mode);
+
     glfwSetWindowUserPointer(window, this);
     glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
 
+}
+
+void AppWindow::set_window_mode(int window_mode)
+{
+    if(window_mode == 1)
+    {
+        get_resolution();
+        window = glfwCreateWindow(WIDTH, HEIGHT, "SpeedEngineVk", glfwGetPrimaryMonitor(), nullptr);
+    }
+    else if (window_mode == 0)
+    {
+       window = glfwCreateWindow(WIDTH, HEIGHT, "SpeedEngineVk", nullptr, nullptr); 
+    }
 }
 
 void AppWindow::cleanupWindow()
 {
     glfwDestroyWindow(window);
     glfwTerminate();
+}
+
+void AppWindow::get_resolution()
+{
+    const GLFWvidmode * mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+    WIDTH = mode->width;
+    HEIGHT = mode->height;
 }
 
 

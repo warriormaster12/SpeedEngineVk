@@ -27,7 +27,7 @@ namespace VkRenderer
         meshes.emplace_back();
         
 
-
+    
         texture_m_ref.createTextureImage("EngineAssets/Textures/viking_room.png", Cbuffer_ref.commandPool);
         texture_m_ref.createTextureImageView();
         texture_m_ref.createTextureSampler();
@@ -128,7 +128,7 @@ namespace VkRenderer
         
         vkDestroySampler(setup_ref.device, texture_m_ref.textureSampler, nullptr);
         vkDestroyImageView(setup_ref.device, texture_m_ref.textureImageView, nullptr);
-
+        
         vkDestroyImage(setup_ref.device, texture_m_ref.textureImage, nullptr);
         vkFreeMemory(setup_ref.device, texture_m_ref.textureImageMemory, nullptr);
 

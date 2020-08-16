@@ -28,6 +28,7 @@ namespace VkRenderer
         VkSetup *setup_ref;
         
         Transform3D mesh_transform;
+        std::string TEXTURE_PATH = "EngineAssets/Textures/viking_room.png";
         
         
 
