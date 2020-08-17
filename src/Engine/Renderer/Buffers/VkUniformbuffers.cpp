@@ -37,6 +37,7 @@ namespace VkRenderer
         ubo.view = camera_object.matrices.view;
         ubo.proj = camera_object.matrices.perspective;
 
+        camera_object.CameraUpdate(time);
 
         ubo.lightPosition = glm::vec3(1.0f, 10000.0f, 0.0f);
     
