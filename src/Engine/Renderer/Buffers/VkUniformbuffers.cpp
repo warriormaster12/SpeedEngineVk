@@ -16,20 +16,27 @@ namespace VkRenderer
 
     void VkUbuffer::updateUniformBuffer(uint32_t DescriptorSetIndex, VkExtent2D& swapChainExtent)
     {
+        
         static auto startTime = std::chrono::high_resolution_clock::now();
 
         auto currentTime = std::chrono::high_resolution_clock::now();
         float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-
+        
+        
         UniformBufferObject ubo{};
+        glm::mat4 rotM = glm::mat4(1.0f);
 
-        ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(30.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        rotM = glm::rotate(rotM, glm::radians(meshes[DescriptorSetIndex]->mesh_transform.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+        rotM= glm::rotate(rotM, glm::radians(meshes[DescriptorSetIndex]->mesh_transform.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+        rotM= glm::rotate(rotM, glm::radians(meshes[DescriptorSetIndex]->mesh_transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+        ubo.model = rotM;
         ubo.model = glm::translate(ubo.model, meshes[DescriptorSetIndex]->mesh_transform.translate);
         ubo.model = glm::scale(ubo.model, meshes[DescriptorSetIndex]->mesh_transform.scale);	
+        
+        camera_object.Set_Camera(swapChainExtent.width / (float) swapChainExtent.height);
+        ubo.view = camera_object.matrices.view;
+        ubo.proj = camera_object.matrices.perspective;
 
-        ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        ubo.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float) swapChainExtent.height, 0.1f, 100.0f);
-        ubo.proj[1][1] *= -1;
 
         ubo.lightPosition = glm::vec3(1.0f, 10000.0f, 0.0f);
     

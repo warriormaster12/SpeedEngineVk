@@ -4,6 +4,7 @@
 #include "../Renderer/VkSetup.h"
 #include "../Renderer/Buffers/VkVertexbuffers.h"
 #include "../Renderer/Buffers/VkIndexbuffers.h"
+#include "../Math/Math3D.h"
 
 
 
@@ -12,11 +13,7 @@
 
 namespace VkRenderer
 {
-    struct Transform3D
-    {
-        glm::vec3 translate;
-        glm::vec3 scale;
-    };
+    
     class Mesh 
     {
     public: 

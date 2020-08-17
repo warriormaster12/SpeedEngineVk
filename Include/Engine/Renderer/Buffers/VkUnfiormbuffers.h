@@ -4,6 +4,7 @@
 #include "../VkSetup.h"
 #include "../VkMemory.h"
 #include "VkBufferCreation.h"
+#include "../Camera/Camera.h"
 #include "../../Components/Mesh.h"
 
 
@@ -38,5 +39,6 @@ namespace VkRenderer
         VkMemory *memory_ref;
         VkBufferCreation *buffer_ref;
         std::vector <Mesh*> meshes;
+        Camera camera_object;
     };
 }
