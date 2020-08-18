@@ -15,14 +15,16 @@ namespace VkRenderer
 		matrices.perspective[1][1] *= -1.0f;
     }
 
-    void Camera::CameraUpdate(double DeltaT)
+    void Camera::CameraUpdate()
     {
-      
-        
-       camera_speed = 0.05f * DeltaT;
-       ///if (glfwGetKey(win_ref->window, GLFW_KEY_W) == GLFW_PRESS)
-       
+
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+        camera_speed = 0.25f * deltaTime;
+        //if (glfwGetKey(win_ref->window, GLFW_KEY_W) == GLFW_PRESS)
         camera_transform.translate += camera_speed * cameraFront;
+        camera_transform.translate += camera_speed * cameraUp;
            
        
         

@@ -17,10 +17,6 @@ namespace VkRenderer
     void VkUbuffer::updateUniformBuffer(uint32_t DescriptorSetIndex, VkExtent2D& swapChainExtent)
     {
         
-        static auto startTime = std::chrono::high_resolution_clock::now();
-
-        auto currentTime = std::chrono::high_resolution_clock::now();
-        float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
         
         
         UniformBufferObject ubo{};
@@ -37,7 +33,7 @@ namespace VkRenderer
         ubo.view = camera_object.matrices.view;
         ubo.proj = camera_object.matrices.perspective;
 
-        camera_object.CameraUpdate(time);
+        camera_object.CameraUpdate();
 
         ubo.lightPosition = glm::vec3(1.0f, 10000.0f, 0.0f);
     

@@ -30,8 +30,11 @@ namespace VkRenderer
 
 
         void Set_Camera(float aspect);
-        void CameraUpdate(double DeltaT);
+        void CameraUpdate();
         Camera();
+    private: 
+        float deltaTime = 0.0f;
+        float lastFrame = 0.0f;
     };
 }
 
