@@ -20,7 +20,7 @@ namespace VkRenderer
         
         float fov = 60.0f;
 	    float znear = 0.1f, zfar=100.0f;
-        float camera_speed = 1.0f;
+        float movement_speed = 1.0f;
         //AppWindow *win_ref;
         
 
@@ -30,11 +30,10 @@ namespace VkRenderer
 
 
         void Set_Camera(float aspect);
-        void CameraUpdate();
+        void CameraUpdate(double DeltaT, GLFWwindow *window);
         Camera();
     private: 
-        float deltaTime = 0.0f;
-        float lastFrame = 0.0f;
+        void processMovement(double DeltaT, GLFWwindow *window);
     };
 }
 

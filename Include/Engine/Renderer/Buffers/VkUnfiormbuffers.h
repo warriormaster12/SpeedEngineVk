@@ -25,7 +25,7 @@ namespace VkRenderer
         void createDescriptorPool();
         void createDescriptorSets(VkImageView& textureImageView, VkSampler& textureSampler);
         void createUniformBuffer();
-        void updateUniformBuffer(uint32_t DescriptorSetIndex, VkExtent2D& swapChainExtent);
+        void updateUniformBuffer(uint32_t DescriptorSetIndex, VkExtent2D& swapChainExtent, GLFWwindow *window);
 
         VkDescriptorSetLayout descriptorSetLayout;
         VkDescriptorPool descriptorPool;
@@ -40,5 +40,8 @@ namespace VkRenderer
         VkBufferCreation *buffer_ref;
         std::vector <Mesh*> meshes;
         Camera camera_object;
+    private: 
+        float deltaTime = 0.0f;
+        float lastFrame = 0.0f;
     };
 }

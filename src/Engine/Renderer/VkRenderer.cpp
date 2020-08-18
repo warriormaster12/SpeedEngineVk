@@ -174,7 +174,7 @@ namespace VkRenderer
 
         for (int i=0; i < meshes.size(); i++)
         {
-            Ubuffer_ref.updateUniformBuffer(i, swap_ref.swapChainExtent);
+            Ubuffer_ref.updateUniformBuffer(i, swap_ref.swapChainExtent, win_ref->window);
         }
 
         

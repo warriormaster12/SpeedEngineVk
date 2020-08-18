@@ -15,19 +15,38 @@ namespace VkRenderer
 		matrices.perspective[1][1] *= -1.0f;
     }
 
-    void Camera::CameraUpdate()
+    void Camera::CameraUpdate(double DeltaT, GLFWwindow *window)
     {
+       processMovement(DeltaT, window);
 
-        float currentFrame = glfwGetTime();
-        deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
-        camera_speed = 0.25f * deltaTime;
-        //if (glfwGetKey(win_ref->window, GLFW_KEY_W) == GLFW_PRESS)
-        camera_transform.translate += camera_speed * cameraFront;
-        camera_transform.translate += camera_speed * cameraUp;
-           
        
-        
-
+    }
+    void Camera::processMovement(double DeltaT, GLFWwindow *window)
+    {
+        float camera_speed = movement_speed * DeltaT;
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        {
+            camera_transform.translate += camera_speed * cameraFront;
+        }
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        {
+            camera_transform.translate -= camera_speed * cameraFront;
+        }
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        {
+            camera_transform.translate -= glm::normalize(glm::cross(cameraFront, cameraUp)) * camera_speed;
+        }
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        {
+            camera_transform.translate+= glm::normalize(glm::cross(cameraFront, cameraUp)) * camera_speed;
+        }
+        if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+        {
+            camera_transform.translate += camera_speed * cameraUp;
+        }
+        if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+        {
+            camera_transform.translate -= camera_speed * cameraUp;
+        }
     }
 }
