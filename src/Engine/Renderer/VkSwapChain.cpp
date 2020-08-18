@@ -10,13 +10,13 @@ namespace VkRenderer
             throw std::runtime_error("failed to create window surface!");
         }
    } 
-   void VkSwapChain::createSwapChain()
+   void VkSwapChain::createSwapChain(GLFWwindow *window)
    {
         SwapChainSupportDetails swapChainSupport = querySwapChainSupport(setup_ref->physicalDevice);
 
         VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
         VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
-        VkExtent2D extent = chooseSwapExtent(swapChainSupport.capabilities);
+        VkExtent2D extent = chooseSwapExtent(swapChainSupport.capabilities, window);
 
         uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
         if (swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount) {
@@ -93,13 +93,13 @@ namespace VkRenderer
 
         return VK_PRESENT_MODE_FIFO_KHR; 
     }
-    VkExtent2D VkSwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities)
+    VkExtent2D VkSwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities, GLFWwindow *window)
     {
         if (capabilities.currentExtent.width != UINT32_MAX) {
             return capabilities.currentExtent;
         } else {
             int width, height;
-            glfwGetFramebufferSize(win_ref->window, &width, &height);
+            glfwGetFramebufferSize(window, &width, &height);
 
             VkExtent2D actualExtent = {
                 static_cast<uint32_t>(width),

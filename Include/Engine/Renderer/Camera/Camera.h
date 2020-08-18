@@ -2,6 +2,8 @@
 
 #include "../VkIncludes.h"
 #include "../../Math/Math3D.h"
+#include "../../Window/Window.h"
+
 
 namespace VkRenderer
 {
@@ -16,10 +18,15 @@ namespace VkRenderer
             glm::mat4 view;
         } matrices;
         
-        float fov = 90.0f;
+        float fov = 60.0f;
 	    float znear = 0.1f, zfar=100.0f;
         float camera_speed = 1.0f;
-        glm::vec3 position;
+        //AppWindow *win_ref;
+        
+
+        glm::vec3 cameraFront = glm::vec3(-1.0f, 0.0f, 0.0f);
+        glm::vec3 cameraUp    = glm::vec3(0.0f, 0.0f,  1.0f);   
+       
 
 
         void Set_Camera(float aspect);
