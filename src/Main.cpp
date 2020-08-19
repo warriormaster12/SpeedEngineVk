@@ -3,54 +3,50 @@
 #include "../Include/Engine/Components/Mesh.h"
 
 
-class Engine 
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+VkRenderer::Renderer renderer_ref;
+AppWindow glfw_win_ref;
+window_mode mode;
+
+
+void cleanup()
 {
-public: 
-    void run()
+    renderer_ref.DestroyVulkan();
+    glfw_win_ref.cleanupWindow();
+}
+void mainLoop()
+{
+    while (!glfwWindowShouldClose(glfw_win_ref.window))
     {
-        glfw_win_ref.initWindow(mode.fullscreen);
-        renderer_ref.win_ref = &glfw_win_ref;
-        renderer_ref.InitVulkan();
-        mainLoop();
-        cleanup();
-    }
-    
-    
+        glfwPollEvents();
+        renderer_ref.drawFrame();
 
-private: 
-    VkRenderer::Renderer renderer_ref;
-    AppWindow glfw_win_ref;
-    window_mode mode;
-    
-   
-    
-    void mainLoop()
-    {
-        while (!glfwWindowShouldClose(glfw_win_ref.window))
+        if(glfwGetKey(glfw_win_ref.window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         {
-            glfwPollEvents();
-            renderer_ref.drawFrame();
-
-            if(glfwGetKey(glfw_win_ref.window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-            {
-                glfwSetWindowShouldClose(glfw_win_ref.window, true);
-            }
+            glfwSetWindowShouldClose(glfw_win_ref.window, true);
         }
-        vkDeviceWaitIdle(renderer_ref.setup_ref.device);
     }
-    void cleanup()
-    {
-        renderer_ref.DestroyVulkan();
-        glfw_win_ref.cleanupWindow();
-    }
+    vkDeviceWaitIdle(renderer_ref.setup_ref.device);
+}
+
+void run()
+{
     
-};
+
+    glfw_win_ref.initWindow(mode.fullscreen);
+    renderer_ref.win_ref = &glfw_win_ref;
+    glfwSetCursorPosCallback(glfw_win_ref.window, mouse_callback);
+    renderer_ref.InitVulkan();
+    mainLoop();
+    cleanup();
+
+    
+}
 
 int main()
 {
-    Engine engine_ref; 
     try {
-        engine_ref.run();
+        run();
     } catch (const std::exception& e)
     {
         std::cerr << e.what() << std::endl;
@@ -58,5 +54,13 @@ int main()
     }
     
     return EXIT_SUCCESS;
+}
+    
+    
+
+ 
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    renderer_ref.Ubuffer_ref.camera_object.processMouse(xpos, ypos);
 }
 

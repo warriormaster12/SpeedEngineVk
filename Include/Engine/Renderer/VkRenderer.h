@@ -30,6 +30,7 @@ namespace VkRenderer
         void DestroyVulkan();
         VkSetup setup_ref;
         AppWindow *win_ref;
+        VkUbuffer Ubuffer_ref;
         
     private:  
         VkSwapChain swap_ref;
@@ -37,7 +38,7 @@ namespace VkRenderer
         VkframeBuffer Fbuffer_ref;
         VkcommandBuffer Cbuffer_ref;
         std::vector <Mesh> meshes;
-        VkUbuffer Ubuffer_ref;
+        
         VkTextureManager texture_m_ref;
         VkMemory memory_ref;
         VkBufferCreation buffer_ref;
