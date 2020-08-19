@@ -10,10 +10,10 @@ namespace VkRenderer
 
         setup_ref.createInstance();
         setup_ref.setupDebugMessenger();
-        swap_ref.createSurface(win_ref->window);
+        swap_ref.createSurface();
         swap_ref.pickPhysicalDevice();
         setup_ref.createLogicalDevice(swap_ref.surface);
-        swap_ref.createSwapChain(win_ref->window);
+        swap_ref.createSwapChain();
         swap_ref.createImageViews();
         gpipeline_ref.createRenderPass(swap_ref.swapChainImageFormat);
         Ubuffer_ref.createDescriptorSetLayout();
@@ -81,7 +81,7 @@ namespace VkRenderer
 
         cleanupSwapChain();
 
-        swap_ref.createSwapChain(win_ref->window);
+        swap_ref.createSwapChain();
         swap_ref.createImageViews();
         gpipeline_ref.createRenderPass(swap_ref.swapChainImageFormat);
         gpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent);
@@ -174,7 +174,7 @@ namespace VkRenderer
 
         for (int i=0; i < meshes.size(); i++)
         {
-            Ubuffer_ref.updateUniformBuffer(i, swap_ref.swapChainExtent, win_ref->window);
+            Ubuffer_ref.updateUniformBuffer(i, swap_ref.swapChainExtent);
         }
 
         

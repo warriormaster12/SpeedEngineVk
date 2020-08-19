@@ -15,38 +15,48 @@ namespace VkRenderer
 		matrices.perspective[1][1] *= -1.0f;
     }
 
-    void Camera::CameraUpdate(double DeltaT, GLFWwindow *window)
+    void Camera::CameraUpdate(double DeltaT)
     {
-       processMovement(DeltaT, window);
+       processMovement(DeltaT);
 
-       
+
     }
-    void Camera::processMovement(double DeltaT, GLFWwindow *window)
+    void Camera::processMovement(double DeltaT)
     {
         float camera_speed = movement_speed * DeltaT;
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        if (glfwGetKey((*win_ref)->window, GLFW_KEY_W) == GLFW_PRESS)
         {
             camera_transform.translate += camera_speed * cameraFront;
         }
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        if (glfwGetKey((*win_ref)->window, GLFW_KEY_S) == GLFW_PRESS)
         {
             camera_transform.translate -= camera_speed * cameraFront;
         }
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        if (glfwGetKey((*win_ref)->window, GLFW_KEY_A) == GLFW_PRESS)
         {
             camera_transform.translate -= glm::normalize(glm::cross(cameraFront, cameraUp)) * camera_speed;
         }
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        if (glfwGetKey((*win_ref)->window, GLFW_KEY_D) == GLFW_PRESS)
         {
             camera_transform.translate+= glm::normalize(glm::cross(cameraFront, cameraUp)) * camera_speed;
         }
-        if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+        if (glfwGetKey((*win_ref)->window, GLFW_KEY_E) == GLFW_PRESS)
         {
             camera_transform.translate += camera_speed * cameraUp;
         }
-        if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+        if (glfwGetKey((*win_ref)->window, GLFW_KEY_Q) == GLFW_PRESS)
         {
             camera_transform.translate -= camera_speed * cameraUp;
         }
+
+        if (glfwGetKey((*win_ref)->window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+        {
+            movement_speed = 2.0f;
+        }
+        else
+        {
+            movement_speed = 1.0f;
+        }
+        
     }
 }

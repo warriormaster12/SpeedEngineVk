@@ -21,7 +21,7 @@ namespace VkRenderer
         float fov = 60.0f;
 	    float znear = 0.1f, zfar=100.0f;
         float movement_speed = 1.0f;
-        //AppWindow *win_ref;
+        AppWindow **win_ref;
         
 
         glm::vec3 cameraFront = glm::vec3(-1.0f, 0.0f, 0.0f);
@@ -30,10 +30,10 @@ namespace VkRenderer
 
 
         void Set_Camera(float aspect);
-        void CameraUpdate(double DeltaT, GLFWwindow *window);
+        void CameraUpdate(double DeltaT);
         Camera();
     private: 
-        void processMovement(double DeltaT, GLFWwindow *window);
+        void processMovement(double DeltaT);
     };
 }
 

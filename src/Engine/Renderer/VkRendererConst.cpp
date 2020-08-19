@@ -6,7 +6,7 @@ namespace VkRenderer
     {
         
         //SwapChain
-        swap_ref.win_ref = win_ref;
+        swap_ref.win_ref = &win_ref;
         swap_ref.setup_ref = &setup_ref;
         swap_ref.texture_m_ref = &texture_m_ref;
 
@@ -19,6 +19,7 @@ namespace VkRenderer
         Ubuffer_ref.setup_ref = &setup_ref;
         Ubuffer_ref.memory_ref = &memory_ref;
         Ubuffer_ref.buffer_ref = &buffer_ref;
+        Ubuffer_ref.camera_object.win_ref = &win_ref;
         
         //BufferCreation
         buffer_ref.setup_ref = &setup_ref;

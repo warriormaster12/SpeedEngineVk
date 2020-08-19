@@ -14,7 +14,7 @@ namespace VkRenderer
         }
     }
 
-    void VkUbuffer::updateUniformBuffer(uint32_t DescriptorSetIndex, VkExtent2D& swapChainExtent, GLFWwindow *window)
+    void VkUbuffer::updateUniformBuffer(uint32_t DescriptorSetIndex, VkExtent2D& swapChainExtent)
     {
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
@@ -36,7 +36,7 @@ namespace VkRenderer
         ubo.view = camera_object.matrices.view;
         ubo.proj = camera_object.matrices.perspective;
 
-        camera_object.CameraUpdate(deltaTime, window);
+        camera_object.CameraUpdate(deltaTime);
 
         ubo.lightPosition = glm::vec3(1.0f, 10000.0f, 0.0f);
     

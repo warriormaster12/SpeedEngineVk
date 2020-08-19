@@ -8,8 +8,8 @@ class Engine
 public: 
     void run()
     {
-        renderer_ref.win_ref = &glfw_win_ref;
         glfw_win_ref.initWindow(mode.fullscreen);
+        renderer_ref.win_ref = &glfw_win_ref;
         renderer_ref.InitVulkan();
         mainLoop();
         cleanup();
@@ -20,7 +20,7 @@ public:
 private: 
     VkRenderer::Renderer renderer_ref;
     AppWindow glfw_win_ref;
-     window_mode mode;
+    window_mode mode;
     
    
     
