@@ -4,7 +4,7 @@ namespace VkRenderer
 {
     Camera::Camera()
     {
-        camera_transform.translate = glm::vec3(3.0f, 0.0f, 1.0f);
+        camera_transform.translate = glm::vec3(3.0f, 1.0f, 0.0f);
     }
     void Camera::Set_Camera(float aspect)
     {
