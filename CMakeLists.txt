@@ -47,5 +47,9 @@ target_link_libraries(SpeedEngineVk PRIVATE glfw)
 add_subdirectory(lib/glm EXCLUDE_FROM_ALL)
 target_link_libraries(SpeedEngineVk PRIVATE glm)
 
+#glslang 
+add_subdirectory(lib/glslang EXCLUDE_FROM_ALL)
+target_link_libraries(SpeedEngineVk PRIVATE glslang SPIRV)
+
 file(COPY ${PROJECT_SOURCE_DIR}/EngineAssets DESTINATION ${PROJECT_BINARY_DIR})
 
