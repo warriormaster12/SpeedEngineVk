@@ -133,9 +133,11 @@ namespace VkRenderer
         }
     }
 
-     const std::vector<unsigned int> VkShader::CompileGLSL(const std::string& filename)
+     const std::vector<unsigned int> VkShader::CompileGLSL(const std::string& filename, const std::string& compiled_shader)
      {
-         if (!glslangInitialized)
+        std::ifstream spvFile(compiled_shader, std::ios::ate | std::ios::binary);
+        
+        if (!glslangInitialized)
         {
             glslang::InitializeProcess();
             glslangInitialized = true;
@@ -158,6 +160,7 @@ namespace VkRenderer
         glslang::TShader Shader(ShaderType);
 
         Shader.setStrings(&InputCString, 1);
+        
 
         int ClientInputSemanticsVersion = 100; // maps to, say, #define VULKAN 100
         glslang::EShTargetClientVersion VulkanClientVersion = glslang::EShTargetVulkan_1_0;
@@ -213,9 +216,20 @@ namespace VkRenderer
         spv::SpvBuildLogger logger;
         glslang::SpvOptions spvOptions;
         glslang::GlslangToSpv(*Program.getIntermediate(ShaderType), SpirV, &logger, &spvOptions);
-        return SpirV;
+        glslang::OutputSpvBin(SpirV, compiled_shader.c_str());   
+        return SpirV;  
+        // else
+        // {
+        //     size_t fileSize = (size_t) spvFile.tellg();
+        //     std::vector<char> buffer(fileSize);
 
-        
+        //     spvFile.seekg(0);
+        //     spvFile.read(buffer.data(), fileSize);
+
+        //     spvFile.close();
+
+        //     return buffer;   
+        // }
         
      }
 

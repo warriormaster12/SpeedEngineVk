@@ -5,8 +5,9 @@ namespace VkRenderer
 {
     void VkGPipeline::createGraphicsPipeline(VkExtent2D& swapChainExtent)
     {
-        auto vertShaderCode = shader_ref.CompileGLSL("EngineAssets/Shaders/Shader.vert");
-        auto fragShaderCode = shader_ref.CompileGLSL("EngineAssets/Shaders/Shader.frag");
+        auto vertShaderCode = shader_ref.CompileGLSL("EngineAssets/Shaders/Shader.vert", "EngineAssets/Shaders/vert.spv");
+        auto fragShaderCode = shader_ref.CompileGLSL("EngineAssets/Shaders/Shader.frag", "EngineAssets/Shaders/frag.spv");
+
 
         VkShaderModule vertShaderModule = shader_ref.createShaderModule(vertShaderCode, setup_ref->device);
         VkShaderModule fragShaderModule = shader_ref.createShaderModule(fragShaderCode, setup_ref->device);
