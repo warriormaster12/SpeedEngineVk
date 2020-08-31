@@ -13,10 +13,12 @@ namespace VkRenderer
     public: 
         VkShader();
         
-        VkShaderModule createShaderModule(const std::vector<unsigned int>& code, VkDevice& device);
+        VkShaderModule createShaderModule(const std::vector<char>& code, VkDevice& device);
 
         std::string GetSuffix(const std::string& name);
         EShLanguage GetShaderStage(const std::string& stage);
+
+        static std::vector<char> readFile(const std::string& filename);
         
 
         const std::vector<unsigned int> CompileGLSL(const std::string& filename, const std::string& compiled_shader);
@@ -24,6 +26,7 @@ namespace VkRenderer
     private:
         bool glslangInitialized = false;
         TBuiltInResource DefaultTBuiltInResource {};
+        
        
     };
 }

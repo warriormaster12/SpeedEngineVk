@@ -133,10 +133,8 @@ namespace VkRenderer
         }
     }
 
-     const std::vector<unsigned int> VkShader::CompileGLSL(const std::string& filename, const std::string& compiled_shader)
-     {
-        std::ifstream spvFile(compiled_shader, std::ios::ate | std::ios::binary);
-        
+    const std::vector<unsigned int> VkShader::CompileGLSL(const std::string& filename, const std::string& compiled_shader)
+    {
         if (!glslangInitialized)
         {
             glslang::InitializeProcess();
@@ -192,11 +190,6 @@ namespace VkRenderer
         }
         const char* PreprocessedCStr = PreprocessedGLSL.c_str();
         Shader.setStrings(&PreprocessedCStr, 1);
-
-        
-        
-        
-
         if (!Shader.parse(&Resources, 100, false, messages))
         {
             std::cout << "GLSL Parsing Failed for: " << filename << std::endl;
@@ -217,33 +210,41 @@ namespace VkRenderer
         glslang::SpvOptions spvOptions;
         glslang::GlslangToSpv(*Program.getIntermediate(ShaderType), SpirV, &logger, &spvOptions);
         glslang::OutputSpvBin(SpirV, compiled_shader.c_str());   
+
         return SpirV;  
-        // else
-        // {
-        //     size_t fileSize = (size_t) spvFile.tellg();
-        //     std::vector<char> buffer(fileSize);
-
-        //     spvFile.seekg(0);
-        //     spvFile.read(buffer.data(), fileSize);
-
-        //     spvFile.close();
-
-        //     return buffer;   
-        // }
         
-     }
+    }
 
-     std::string VkShader::GetFilePath(const std::string& str)
+    std::vector<char> VkShader::readFile(const std::string& filename)
+    {
+        std::ifstream file(filename, std::ios::ate | std::ios::binary);
+
+        if (!file.is_open()) {
+            throw std::runtime_error("failed to open file!");
+        }
+
+        size_t fileSize = (size_t) file.tellg();
+        std::vector<char> buffer(fileSize);
+
+        file.seekg(0);
+        file.read(buffer.data(), fileSize);
+
+        file.close();
+
+        return buffer;
+    }
+
+    std::string VkShader::GetFilePath(const std::string& str)
     {
         size_t found = str.find_last_of("/\\");
         return str.substr(0,found);
         //size_t FileName = str.substr(found+1);
     }
 
-     VkShaderModule VkShader::createShaderModule(const std::vector<unsigned int>& code, VkDevice& device) {
+     VkShaderModule VkShader::createShaderModule(const std::vector<char>& code, VkDevice& device) {
         VkShaderModuleCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-        createInfo.codeSize = code.size() * sizeof(uint32_t);
+        createInfo.codeSize = code.size();
         createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
 
         VkShaderModule shaderModule;

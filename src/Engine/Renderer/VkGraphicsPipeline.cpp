@@ -5,8 +5,20 @@ namespace VkRenderer
 {
     void VkGPipeline::createGraphicsPipeline(VkExtent2D& swapChainExtent)
     {
-        auto vertShaderCode = shader_ref.CompileGLSL("EngineAssets/Shaders/Shader.vert", "EngineAssets/Shaders/vert.spv");
-        auto fragShaderCode = shader_ref.CompileGLSL("EngineAssets/Shaders/Shader.frag", "EngineAssets/Shaders/frag.spv");
+        std::ifstream vertS("EngineAssets/Shaders/vert.spv");
+        std::ifstream fragS("EngineAssets/Shaders/frag.spv");
+        if (!vertS)
+        {
+            shader_ref.CompileGLSL("EngineAssets/Shaders/Shader.vert", "EngineAssets/Shaders/" "vert" ".spv"); //testing for future abstraction
+            std::cout<<"vertex shader compiled"<<std::endl;
+        }
+        if (!fragS)
+        {
+            shader_ref.CompileGLSL("EngineAssets/Shaders/Shader.frag", "EngineAssets/Shaders/frag.spv");
+            std::cout<<"fragment shader compiled"<<std::endl;
+        }
+        auto vertShaderCode = shader_ref.readFile("EngineAssets/Shaders/vert.spv");
+        auto fragShaderCode = shader_ref.readFile("EngineAssets/Shaders/frag.spv");
 
 
         VkShaderModule vertShaderModule = shader_ref.createShaderModule(vertShaderCode, setup_ref->device);
