@@ -5,8 +5,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-find_package(Vulkan REQUIRED)
+
 find_package(X11 REQUIRED)
+find_package(Vulkan REQUIRED)
+
 
 file(GLOB_RECURSE SRC ${PROJECT_SOURCE_DIR}/src/*)
 
@@ -14,8 +16,6 @@ add_executable(SpeedEngineVk ${SRC})
 
 target_include_directories(SpeedEngineVk PUBLIC
     Include
-    ${VK_INCLUDE_DIRS}
-    ${VK_INCLUDE_DIRS}/vulkan
 )
 
 
@@ -23,7 +23,6 @@ target_include_directories(SpeedEngineVk PUBLIC
 if (UNIX AND NOT APPLE)
     set (LINUX TRUE)
 	target_compile_definitions(SpeedEngineVk PRIVATE -DVK_USE_PLATFORM_XLIB_KHR)
-
 	target_include_directories(SpeedEngineVk PRIVATE Vulkan::Vulkan)
 	target_include_directories(SpeedEngineVk PRIVATE ${X11+INCLUDE_DIR})
 	target_link_libraries(SpeedEngineVk PRIVATE Vulkan::Vulkan)
@@ -32,7 +31,6 @@ endif ()
 
 if (WIN32)
 	target_compile_definitions(SpeedEngineVk PRIVATE -DVK_USE_PLATFORM_WIN32LIB_KHR)
-
 	target_include_directories(SpeedEngineVk PRIVATE Vulkan::Vulkan)
 	target_include_directories(SpeedEngineVk PRIVATE ${WIN32+INCLUDE_DIR})
 	target_link_libraries(SpeedEngineVk PRIVATE Vulkan::Vulkan)
