@@ -14,7 +14,7 @@ Download Vulkan-SDK https://vulkan.lunarg.com/
 ```
 
 
-#### additional dependencie for Windows
+#### additional dependencies for Windows
 ```
 Download and install cmake-gui https://cmake.org/download/
 Download and install python for compiling glslang https://www.python.org/downloads/
