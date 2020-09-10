@@ -16,7 +16,8 @@ Download Vulkan-SDK https://vulkan.lunarg.com/
 
 #### additional dependencie for Windows
 ```
-Download cmake-gui and install https://cmake.org/download/
+Download and install cmake-gui https://cmake.org/download/
+Download and install python for compiling glslang https://www.python.org/downloads/
 ```
 
 ####  Vulkan-SDK doc provides installation guide for installing SDK succefully
@@ -34,14 +35,4 @@ $ cmake --build .
 create "build" folder
 Generate build with cmake-gui and build https://youtu.be/LxHV-KNEG3k?t=155
 ```
-### Don't forget to compile shaders 
-#### Linux
-```
-$ cd EngineAssets/Shaders 
-$ ./ShaderCompiler.sh
-```
-#### Windows
-```
-go to "EngineAssets/Shaders" directory
-execute ShaderCompiler.bat
-```
+### Shader compiling is automated 
