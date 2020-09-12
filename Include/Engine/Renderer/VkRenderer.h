@@ -11,6 +11,7 @@
 #include "Buffers/VkDepthBuffer.h"
 #include "Buffers/VkUnfiormbuffers.h"
 #include "VkMemory.h"
+#include "../Config/EngineConf.h"
 #include "../Window/Window.h"
 #include "../Components/Mesh.h"
 
@@ -33,6 +34,8 @@ namespace VkRenderer
         VkUbuffer Ubuffer_ref;
         
     private:  
+        FileConf renderer_config;
+
         VkSwapChain swap_ref;
         VkGPipeline gpipeline_ref;
         VkframeBuffer Fbuffer_ref;
