@@ -156,7 +156,7 @@ namespace VkRenderer
 
         EShLanguage ShaderType = GetShaderStage(GetSuffix(filename));
         glslang::TShader Shader(ShaderType);
-
+        
         Shader.setStrings(&InputCString, 1);
         
 
