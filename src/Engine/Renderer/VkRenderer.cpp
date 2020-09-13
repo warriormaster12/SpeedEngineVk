@@ -6,19 +6,6 @@ namespace VkRenderer
     
     void Renderer::InitVulkan()
     {
-        std::vector <std::string> text_test = 
-        {
-            "[Renderer]",
-            "r.window_width = 1920", 
-            "r.window_height = 1080",
-            "r.window_fullscreen = 1"
-        };
-        renderer_config.generateFile("renderer.conf",text_test);
-        std::vector <std::string> settings_array = renderer_config.readFile("renderer.conf");
-        for(int i = 0; i < settings_array.size(); i++)
-        {
-            std::cout<<settings_array[i]<<std::endl;
-        }
         
         setup_ref.createInstance();
         setup_ref.setupDebugMessenger();

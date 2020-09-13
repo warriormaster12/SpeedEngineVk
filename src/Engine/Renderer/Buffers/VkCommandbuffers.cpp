@@ -53,7 +53,6 @@ namespace VkRenderer
 
             vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
                 
-                VkBool32 Unlit = VK_FALSE;
                 vkCmdPushConstants(commandBuffers[i], gpipeline_ref->pipelineLayout, VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(Unlit), &Unlit);
                 vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, gpipeline_ref->graphicsPipeline);
                 for(int j=0; j < meshes.size(); j++)

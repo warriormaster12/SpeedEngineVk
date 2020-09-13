@@ -21,7 +21,7 @@ namespace VkRenderer
 
         VkSetup *setup_ref;
         VkGPipeline *gpipeline_ref;
-        
+        VkBool32 Unlit = VK_FALSE;
         std::vector <Mesh*> meshes;
 
     };

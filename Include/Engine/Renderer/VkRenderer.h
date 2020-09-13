@@ -11,7 +11,6 @@
 #include "Buffers/VkDepthBuffer.h"
 #include "Buffers/VkUnfiormbuffers.h"
 #include "VkMemory.h"
-#include "../Config/EngineConf.h"
 #include "../Window/Window.h"
 #include "../Components/Mesh.h"
 
@@ -32,14 +31,15 @@ namespace VkRenderer
         VkSetup setup_ref;
         AppWindow *win_ref;
         VkUbuffer Ubuffer_ref;
+        VkcommandBuffer Cbuffer_ref;
         
     private:  
-        FileConf renderer_config;
+        
 
         VkSwapChain swap_ref;
         VkGPipeline gpipeline_ref;
         VkframeBuffer Fbuffer_ref;
-        VkcommandBuffer Cbuffer_ref;
+        
         std::vector <Mesh> meshes;
         
         VkTextureManager texture_m_ref;
