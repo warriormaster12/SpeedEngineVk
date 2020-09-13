@@ -33,6 +33,6 @@ $ cmake --build .
 #### Windows 
 ```
 create "build" folder
-Generate build with cmake-gui and build https://youtu.be/LxHV-KNEG3k?t=155
+Generate compiler instruction set with cmake-gui and build https://youtu.be/LxHV-KNEG3k?t=155
 ```
 ### Shader compiling is automated 
