@@ -58,7 +58,7 @@ namespace VkRenderer
             throw std::runtime_error("failed to create descriptor pool!");
         }   
     }
-    void VkUbuffer::createDescriptorSets(VkImageView& textureImageView, VkSampler& textureSampler)
+    void VkUbuffer::createDescriptorSets()
     {
         descriptorSets.resize(meshes.size());
         for (size_t i = 0; i < meshes.size(); i++) {
@@ -82,8 +82,8 @@ namespace VkRenderer
 
             VkDescriptorImageInfo imageInfo{};
             imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-            imageInfo.imageView = textureImageView;
-            imageInfo.sampler = textureSampler;
+            imageInfo.imageView = meshes[i]->texture.textureImageView;
+            imageInfo.sampler = meshes[i]->texture.textureSampler;
             std::vector<VkWriteDescriptorSet> descriptorWrites = {
                 writeDescriptorSet(descriptorSets[i], VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 0, nullptr, &bufferInfo, 1),
                 writeDescriptorSet(descriptorSets[i], VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1, &imageInfo, nullptr, 1),

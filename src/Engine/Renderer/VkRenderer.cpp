@@ -26,11 +26,8 @@ namespace VkRenderer
         meshes.emplace_back();
         
 
-    
-        texture_m_ref.createTextureImage("EngineAssets/Textures/viking_room.png", Cbuffer_ref.commandPool);
-        texture_m_ref.createTextureImageView();
-        texture_m_ref.createTextureSampler();
 
+        meshes[2].TEXTURE_PATH = "EngineAssets/Textures/chapel_diffuse.tga";
         meshes[2].model_ref.MODEL_PATH = "EngineAssets/Models/chapel_obj.obj";
 
         for (int i = 0; i < meshes.size(); i++) {
@@ -44,7 +41,10 @@ namespace VkRenderer
             
             //Mesh
             meshes[i].setup_ref = &setup_ref;
+            meshes[i].memory_ref = &memory_ref;
+            meshes[i].buffer_ref = &buffer_ref;
 
+            meshes[i].BindTexture(Cbuffer_ref.commandPool);
             meshes[i].InitMesh(Cbuffer_ref.commandPool);
             meshes[i].mesh_transform.rotation = glm::vec3(-90.0f,0.0f,0.0f);
             Ubuffer_ref.meshes.push_back(&meshes[i]);
@@ -56,7 +56,7 @@ namespace VkRenderer
         Ubuffer_ref.createUniformBuffer(); 
         
         Ubuffer_ref.createDescriptorPool();
-        Ubuffer_ref.createDescriptorSets(texture_m_ref.textureImageView,  texture_m_ref.textureSampler);
+        Ubuffer_ref.createDescriptorSets();
         
         
 
@@ -65,8 +65,8 @@ namespace VkRenderer
 
         meshes[0].mesh_transform.translate=glm::vec3(0.0f,-1.0f,0.0f);
         meshes[1].mesh_transform.translate=glm::vec3(0.0f,1.0f,0.0f);
-        meshes[2].mesh_transform.translate=glm::vec3(0.0f,0.0f,1.0f);
-        meshes[2].mesh_transform.scale = glm::vec3(0.001f);
+        meshes[2].mesh_transform.translate=glm::vec3(0.0f,0.0f,3.0f);
+        meshes[2].mesh_transform.scale = glm::vec3(0.002f);
         meshes[2].mesh_transform.rotation = glm::vec3(0.0f, 90.0f, 0.0f);
         
     }
@@ -91,7 +91,7 @@ namespace VkRenderer
         
         Ubuffer_ref.createUniformBuffer();
         Ubuffer_ref.createDescriptorPool();
-        Ubuffer_ref.createDescriptorSets(texture_m_ref.textureImageView, texture_m_ref.textureSampler);
+        Ubuffer_ref.createDescriptorSets();
         
 
         Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, Ubuffer_ref.descriptorSets);
@@ -128,15 +128,12 @@ namespace VkRenderer
     {  
         cleanupSwapChain();
         
-        vkDestroySampler(setup_ref.device, texture_m_ref.textureSampler, nullptr);
-        vkDestroyImageView(setup_ref.device, texture_m_ref.textureImageView, nullptr);
         
-        vkDestroyImage(setup_ref.device, texture_m_ref.textureImage, nullptr);
-        vkFreeMemory(setup_ref.device, texture_m_ref.textureImageMemory, nullptr);
 
         vkDestroyDescriptorSetLayout(setup_ref.device, Ubuffer_ref.descriptorSetLayout, nullptr);  
         for (int i=meshes.size()-1; i >= 0; i--)
         {
+            meshes[i].DestroyTexture();
             meshes[i].DestroyMesh();
         }
 

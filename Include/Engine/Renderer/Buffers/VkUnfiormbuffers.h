@@ -23,7 +23,7 @@ namespace VkRenderer
     public: 
         void createDescriptorSetLayout();
         void createDescriptorPool();
-        void createDescriptorSets(VkImageView& textureImageView, VkSampler& textureSampler);
+        void createDescriptorSets();
         void createUniformBuffer();
         void updateUniformBuffer(uint32_t DescriptorSetIndex, VkExtent2D& swapChainExtent);
 
