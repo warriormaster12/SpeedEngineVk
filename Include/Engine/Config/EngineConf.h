@@ -15,5 +15,5 @@ class FileConf
 {
 public: 
     void generateFile(const std::string fileName, std::vector <std::string> content_to_write);
-    std::vector <int> readFile(const std::string fileName);
+    std::vector <std::string> readFile(const std::string fileName);
 };

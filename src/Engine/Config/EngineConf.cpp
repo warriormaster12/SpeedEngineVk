@@ -19,21 +19,20 @@ void FileConf::generateFile(const std::string fileName, const std::vector <std::
     
 }
 
-std::vector <int> FileConf::readFile(const std::string fileName)
+std::vector <std::string> FileConf::readFile(const std::string fileName)
 {
-    std::vector <int> data_value; 
+    std::vector <std::string> string_value; 
     std::ifstream config_file(fileName);
     if(config_file)
     {
         std::string current_line;
-        int current_value;
-        while(std::getline(config_file, current_line, '=') && config_file >> current_value)
+        while(std::getline(config_file, current_line, '=') && config_file >> current_line)
         {
-            data_value.push_back(current_value);
+            string_value.push_back(current_line);
         }
     }
 
     config_file.close();
     
-    return data_value;
+    return string_value;
 }
