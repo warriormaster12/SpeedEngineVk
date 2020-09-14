@@ -21,7 +21,7 @@ namespace VkRenderer
         void generateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels, VkCommandPool& commandPool);
 
         VkSetup *setup_ref;
-        VkBufferCreation *buffer_ref;
+        VkbufferCreation *buffer_ref;
         VkMemory *memory_ref;
 
         uint32_t mipLevels;

@@ -120,7 +120,7 @@ namespace VkRenderer
         pipelineLayoutInfo.pNext = nullptr;
         pipelineLayoutInfo.flags = 0;
         pipelineLayoutInfo.setLayoutCount = 1;
-        pipelineLayoutInfo.pSetLayouts = &Ubuffer_ref->descriptorSetLayout;
+        pipelineLayoutInfo.pSetLayouts = &uniformBuffer_ref->descriptorSetLayout;
         pipelineLayoutInfo.pushConstantRangeCount = 1;
         pipelineLayoutInfo.pPushConstantRanges = &pushConstanRange;
 

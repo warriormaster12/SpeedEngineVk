@@ -19,6 +19,6 @@ namespace VkRenderer
         void createIndexBuffer(VkCommandPool& commandPool);
 
         VkSetup *setup_ref;
-        VkBufferCreation *buffer_ref;
+        VkbufferCreation *buffer_ref;
     };
 }

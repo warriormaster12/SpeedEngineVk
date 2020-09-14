@@ -87,6 +87,6 @@ int main()
  
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
-    renderer_ref.Ubuffer_ref.camera_object.processMouse(xpos, ypos);
+    renderer_ref.uniformBuffer_ref.camera_object.processMouse(xpos, ypos);
 }
 

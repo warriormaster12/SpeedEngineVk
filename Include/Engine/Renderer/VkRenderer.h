@@ -30,7 +30,7 @@ namespace VkRenderer
         void DestroyVulkan();
         VkSetup setup_ref;
         AppWindow *win_ref;
-        VkUbuffer Ubuffer_ref;
+        VkuniformBuffer uniformBuffer_ref;
         VkcommandBuffer Cbuffer_ref;
         
     private:  
@@ -44,8 +44,8 @@ namespace VkRenderer
         
         VkTextureManager texture_m_ref;
         VkMemory memory_ref;
-        VkBufferCreation buffer_ref;
-        VkDepthBuffer Dbuffer_ref;
+        VkbufferCreation buffer_ref;
+        VkdepthBuffer Dbuffer_ref;
 
         
 

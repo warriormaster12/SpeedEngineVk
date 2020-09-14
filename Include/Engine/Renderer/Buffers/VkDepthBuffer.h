@@ -6,7 +6,7 @@
 
 namespace VkRenderer
 {
-    class VkDepthBuffer
+    class VkdepthBuffer
     {
     public: 
         VkImage depthImage;

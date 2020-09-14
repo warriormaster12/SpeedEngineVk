@@ -15,8 +15,8 @@ namespace VkRenderer
         
 
         void loadModel();
-        VkindexBuffer *Ibuffer_ref;
-        VkVbuffer *Vbuffer_ref;
+        VkindexBuffer *indexBuffer_ref;
+        VkvertexBuffer *vertexBuffer_ref;
         
     };
 }

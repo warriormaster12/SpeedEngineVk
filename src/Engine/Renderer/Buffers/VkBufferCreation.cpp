@@ -3,7 +3,7 @@
 
 namespace VkRenderer
 {
-    void VkBufferCreation::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)
+    void VkbufferCreation::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)
     {
         VkBufferCreateInfo bufferInfo{};
         bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -30,7 +30,7 @@ namespace VkRenderer
         vkBindBufferMemory(setup_ref->device, buffer, bufferMemory, 0);   
     }
 
-    void VkBufferCreation::copyBuffer(VkCommandPool& commandPool, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
+    void VkbufferCreation::copyBuffer(VkCommandPool& commandPool, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
     {
         VkCommandBuffer commandBuffer = beginSingleTimeCommands(commandPool);
 
@@ -41,7 +41,7 @@ namespace VkRenderer
         endSingleTimeCommands(commandBuffer, commandPool);
     }
 
-    VkCommandBuffer VkBufferCreation::beginSingleTimeCommands(VkCommandPool& commandPool) {
+    VkCommandBuffer VkbufferCreation::beginSingleTimeCommands(VkCommandPool& commandPool) {
         VkCommandBufferAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
         allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
@@ -59,7 +59,7 @@ namespace VkRenderer
 
         return commandBuffer;
     }
-    void  VkBufferCreation::endSingleTimeCommands(VkCommandBuffer commandBuffer, VkCommandPool& commandPool) {
+    void  VkbufferCreation::endSingleTimeCommands(VkCommandBuffer commandBuffer, VkCommandPool& commandPool) {
         vkEndCommandBuffer(commandBuffer);
 
         VkSubmitInfo submitInfo{};

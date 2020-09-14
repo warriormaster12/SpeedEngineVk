@@ -20,8 +20,8 @@ namespace VkRenderer
         VkPipeline graphicsPipeline;
 
         VkSetup *setup_ref;
-        VkUbuffer *Ubuffer_ref;
-        VkDepthBuffer *Dbuffer_ref;
+        VkuniformBuffer *uniformBuffer_ref;
+        VkdepthBuffer *Dbuffer_ref;
 
     private: 
         VkShader shader_ref;

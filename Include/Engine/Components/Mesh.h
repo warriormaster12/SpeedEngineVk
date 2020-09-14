@@ -21,13 +21,13 @@ namespace VkRenderer
     {
     public: 
         ModelLoader model_ref;
-        VkVbuffer Vbuffer_ref;
-        VkindexBuffer Ibuffer_ref;  
+        VkvertexBuffer vertexBuffer_ref;
+        VkindexBuffer indexBuffer_ref;  
 
         
         VkSetup *setup_ref;
         VkMemory *memory_ref;
-        VkBufferCreation *buffer_ref;
+        VkbufferCreation *buffer_ref;
         
         Transform3D mesh_transform;
         VkTextureManager texture;

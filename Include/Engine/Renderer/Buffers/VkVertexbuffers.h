@@ -55,14 +55,14 @@ namespace VkRenderer
 
     
     
-    class VkVbuffer
+    class VkvertexBuffer
     {
     public: 
         void createVertexBuffer(VkCommandPool& commandPool);
         VkBuffer vertexBuffer;
         VkDeviceMemory vertexBufferMemory;
         VkSetup *setup_ref;
-        VkBufferCreation *buffer_ref;
+        VkbufferCreation *buffer_ref;
         std::vector<Vertex> vertices;
     };
 }

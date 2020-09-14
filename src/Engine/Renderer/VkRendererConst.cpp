@@ -12,14 +12,14 @@ namespace VkRenderer
 
         //GraphicsPipeline
         gpipeline_ref.setup_ref = &setup_ref;
-        gpipeline_ref.Ubuffer_ref = &Ubuffer_ref;
+        gpipeline_ref.uniformBuffer_ref = &uniformBuffer_ref;
         gpipeline_ref.Dbuffer_ref = &Dbuffer_ref;
 
         //UniformBuffer
-        Ubuffer_ref.setup_ref = &setup_ref;
-        Ubuffer_ref.memory_ref = &memory_ref;
-        Ubuffer_ref.buffer_ref = &buffer_ref;
-        Ubuffer_ref.camera_object.win_ref = &win_ref;
+        uniformBuffer_ref.setup_ref = &setup_ref;
+        uniformBuffer_ref.memory_ref = &memory_ref;
+        uniformBuffer_ref.buffer_ref = &buffer_ref;
+        uniformBuffer_ref.camera_object.win_ref = &win_ref;
         
         //BufferCreation
         buffer_ref.setup_ref = &setup_ref;

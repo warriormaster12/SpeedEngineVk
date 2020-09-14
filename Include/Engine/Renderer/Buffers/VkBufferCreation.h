@@ -9,7 +9,7 @@
 
 namespace VkRenderer
 {
-    class VkBufferCreation
+    class VkbufferCreation
     {
     public:     
         void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);

@@ -15,7 +15,7 @@ namespace VkRenderer
         swap_ref.createSwapChain();
         swap_ref.createImageViews();
         gpipeline_ref.createRenderPass(swap_ref.swapChainImageFormat);
-        Ubuffer_ref.createDescriptorSetLayout();
+        uniformBuffer_ref.createDescriptorSetLayout();
         gpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent);
         Cbuffer_ref.createCommandPool(swap_ref.surface);
         Dbuffer_ref.createDepthResources(swap_ref.swapChainExtent);
@@ -32,12 +32,12 @@ namespace VkRenderer
 
         for (int i = 0; i < meshes.size(); i++) {
             //IndexBuffer
-            meshes[i].Ibuffer_ref.setup_ref = &setup_ref;
-            meshes[i].Ibuffer_ref.buffer_ref = &buffer_ref;
+            meshes[i].indexBuffer_ref.setup_ref = &setup_ref;
+            meshes[i].indexBuffer_ref.buffer_ref = &buffer_ref;
 
             //VertexBuffer
-            meshes[i].Vbuffer_ref.setup_ref = &setup_ref;
-            meshes[i].Vbuffer_ref.buffer_ref = &buffer_ref;
+            meshes[i].vertexBuffer_ref.setup_ref = &setup_ref;
+            meshes[i].vertexBuffer_ref.buffer_ref = &buffer_ref;
             
             //Mesh
             meshes[i].setup_ref = &setup_ref;
@@ -47,20 +47,20 @@ namespace VkRenderer
             meshes[i].BindTexture(Cbuffer_ref.commandPool);
             meshes[i].InitMesh(Cbuffer_ref.commandPool);
             meshes[i].mesh_transform.rotation = glm::vec3(-90.0f,0.0f,0.0f);
-            Ubuffer_ref.meshes.push_back(&meshes[i]);
+            uniformBuffer_ref.meshes.push_back(&meshes[i]);
             Cbuffer_ref.meshes.push_back(&meshes[i]);
         }
         
 
        
-        Ubuffer_ref.createUniformBuffer(); 
+        uniformBuffer_ref.createUniformBuffer(); 
         
-        Ubuffer_ref.createDescriptorPool();
-        Ubuffer_ref.createDescriptorSets();
+        uniformBuffer_ref.createDescriptorPool();
+        uniformBuffer_ref.createDescriptorSets();
         
         
 
-        Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, Ubuffer_ref.descriptorSets);
+        Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, uniformBuffer_ref.descriptorSets);
         createSyncObjects();
 
         meshes[0].mesh_transform.translate=glm::vec3(0.0f,-1.0f,0.0f);
@@ -89,12 +89,12 @@ namespace VkRenderer
         Dbuffer_ref.createDepthResources(swap_ref.swapChainExtent);
         Fbuffer_ref.createFramebuffers();
         
-        Ubuffer_ref.createUniformBuffer();
-        Ubuffer_ref.createDescriptorPool();
-        Ubuffer_ref.createDescriptorSets();
+        uniformBuffer_ref.createUniformBuffer();
+        uniformBuffer_ref.createDescriptorPool();
+        uniformBuffer_ref.createDescriptorSets();
         
 
-        Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, Ubuffer_ref.descriptorSets);
+        Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, uniformBuffer_ref.descriptorSets);
         
 
     }
@@ -119,10 +119,10 @@ namespace VkRenderer
 
         vkDestroySwapchainKHR(setup_ref.device, swap_ref.swapChain, nullptr);
         for (size_t i = 0; i < meshes.size(); i++) {
-            vkDestroyBuffer(setup_ref.device, Ubuffer_ref.uniformBuffers[i], nullptr);
-            vkFreeMemory(setup_ref.device, Ubuffer_ref.uniformBuffersMemory[i], nullptr);
+            vkDestroyBuffer(setup_ref.device, uniformBuffer_ref.uniformBuffers[i], nullptr);
+            vkFreeMemory(setup_ref.device, uniformBuffer_ref.uniformBuffersMemory[i], nullptr);
         }
-        vkDestroyDescriptorPool(setup_ref.device, Ubuffer_ref.descriptorPool, nullptr);
+        vkDestroyDescriptorPool(setup_ref.device, uniformBuffer_ref.descriptorPool, nullptr);
     }
     void Renderer::DestroyVulkan()
     {  
@@ -130,7 +130,7 @@ namespace VkRenderer
         
         
 
-        vkDestroyDescriptorSetLayout(setup_ref.device, Ubuffer_ref.descriptorSetLayout, nullptr);  
+        vkDestroyDescriptorSetLayout(setup_ref.device, uniformBuffer_ref.descriptorSetLayout, nullptr);  
         for (int i=meshes.size()-1; i >= 0; i--)
         {
             meshes[i].DestroyTexture();
@@ -172,7 +172,7 @@ namespace VkRenderer
 
         for (int i=0; i < meshes.size(); i++)
         {
-            Ubuffer_ref.updateUniformBuffer(i, swap_ref.swapChainExtent);
+            uniformBuffer_ref.updateUniformBuffer(i, swap_ref.swapChainExtent);
         }
 
         

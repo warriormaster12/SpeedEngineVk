@@ -2,7 +2,7 @@
 
 namespace VkRenderer
 {
-    void VkUbuffer::createUniformBuffer()
+    void VkuniformBuffer::createUniformBuffer()
     {
         VkDeviceSize bufferSize = sizeof(UniformBufferObject);
 
@@ -14,7 +14,7 @@ namespace VkRenderer
         }
     }
 
-    void VkUbuffer::updateUniformBuffer(uint32_t DescriptorSetIndex, VkExtent2D& swapChainExtent)
+    void VkuniformBuffer::updateUniformBuffer(uint32_t DescriptorSetIndex, VkExtent2D& swapChainExtent)
     {
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
@@ -47,7 +47,7 @@ namespace VkRenderer
         vkUnmapMemory(setup_ref->device, uniformBuffersMemory[DescriptorSetIndex]);
     }
 
-    void VkUbuffer::createDescriptorPool()
+    void VkuniformBuffer::createDescriptorPool()
     {
         std::vector<VkDescriptorPoolSize> poolSizes = {
             descriptorPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, static_cast<uint32_t>(meshes.size())),
@@ -58,7 +58,7 @@ namespace VkRenderer
             throw std::runtime_error("failed to create descriptor pool!");
         }   
     }
-    void VkUbuffer::createDescriptorSets()
+    void VkuniformBuffer::createDescriptorSets()
     {
         descriptorSets.resize(meshes.size());
         for (size_t i = 0; i < meshes.size(); i++) {
@@ -94,7 +94,7 @@ namespace VkRenderer
             vkUpdateDescriptorSets(setup_ref->device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
         }
     }
-    void VkUbuffer::createDescriptorSetLayout()
+    void VkuniformBuffer::createDescriptorSetLayout()
     {
         std::vector<VkDescriptorSetLayoutBinding> setLayoutBindings = {
             descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, 0, 1),
@@ -108,7 +108,7 @@ namespace VkRenderer
         }
     }
 
-    inline VkDescriptorPoolCreateInfo VkUbuffer::descriptorPoolCreateInfo(const std::vector<VkDescriptorPoolSize>& poolSizes,uint32_t maxSets)
+    inline VkDescriptorPoolCreateInfo VkuniformBuffer::descriptorPoolCreateInfo(const std::vector<VkDescriptorPoolSize>& poolSizes,uint32_t maxSets)
     {
         VkDescriptorPoolCreateInfo descriptorPoolInfo{};
         descriptorPoolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -119,7 +119,7 @@ namespace VkRenderer
     }
 
 
-    inline VkDescriptorPoolSize VkUbuffer::descriptorPoolSize(VkDescriptorType type,uint32_t descriptorCount)
+    inline VkDescriptorPoolSize VkuniformBuffer::descriptorPoolSize(VkDescriptorType type,uint32_t descriptorCount)
     {
         VkDescriptorPoolSize descriptorPoolSize {};
         descriptorPoolSize.type = type;
@@ -127,7 +127,7 @@ namespace VkRenderer
         return descriptorPoolSize;
     }
 
-    inline VkWriteDescriptorSet VkUbuffer::writeDescriptorSet(VkDescriptorSet dstSet, VkDescriptorType type, uint32_t binding, VkDescriptorImageInfo *imageInfo, VkDescriptorBufferInfo *bufferInfo, uint32_t descriptorCount)
+    inline VkWriteDescriptorSet VkuniformBuffer::writeDescriptorSet(VkDescriptorSet dstSet, VkDescriptorType type, uint32_t binding, VkDescriptorImageInfo *imageInfo, VkDescriptorBufferInfo *bufferInfo, uint32_t descriptorCount)
     {
         VkWriteDescriptorSet writeDescriptorSet {};
         writeDescriptorSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -140,7 +140,7 @@ namespace VkRenderer
         return writeDescriptorSet;
     }
 
-    inline VkDescriptorSetLayoutBinding VkUbuffer::descriptorSetLayoutBinding(VkDescriptorType type,VkShaderStageFlags stageFlags,uint32_t binding,uint32_t descriptorCount)
+    inline VkDescriptorSetLayoutBinding VkuniformBuffer::descriptorSetLayoutBinding(VkDescriptorType type,VkShaderStageFlags stageFlags,uint32_t binding,uint32_t descriptorCount)
     {
         VkDescriptorSetLayoutBinding setLayoutBinding {};
         setLayoutBinding.descriptorType = type;
@@ -149,7 +149,7 @@ namespace VkRenderer
         setLayoutBinding.descriptorCount = descriptorCount;
         return setLayoutBinding;
     }
-    inline VkDescriptorSetLayoutCreateInfo VkUbuffer::descriptorSetLayoutCreateInfo(const std::vector<VkDescriptorSetLayoutBinding>& bindings)
+    inline VkDescriptorSetLayoutCreateInfo VkuniformBuffer::descriptorSetLayoutCreateInfo(const std::vector<VkDescriptorSetLayoutBinding>& bindings)
     {
         VkDescriptorSetLayoutCreateInfo descriptorSetLayoutCreateInfo{};
         descriptorSetLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;

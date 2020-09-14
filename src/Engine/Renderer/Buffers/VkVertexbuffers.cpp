@@ -2,7 +2,7 @@
 
 namespace VkRenderer
 {
-    void VkVbuffer::createVertexBuffer(VkCommandPool& commandPool)
+    void VkvertexBuffer::createVertexBuffer(VkCommandPool& commandPool)
     {
         VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 

@@ -18,7 +18,7 @@ namespace VkRenderer
         glm::vec3 lightPosition;
     };
     
-    class VkUbuffer
+    class VkuniformBuffer
     {
     public: 
         void createDescriptorSetLayout();
@@ -37,7 +37,7 @@ namespace VkRenderer
 
         VkSetup *setup_ref;
         VkMemory *memory_ref;
-        VkBufferCreation *buffer_ref;
+        VkbufferCreation *buffer_ref;
         std::vector <Mesh*> meshes;
         Camera camera_object;
     private: 
