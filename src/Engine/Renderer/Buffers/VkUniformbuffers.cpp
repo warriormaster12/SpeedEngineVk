@@ -38,7 +38,7 @@ namespace VkRenderer
 
         camera_object.CameraUpdate(deltaTime);
 
-        ubo.lightPosition = glm::vec3(1.0f, 10000.0f, 0.0f);
+        ubo.lightPosition = glm::vec3(0.0f, 0.0f, 0.0f);
     
 
         void* data;
@@ -51,6 +51,7 @@ namespace VkRenderer
     {
         std::vector<VkDescriptorPoolSize> poolSizes = {
             descriptorPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, static_cast<uint32_t>(meshes.size())),
+            descriptorPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, static_cast<uint32_t>(meshes.size())),
             descriptorPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, static_cast<uint32_t>(meshes.size()))
         };
         VkDescriptorPoolCreateInfo descriptorPoolInfo = descriptorPoolCreateInfo(poolSizes, static_cast<uint32_t>(meshes.size()));
@@ -80,13 +81,19 @@ namespace VkRenderer
             bufferInfo.offset = 0;
             bufferInfo.range = sizeof(UniformBufferObject);
 
-            VkDescriptorImageInfo imageInfo{};
-            imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-            imageInfo.imageView = meshes[i]->texture2D.textureImageView;
-            imageInfo.sampler = meshes[i]->texture2D.textureSampler;
+            VkDescriptorImageInfo DiffuseImageInfo{};
+            DiffuseImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+            DiffuseImageInfo.imageView = meshes[i]->DiffuseTexture.textureImageView;
+            DiffuseImageInfo.sampler = meshes[i]->DiffuseTexture.textureSampler;
+
+            VkDescriptorImageInfo NormalImageInfo{};
+            NormalImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+            NormalImageInfo.imageView = meshes[i]->NormalTexture.textureImageView;
+            NormalImageInfo.sampler = meshes[i]->NormalTexture.textureSampler;
             std::vector<VkWriteDescriptorSet> descriptorWrites = {
                 writeDescriptorSet(descriptorSets[i], VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 0, nullptr, &bufferInfo, 1),
-                writeDescriptorSet(descriptorSets[i], VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1, &imageInfo, nullptr, 1),
+                writeDescriptorSet(descriptorSets[i], VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1, &DiffuseImageInfo, nullptr, 1),
+                writeDescriptorSet(descriptorSets[i], VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 2, &NormalImageInfo, nullptr, 1),
             };
            
             
@@ -99,6 +106,7 @@ namespace VkRenderer
         std::vector<VkDescriptorSetLayoutBinding> setLayoutBindings = {
             descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, 0, 1),
             descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1, 1),
+            descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 2, 1),
         };
 
         VkDescriptorSetLayoutCreateInfo descriptorLayout = descriptorSetLayoutCreateInfo(setLayoutBindings);

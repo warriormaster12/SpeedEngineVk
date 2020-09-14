@@ -2,15 +2,15 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "Engine/Renderer/stb_image/stb_image.h"
 
-void Texture2D::BindTexture(const std::string TEXTURE_PATH,VkCommandPool& commandPool)
+void Texture2D::BindTexture(VkCommandPool& commandPool)
 {
-    createTextureImage(TEXTURE_PATH, commandPool);
+    createTextureImage(commandPool);
     createTextureImageView();
     createTextureSampler();
 };
 
 
-void Texture2D::createTextureImage(const std::string TEXTURE_PATH,VkCommandPool& commandPool)
+void Texture2D::createTextureImage(VkCommandPool& commandPool)
 {
     int texWidth, texHeight, texChannels;
     stbi_uc* pixels = stbi_load(TEXTURE_PATH.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);

@@ -7,11 +7,13 @@
 
 struct Texture2D
 {
-    void BindTexture(const std::string TEXTURE_PATH,VkCommandPool& commandPool);
-    void createTextureImage(const std::string TEXTURE_PATH, VkCommandPool& commandPool);
+    void BindTexture(VkCommandPool& commandPool);
+    void createTextureImage(VkCommandPool& commandPool);
     void createTextureImageView();
     void createTextureSampler();
     void DestroyTexture();
+    std::string TEXTURE_PATH = "EngineAssets/Textures/viking_room.png";
+
     VkRenderer::VkImageManager *image_m_ref;
 
     uint32_t mipLevels;

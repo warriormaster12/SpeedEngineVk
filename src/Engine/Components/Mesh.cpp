@@ -5,7 +5,8 @@ namespace VkRenderer
 
     void Mesh::InitMesh(VkCommandPool& commandPool)
     {
-        texture2D.BindTexture(TEXTURE_PATH,commandPool);
+        DiffuseTexture.BindTexture(commandPool);
+        NormalTexture.BindTexture(commandPool);
 
         model_ref.indexBuffer_ref = &indexBuffer_ref;
         model_ref.vertexBuffer_ref = &vertexBuffer_ref;
@@ -23,7 +24,8 @@ namespace VkRenderer
 
     void Mesh::DestroyMesh()
     {
-        texture2D.DestroyTexture();
+        DiffuseTexture.DestroyTexture();
+        NormalTexture.DestroyTexture();
 
         vkDestroyBuffer(setup_ref->device, indexBuffer_ref.indexBuffer, nullptr);
         vkFreeMemory(setup_ref->device, indexBuffer_ref.indexBufferMemory, nullptr);

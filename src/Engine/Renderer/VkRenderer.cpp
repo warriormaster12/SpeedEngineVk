@@ -27,12 +27,14 @@ namespace VkRenderer
         
 
 
-        meshes[2].TEXTURE_PATH = "EngineAssets/Textures/chapel_diffuse.tga";
+        meshes[2].DiffuseTexture.TEXTURE_PATH = "EngineAssets/Textures/chapel_diffuse.tga";
+        meshes[2].NormalTexture.TEXTURE_PATH = "EngineAssets/Textures/chapel_normal.tga";
         meshes[2].model_ref.MODEL_PATH = "EngineAssets/Models/chapel_obj.obj";
 
         for (int i = 0; i < meshes.size(); i++) {
             //Textures
-            meshes[i].texture2D.image_m_ref = & image_m_ref;
+            meshes[i].DiffuseTexture.image_m_ref = & image_m_ref;
+            meshes[i].NormalTexture.image_m_ref = & image_m_ref;
             
             //IndexBuffer
             meshes[i].indexBuffer_ref.setup_ref = &setup_ref;

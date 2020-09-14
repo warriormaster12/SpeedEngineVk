@@ -30,8 +30,8 @@ namespace VkRenderer
         VkbufferCreation *buffer_ref;
         
         Transform3D mesh_transform;
-        std::string TEXTURE_PATH = "EngineAssets/Textures/viking_room.png";
-        Texture2D texture2D;
+        Texture2D DiffuseTexture;
+        Texture2D NormalTexture;
         
         void InitMesh(VkCommandPool& commandPool);
         void update(uint32_t imageIndex);
