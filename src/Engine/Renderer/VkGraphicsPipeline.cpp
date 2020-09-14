@@ -9,12 +9,12 @@ namespace VkRenderer
         std::ifstream fragS("EngineAssets/Shaders/Model_frag.spv");
         if (!vertS)
         {
-            shader_ref.CompileGLSL("EngineAssets/Shaders/Model_vert.vert", "EngineAssets/Shaders/" "Model_vert" ".spv"); //testing for future abstraction
+            shader_ref.CompileGLSL("EngineAssets/Shaders/Model_vert.vert");
             std::cout<<"vertex shader compiled"<<std::endl;
         }
         if (!fragS)
         {
-            shader_ref.CompileGLSL("EngineAssets/Shaders/Model_frag.frag", "EngineAssets/Shaders/Model_frag.spv");
+            shader_ref.CompileGLSL("EngineAssets/Shaders/Model_frag.frag");
             std::cout<<"fragment shader compiled"<<std::endl;
         }
         auto vertShaderCode = shader_ref.readFile("EngineAssets/Shaders/Model_vert.spv");

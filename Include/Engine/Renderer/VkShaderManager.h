@@ -21,7 +21,7 @@ namespace VkRenderer
         static std::vector<char> readFile(const std::string& filename);
         
 
-        const std::vector<unsigned int> CompileGLSL(const std::string& filename, const std::string& compiled_shader);
+        const std::vector<unsigned int> CompileGLSL(const std::string& filename);
         std::string GetFilePath(const std::string& str);
     private:
         bool glslangInitialized = false;

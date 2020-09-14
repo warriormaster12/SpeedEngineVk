@@ -133,8 +133,10 @@ namespace VkRenderer
         }
     }
 
-    const std::vector<unsigned int> VkShader::CompileGLSL(const std::string& filename, const std::string& compiled_shader)
+    const std::vector<unsigned int> VkShader::CompileGLSL(const std::string& filename)
     {
+        std::string::size_type filenamePos = filename.find('.');
+        const std::string compiled_Shader = filename.substr(0, filenamePos); 
         if (!glslangInitialized)
         {
             glslang::InitializeProcess();
@@ -209,7 +211,8 @@ namespace VkRenderer
         spv::SpvBuildLogger logger;
         glslang::SpvOptions spvOptions;
         glslang::GlslangToSpv(*Program.getIntermediate(ShaderType), SpirV, &logger, &spvOptions);
-        glslang::OutputSpvBin(SpirV, compiled_shader.c_str());   
+        std::string SpirV_filename = compiled_Shader + ".spv";
+        glslang::OutputSpvBin(SpirV, SpirV_filename.c_str());   
 
         return SpirV;  
         
