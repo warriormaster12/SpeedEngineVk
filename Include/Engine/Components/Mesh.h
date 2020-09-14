@@ -7,7 +7,7 @@
 #include "../Renderer/Buffers/VkBufferCreation.h"
 #include "../Renderer/VkMemory.h"
 #include "../Math/Math3D.h"
-#include "../Renderer/VkTextureManager.h"
+#include "Textures.h"
 
 
 
@@ -30,12 +30,9 @@ namespace VkRenderer
         VkbufferCreation *buffer_ref;
         
         Transform3D mesh_transform;
-        VkTextureManager texture;
         std::string TEXTURE_PATH = "EngineAssets/Textures/viking_room.png";
+        Texture2D texture2D;
         
-        
-        void BindTexture(VkCommandPool& commandPool);
-        void DestroyTexture();
         void InitMesh(VkCommandPool& commandPool);
         void update(uint32_t imageIndex);
         void DestroyMesh();

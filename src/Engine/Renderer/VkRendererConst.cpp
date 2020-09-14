@@ -8,7 +8,7 @@ namespace VkRenderer
         //SwapChain
         swap_ref.win_ref = &win_ref;
         swap_ref.setup_ref = &setup_ref;
-        swap_ref.texture_m_ref = &texture_m_ref;
+        swap_ref.image_m_ref = &image_m_ref;
 
         //GraphicsPipeline
         gpipeline_ref.setup_ref = &setup_ref;
@@ -40,11 +40,11 @@ namespace VkRenderer
         
         //DepthBuffer
         Dbuffer_ref.setup_ref = &setup_ref;
-        Dbuffer_ref.texture_m_ref = &texture_m_ref;
+        Dbuffer_ref.image_m_ref = &image_m_ref;
 
-        //TextureManager
-        texture_m_ref.setup_ref = &setup_ref;
-        texture_m_ref.buffer_ref = &buffer_ref;
-        texture_m_ref.memory_ref = &memory_ref;
+        //imageManager
+        image_m_ref.setup_ref = &setup_ref;
+        image_m_ref.buffer_ref = &buffer_ref;
+        image_m_ref.memory_ref = &memory_ref;
     }
 }

@@ -31,6 +31,9 @@ namespace VkRenderer
         meshes[2].model_ref.MODEL_PATH = "EngineAssets/Models/chapel_obj.obj";
 
         for (int i = 0; i < meshes.size(); i++) {
+            //Textures
+            meshes[i].texture2D.image_m_ref = & image_m_ref;
+            
             //IndexBuffer
             meshes[i].indexBuffer_ref.setup_ref = &setup_ref;
             meshes[i].indexBuffer_ref.buffer_ref = &buffer_ref;
@@ -44,7 +47,6 @@ namespace VkRenderer
             meshes[i].memory_ref = &memory_ref;
             meshes[i].buffer_ref = &buffer_ref;
 
-            meshes[i].BindTexture(Cbuffer_ref.commandPool);
             meshes[i].InitMesh(Cbuffer_ref.commandPool);
             meshes[i].mesh_transform.rotation = glm::vec3(-90.0f,0.0f,0.0f);
             uniformBuffer_ref.meshes.push_back(&meshes[i]);
@@ -133,7 +135,6 @@ namespace VkRenderer
         vkDestroyDescriptorSetLayout(setup_ref.device, uniformBuffer_ref.descriptorSetLayout, nullptr);  
         for (int i=meshes.size()-1; i >= 0; i--)
         {
-            meshes[i].DestroyTexture();
             meshes[i].DestroyMesh();
         }
 

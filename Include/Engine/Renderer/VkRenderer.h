@@ -4,7 +4,7 @@
 #include "VkSetup.h"
 #include "VkSwapChain.h"
 #include "VkGraphicsPipeline.h"
-#include "VkTextureManager.h"
+#include "VkImageManager.h"
 #include "Buffers/VkFramebuffers.h"
 #include "Buffers/VkCommandbuffers.h"
 #include "Buffers/VkBufferCreation.h"
@@ -42,7 +42,7 @@ namespace VkRenderer
         
         std::vector <Mesh> meshes;
         
-        VkTextureManager texture_m_ref;
+        VkImageManager image_m_ref;
         VkMemory memory_ref;
         VkbufferCreation buffer_ref;
         VkdepthBuffer Dbuffer_ref;

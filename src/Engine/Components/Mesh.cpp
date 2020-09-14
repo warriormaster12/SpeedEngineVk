@@ -2,19 +2,11 @@
 
 namespace VkRenderer
 {
-    void Mesh::BindTexture(VkCommandPool& commandPool)
-    {
-        texture.setup_ref = setup_ref;
-        texture.buffer_ref = buffer_ref;
-        texture.memory_ref = memory_ref;
-
-        texture.createTextureImage(TEXTURE_PATH, commandPool);
-        texture.createTextureImageView();
-        texture.createTextureSampler();
-    }
 
     void Mesh::InitMesh(VkCommandPool& commandPool)
     {
+        texture2D.BindTexture(TEXTURE_PATH,commandPool);
+
         model_ref.indexBuffer_ref = &indexBuffer_ref;
         model_ref.vertexBuffer_ref = &vertexBuffer_ref;
 
@@ -28,18 +20,10 @@ namespace VkRenderer
         
     }
 
-    void Mesh::DestroyTexture()
-    {
-        vkDestroySampler(setup_ref->device, texture.textureSampler, nullptr);
-        vkDestroyImageView(setup_ref->device, texture.textureImageView, nullptr);
-        
-        vkDestroyImage(setup_ref->device, texture.textureImage, nullptr);
-        vkFreeMemory(setup_ref->device, texture.textureImageMemory, nullptr);
-    }
-
 
     void Mesh::DestroyMesh()
     {
+        texture2D.DestroyTexture();
 
         vkDestroyBuffer(setup_ref->device, indexBuffer_ref.indexBuffer, nullptr);
         vkFreeMemory(setup_ref->device, indexBuffer_ref.indexBufferMemory, nullptr);

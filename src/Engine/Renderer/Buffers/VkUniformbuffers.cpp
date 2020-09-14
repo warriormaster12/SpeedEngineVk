@@ -82,8 +82,8 @@ namespace VkRenderer
 
             VkDescriptorImageInfo imageInfo{};
             imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-            imageInfo.imageView = meshes[i]->texture.textureImageView;
-            imageInfo.sampler = meshes[i]->texture.textureSampler;
+            imageInfo.imageView = meshes[i]->texture2D.textureImageView;
+            imageInfo.sampler = meshes[i]->texture2D.textureSampler;
             std::vector<VkWriteDescriptorSet> descriptorWrites = {
                 writeDescriptorSet(descriptorSets[i], VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 0, nullptr, &bufferInfo, 1),
                 writeDescriptorSet(descriptorSets[i], VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1, &imageInfo, nullptr, 1),
