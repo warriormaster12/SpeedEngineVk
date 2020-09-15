@@ -23,14 +23,16 @@ namespace VkRenderer
         
         
         UniformBufferObject ubo{};
-        glm::mat4 rotM = glm::mat4(1.0f);
+        glm::mat4 ModelMatrix(1.0f);
+        ubo.model = ModelMatrix;
 
-        rotM = glm::rotate(rotM, glm::radians(meshes[DescriptorSetIndex]->mesh_transform.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-        rotM= glm::rotate(rotM, glm::radians(meshes[DescriptorSetIndex]->mesh_transform.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-        rotM= glm::rotate(rotM, glm::radians(meshes[DescriptorSetIndex]->mesh_transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-        ubo.model = rotM;
         ubo.model = glm::translate(ubo.model, meshes[DescriptorSetIndex]->mesh_transform.translate);
+        ubo.model = glm::rotate(ubo.model, glm::radians(meshes[DescriptorSetIndex]->mesh_transform.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+        ubo.model= glm::rotate(ubo.model, glm::radians(meshes[DescriptorSetIndex]->mesh_transform.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+        ubo.model= glm::rotate(ubo.model, glm::radians(meshes[DescriptorSetIndex]->mesh_transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
         ubo.model = glm::scale(ubo.model, meshes[DescriptorSetIndex]->mesh_transform.scale);	
+        
+        
         
         camera_object.Set_Camera(swapChainExtent.width / (float) swapChainExtent.height);
         ubo.view = camera_object.matrices.view;
