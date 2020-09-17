@@ -32,7 +32,7 @@ namespace VkRenderer
         ubo.model= glm::rotate(ubo.model, glm::radians(meshes[DescriptorSetIndex]->mesh_transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
         ubo.model = glm::scale(ubo.model, meshes[DescriptorSetIndex]->mesh_transform.scale);	
         
-        ubo.light.position = glm::vec3(0.0f, 0.0f, 0.0f);
+        ubo.light.position = glm::vec3(0.0f, 4.0f, 0.0f);
         ubo.camPos = camera_object.camera_transform.translate;
 
         ubo.light.ambient = glm::vec3(0.2f,0.2f,0.2f);

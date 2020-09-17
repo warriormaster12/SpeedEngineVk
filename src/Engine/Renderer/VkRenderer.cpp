@@ -66,13 +66,13 @@ namespace VkRenderer
         Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, uniformBuffer_ref.descriptorSets);
         createSyncObjects();
 
-        meshes[0].mesh_transform.translate=glm::vec3(0.0f,0.0f,-2.0f);
-        meshes[1].mesh_transform.translate=glm::vec3(0.0f,0.0f,2.0f);
-        meshes[2].mesh_transform.translate=glm::vec3(-2.0f,0.0f,0.0f);
+        meshes[0].mesh_transform.translate=glm::vec3(4.0f,0.0f,-2.0f);
+        meshes[1].mesh_transform.translate=glm::vec3(4.0f,0.0f,2.0f);
+        meshes[2].mesh_transform.translate=glm::vec3(8.0f,0.0f,0.0f);
         meshes[2].mesh_transform.scale = glm::vec3(0.002f);
-        meshes[2].mesh_transform.rotation = glm::vec3(0.0f, 180.0f, 0.0f);
-        meshes[0].mesh_transform.rotation=glm::vec3(-90.0f,0.0f,90.0f);
-        meshes[1].mesh_transform.rotation=glm::vec3(-90.0f,0.0f,-90.0f);
+        meshes[2].mesh_transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+        meshes[0].mesh_transform.rotation=glm::vec3(-90.0f,0.0f,-90.0f);
+        meshes[1].mesh_transform.rotation=glm::vec3(-90.0f,0.0f,90.0f);
         
     }
     void Renderer::recreateSwapChain()

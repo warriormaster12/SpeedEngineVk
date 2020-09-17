@@ -62,12 +62,12 @@ void main() {
 
         // attenuation
         float distance    = length(ubo.light.position - FragPos);
-        float attenuation = 1.0 / (ubo.light.constant + ubo.light.linear * distance + ubo.light.quadratic * (distance * distance));    
+        float attenuation = 1.0 / (ubo.light.constant + ubo.light.linear * distance + ubo.light.quadratic + (distance * distance));    
 
         
-        // ambient  *= attenuation;  
-        // diffuse   *= attenuation;
-        // specular *= attenuation;   
+        ambient  *= attenuation;  
+        diffuse   *= attenuation;
+        specular *= attenuation;   
 
         vec3 result = ambient + diffuse + specular;
         outColor = vec4(result, 1.0f);

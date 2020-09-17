@@ -38,7 +38,7 @@ namespace VkRenderer
         
 
         bool firstMouse{true};
-        float yaw{180.0f};	
+        float yaw{0.0f};	
         float pitch{0.0f};
         float lastX{800.0f / 2.0};
         float lastY{600.0 / 2.0};
