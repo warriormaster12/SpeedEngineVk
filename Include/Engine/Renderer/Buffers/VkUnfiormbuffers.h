@@ -11,11 +11,23 @@
 
 namespace VkRenderer
 {
+    struct Light{
+        glm::vec3 position;
+
+        glm::vec3 ambient;
+        glm::vec3 diffuse;
+        glm::vec3 specular;
+
+        float constant;
+        float linear;
+        float quadratic;
+    };
     struct UniformBufferObject {
         glm::mat4 model;
         glm::mat4 view;
-        glm::mat4 proj;
-        glm::vec3 lightPosition;
+        glm::mat4 projection;
+        glm::vec3 camPos;
+        Light light;
     };
     
     class VkuniformBuffer

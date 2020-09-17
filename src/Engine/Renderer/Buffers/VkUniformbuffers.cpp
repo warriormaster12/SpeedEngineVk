@@ -32,15 +32,22 @@ namespace VkRenderer
         ubo.model= glm::rotate(ubo.model, glm::radians(meshes[DescriptorSetIndex]->mesh_transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
         ubo.model = glm::scale(ubo.model, meshes[DescriptorSetIndex]->mesh_transform.scale);	
         
-        
+        ubo.light.position = glm::vec3(0.0f, 0.0f, 0.0f);
+        ubo.camPos = camera_object.camera_transform.translate;
+
+        ubo.light.ambient = glm::vec3(0.2f,0.2f,0.2f);
+        ubo.light.diffuse = glm::vec3(0.5f, 0.5f, 0.5f);
+        ubo.light.specular = glm::vec3(1.0f,1.0f,1.0f);
+
+        ubo.light.constant = 1.0f;
+        ubo.light.linear = 0.09f;
+        ubo.light.quadratic = 0.032f;
         
         camera_object.Set_Camera(swapChainExtent.width / (float) swapChainExtent.height);
         ubo.view = camera_object.matrices.view;
-        ubo.proj = camera_object.matrices.perspective;
+        ubo.projection = camera_object.matrices.perspective;
 
         camera_object.CameraUpdate(deltaTime);
-
-        ubo.lightPosition = glm::vec3(0.0f, 0.0f, 0.0f);
     
 
         void* data;
@@ -106,7 +113,7 @@ namespace VkRenderer
     void VkuniformBuffer::createDescriptorSetLayout()
     {
         std::vector<VkDescriptorSetLayoutBinding> setLayoutBindings = {
-            descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, 0, 1),
+            descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, 1),
             descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1, 1),
             descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 2, 1),
         };
