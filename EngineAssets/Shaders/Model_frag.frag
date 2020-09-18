@@ -17,22 +17,20 @@ layout(push_constant) uniform PushConstants
 } pushConst;
 
 struct Light {
-    vec3 position;
+    vec4 position;
 
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
+    vec4 ambient;
+    vec4 diffuse;
+    vec4 specular;
 
-    float constant;
-    float linear;
-    float quadratic;
+    float radius;
 };
 
 layout(binding = 0) uniform UniformBufferObject {
     mat4 model;
     mat4 view;
     mat4 projection;
-    vec3 camPos;
+    vec4 camPos;
     Light light;
 } ubo;
 
@@ -46,30 +44,30 @@ void main() {
     else 
     {
         //ambient
-        vec3 ambient = ubo.light.ambient * texColor;
+        vec3 ambient = vec3(ubo.light.ambient) * texColor;
 
         //diffuse 
         vec3 norm = normalize(Normal);
-        vec3 lightDir = normalize(ubo.light.position - FragPos);
+        vec3 lightDir = normalize(vec3(ubo.light.position) - FragPos);
         float diff = max(dot(norm, lightDir), 0.0f);
-        vec3 diffuse = ubo.light.diffuse * diff * texColor;
+        vec3 diffuse = vec3(ubo.light.diffuse) * diff * texColor;
 
         //specular 
-        vec3 viewDir = normalize(ubo.camPos - FragPos);
+        vec3 viewDir = normalize(vec3(ubo.camPos) - FragPos);
         vec3 reflectDir = reflect(-lightDir, norm);
         float spec = pow(max(dot(viewDir, reflectDir), 0.0f), 32.0f);
-        vec3 specular = ubo.light.specular * spec * vec3(1.0f,1.0f,1.0f);
+        vec3 specular = vec3(ubo.light.specular) * spec * vec3(0.0f,0.0f,0.0f);
 
         // attenuation
-        float distance    = length(ubo.light.position - FragPos);
-        float attenuation = 1.0 / (ubo.light.constant + ubo.light.linear * distance + ubo.light.quadratic + (distance * distance));    
+        float distance    = length(vec3(ubo.light.position) - FragPos);
+        float attenuation = ubo.light.radius / (pow(distance, 2.0) + 1.0);;    
 
         
         ambient  *= attenuation;  
         diffuse   *= attenuation;
         specular *= attenuation;   
 
-        vec3 result = ambient + diffuse + specular;
+        vec3 result = vec3(ambient + diffuse + specular);
         outColor = vec4(result, 1.0f);
     }
     

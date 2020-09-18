@@ -7,7 +7,7 @@ layout(binding = 0) uniform UniformBufferObject {
     mat4 model;
     mat4 view;
     mat4 projection;
-    vec3 camPos;
+    vec4 camPos;
 } ubo;
 
 layout (location = 0) in vec3 inPos;

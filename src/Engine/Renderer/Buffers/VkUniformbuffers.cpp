@@ -32,16 +32,14 @@ namespace VkRenderer
         ubo.model= glm::rotate(ubo.model, glm::radians(meshes[DescriptorSetIndex]->mesh_transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
         ubo.model = glm::scale(ubo.model, meshes[DescriptorSetIndex]->mesh_transform.scale);	
         
-        ubo.light.position = glm::vec3(0.0f, 4.0f, 0.0f);
-        ubo.camPos = camera_object.camera_transform.translate;
+        ubo.light.position = glm::vec4(glm::cos(currentFrame) * 3.0f, 4.0f, glm::sin(currentFrame) * 3.0f, 0.0f);
+        ubo.camPos = glm::vec4(camera_object.camera_transform.translate, 0.0f);
 
-        ubo.light.ambient = glm::vec3(0.2f,0.2f,0.2f);
-        ubo.light.diffuse = glm::vec3(0.5f, 0.5f, 0.5f);
-        ubo.light.specular = glm::vec3(1.0f,1.0f,1.0f);
+        ubo.light.ambient = glm::vec4(0.01f,0.01f,0.01f, 0.0f);
+        ubo.light.diffuse = glm::vec4(0.5f, 0.5f, 0.5f, 0.0f);
+        ubo.light.specular = glm::vec4(1.0f,1.0f,1.0f, 0.0f);
 
-        ubo.light.constant = 1.0f;
-        ubo.light.linear = 0.09f;
-        ubo.light.quadratic = 0.032f;
+        ubo.light.radius = 5.0f;
         
         camera_object.Set_Camera(swapChainExtent.width / (float) swapChainExtent.height);
         ubo.view = camera_object.matrices.view;
