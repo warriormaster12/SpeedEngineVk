@@ -22,9 +22,11 @@ struct Light {
     vec4 ambient;
     vec4 diffuse;
     vec4 specular;
+    vec4 light_color;
 
     float radius;
 };
+
 
 layout(binding = 0) uniform UniformBufferObject {
     mat4 model;
@@ -34,6 +36,7 @@ layout(binding = 0) uniform UniformBufferObject {
     Light light;
 } ubo;
 
+vec3 CalcPointLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 light_color);
 
 void main() {
     vec3 texColor = texture(diffuseMap, TexCoords).rgb;
@@ -43,34 +46,34 @@ void main() {
     }
     else 
     {
-        //ambient
-        vec3 ambient = vec3(ubo.light.ambient) * texColor;
 
-        //diffuse 
         vec3 norm = normalize(Normal);
-        vec3 lightDir = normalize(vec3(ubo.light.position) - FragPos);
-        float diff = max(dot(norm, lightDir), 0.0f);
-        vec3 diffuse = vec3(ubo.light.diffuse) * diff * texColor;
-
-        //specular 
         vec3 viewDir = normalize(vec3(ubo.camPos) - FragPos);
-        vec3 reflectDir = reflect(-lightDir, norm);
-        float spec = pow(max(dot(viewDir, reflectDir), 0.0f), 32.0f);
-        vec3 specular = vec3(ubo.light.specular) * spec * vec3(0.0f,0.0f,0.0f);
 
-        // attenuation
-        float distance    = length(vec3(ubo.light.position) - FragPos);
-        float attenuation = ubo.light.radius / (pow(distance, 2.0) + 1.0);;    
-
+        vec3 result = CalcPointLight(ubo.light, norm, FragPos, viewDir, vec3(ubo.light.light_color));
         
-        ambient  *= attenuation;  
-        diffuse   *= attenuation;
-        specular *= attenuation;   
-
-        vec3 result = vec3(ambient + diffuse + specular);
         outColor = vec4(result, 1.0f);
     }
     
 }
-
+vec3 CalcPointLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 light_color)
+{
+    vec3 lightDir = normalize(vec3(light.position) - fragPos);
+    // diffuse shading
+    float diff = max(dot(normal, lightDir), 0.0);
+    // specular shading
+    vec3 reflectDir = reflect(-lightDir, normal);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0f);
+    // attenuation
+    float distance = length(vec3(light.position) - fragPos);
+    float attenuation = light.radius / (pow(distance, 2.0) + 1.0);;    
+    // combine results
+    vec3 ambient = vec3(light.ambient) * vec3(texture(diffuseMap, TexCoords)) * light_color;
+    vec3 diffuse = vec3(light.diffuse) * diff * vec3(texture(diffuseMap, TexCoords)) * light_color;
+    vec3 specular = vec3(light.specular) * spec * vec3(0.35f) * light_color;
+    ambient *= attenuation;
+    diffuse *= attenuation;
+    specular *= attenuation;
+    return (ambient + diffuse + specular);
+}
 
