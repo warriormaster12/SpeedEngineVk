@@ -25,5 +25,8 @@ namespace VkRenderer
 
     private: 
         VkShader shader_ref;
+
+        VkPipelineShaderStageCreateInfo loadShader(VkShaderModule module,VkShaderStageFlagBits stage);
+        inline VkPushConstantRange pushConstantRange(VkShaderStageFlags stageFlags,uint32_t size,uint32_t offset);
     };
 }

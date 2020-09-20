@@ -24,19 +24,11 @@ namespace VkRenderer
         VkShaderModule vertShaderModule = shader_ref.createShaderModule(vertShaderCode, setup_ref->device);
         VkShaderModule fragShaderModule = shader_ref.createShaderModule(fragShaderCode, setup_ref->device);
 
-        VkPipelineShaderStageCreateInfo vertShaderStageInfo{};
-        vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-        vertShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
-        vertShaderStageInfo.module = vertShaderModule;
-        vertShaderStageInfo.pName = "main";
+        std::array <VkPipelineShaderStageCreateInfo, 2> shaderStages; 
 
-        VkPipelineShaderStageCreateInfo fragShaderStageInfo{};
-        fragShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-        fragShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-        fragShaderStageInfo.module = fragShaderModule;
-        fragShaderStageInfo.pName = "main";
+        shaderStages[0] = loadShader(vertShaderModule, VK_SHADER_STAGE_VERTEX_BIT);
+        shaderStages[1] = loadShader(fragShaderModule, VK_SHADER_STAGE_FRAGMENT_BIT);
 
-        VkPipelineShaderStageCreateInfo shaderStages[] = {vertShaderStageInfo, fragShaderStageInfo};
 
         VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
         vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
@@ -110,10 +102,8 @@ namespace VkRenderer
         colorBlending.blendConstants[2] = 0.0f;
         colorBlending.blendConstants[3] = 0.0f;
 
-        VkPushConstantRange pushConstanRange;
-        pushConstanRange.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-        pushConstanRange.offset = 0;
-        pushConstanRange.size = sizeof(VkBool32);
+        VkPushConstantRange pushConstant = pushConstantRange(VK_SHADER_STAGE_FRAGMENT_BIT, sizeof(VkBool32), 0);
+
 
         VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
         pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -122,7 +112,7 @@ namespace VkRenderer
         pipelineLayoutInfo.setLayoutCount = 1;
         pipelineLayoutInfo.pSetLayouts = &uniformBuffer_ref->descriptorSetLayout;
         pipelineLayoutInfo.pushConstantRangeCount = 1;
-        pipelineLayoutInfo.pPushConstantRanges = &pushConstanRange;
+        pipelineLayoutInfo.pPushConstantRanges = &pushConstant;
 
         if (vkCreatePipelineLayout(setup_ref->device, &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
             throw std::runtime_error("failed to create pipeline layout!");
@@ -130,8 +120,8 @@ namespace VkRenderer
 
         VkGraphicsPipelineCreateInfo pipelineInfo{};
         pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-        pipelineInfo.stageCount = 2;
-        pipelineInfo.pStages = shaderStages;
+        pipelineInfo.stageCount = shaderStages.size();
+        pipelineInfo.pStages = shaderStages.data();
         pipelineInfo.pVertexInputState = &vertexInputInfo;
         pipelineInfo.pInputAssemblyState = &inputAssembly;
         pipelineInfo.pViewportState = &viewportState;
@@ -208,5 +198,24 @@ namespace VkRenderer
         if (vkCreateRenderPass(setup_ref->device, &renderPassInfo, nullptr, &renderPass) != VK_SUCCESS) {
             throw std::runtime_error("failed to create render pass!");
         }
+    }
+
+    inline VkPushConstantRange VkGPipeline::pushConstantRange(VkShaderStageFlags stageFlags,uint32_t size,uint32_t offset)
+    {
+        VkPushConstantRange pushConstantRange {};
+        pushConstantRange.stageFlags = stageFlags;
+        pushConstantRange.offset = offset;
+        pushConstantRange.size = size;
+        return pushConstantRange;
+    }
+    VkPipelineShaderStageCreateInfo VkGPipeline::loadShader(VkShaderModule module,VkShaderStageFlagBits stage)
+    {
+        VkPipelineShaderStageCreateInfo ShaderStageInfo{};
+        ShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+        ShaderStageInfo.stage = stage;
+        ShaderStageInfo.module = module;
+        ShaderStageInfo.pName = "main";
+
+        return ShaderStageInfo;
     }
 }
