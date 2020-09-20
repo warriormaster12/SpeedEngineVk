@@ -19,14 +19,15 @@ namespace VkRenderer
         glm::vec4 specular;
         glm::vec4 light_color;
 
-        float radius;
+        glm::vec4 radius;
     };
     struct UniformBufferObject {
         glm::mat4 model;
         glm::mat4 view;
         glm::mat4 projection;
         glm::vec4 camPos;
-        Light light;
+        std::array <Light, 2> lights;
+        
     };
     
     class VkuniformBuffer
@@ -43,6 +44,9 @@ namespace VkRenderer
         std::vector<VkDescriptorSet> descriptorSets;
         std::vector<VkBuffer> uniformBuffers;
         std::vector<VkDeviceMemory> uniformBuffersMemory;
+
+        std::vector<VkBuffer> uniformLights;
+        std::vector<VkDeviceMemory> uniformLightsMemory;
 
         
 
