@@ -11,7 +11,7 @@
 
 namespace VkRenderer
 {
-    struct Light{
+    struct alignas(16) Light{
         glm::vec4 position;
 
         glm::vec4 ambient;
@@ -19,15 +19,17 @@ namespace VkRenderer
         glm::vec4 specular;
         glm::vec4 light_color;
 
-        glm::vec4 radius;
+        float radius;
     };
-    struct UniformBufferObject {
+    struct alignas(16) UniformBufferObject {
         glm::mat4 model;
         glm::mat4 view;
         glm::mat4 projection;
-        glm::vec4 camPos;
+        glm::vec3 camPos;
         std::array <Light, 2> lights;
-        
+        float metallic;
+        float ao;
+        float roughness;
     };
     
     class VkuniformBuffer
@@ -44,9 +46,6 @@ namespace VkRenderer
         std::vector<VkDescriptorSet> descriptorSets;
         std::vector<VkBuffer> uniformBuffers;
         std::vector<VkDeviceMemory> uniformBuffersMemory;
-
-        std::vector<VkBuffer> uniformLights;
-        std::vector<VkDeviceMemory> uniformLightsMemory;
 
         
 

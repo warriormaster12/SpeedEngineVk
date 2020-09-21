@@ -7,6 +7,7 @@ namespace VkRenderer
     {
         std::ifstream vertS("EngineAssets/Shaders/Model_vert.spv");
         std::ifstream fragS("EngineAssets/Shaders/Model_frag.spv");
+
         if (!vertS)
         {
             shader_ref.CompileGLSL("EngineAssets/Shaders/Model_vert.vert");
@@ -24,6 +25,7 @@ namespace VkRenderer
         VkShaderModule vertShaderModule = shader_ref.createShaderModule(vertShaderCode, setup_ref->device);
         VkShaderModule fragShaderModule = shader_ref.createShaderModule(fragShaderCode, setup_ref->device);
 
+    
         std::array <VkPipelineShaderStageCreateInfo, 2> shaderStages; 
 
         shaderStages[0] = loadShader(vertShaderModule, VK_SHADER_STAGE_VERTEX_BIT);
@@ -137,7 +139,6 @@ namespace VkRenderer
         if (vkCreateGraphicsPipelines(setup_ref->device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS) {
             throw std::runtime_error("failed to create graphics pipeline!");
         }
-
         vkDestroyShaderModule(setup_ref->device, fragShaderModule, nullptr);
         vkDestroyShaderModule(setup_ref->device, vertShaderModule, nullptr);
     }

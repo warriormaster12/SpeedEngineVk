@@ -32,25 +32,25 @@ namespace VkRenderer
         ubo.model= glm::rotate(ubo.model, glm::radians(meshes[DescriptorSetIndex]->mesh_transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
         ubo.model = glm::scale(ubo.model, meshes[DescriptorSetIndex]->mesh_transform.scale);	
 
-        ubo.camPos = glm::vec4(camera_object.camera_transform.translate, 0.0f);
+        ubo.camPos = camera_object.camera_transform.translate;
 
         ubo.lights[0].position = glm::vec4(glm::vec3(meshes[0]->mesh_transform.translate.x + 1.0f, 1.0f, meshes[0]->mesh_transform.translate.z), 0.0f);
 
         ubo.lights[0].ambient = glm::vec4(glm::vec3(0.4), 0.0f);
         ubo.lights[0].diffuse = glm::vec4(glm::vec3(0.7f), 0.0f);
-        ubo.lights[0].specular = glm::vec4(1.0f,1.0f,1.0f, 0.0f);
-        ubo.lights[0].light_color = glm::vec4(glm::vec3(1.0f, 1.0f, 1.0f),0.0f);
+        ubo.lights[0].specular = glm::vec4(glm::vec3(1.0f),0.0f);
+        ubo.lights[0].light_color = glm::vec4(glm::vec3(1.0f, 1.0f, 1.0f), 0.0f);
 
-        ubo.lights[0].radius = glm::vec4(2.0f);
+        ubo.lights[0].radius = 2.0f;
 
         ubo.lights[1].position = glm::vec4(glm::vec3(meshes[2]->mesh_transform.translate.x + 1.0f, 1.0f, meshes[2]->mesh_transform.translate.z), 0.0f);
 
-        ubo.lights[1].ambient = glm::vec4(glm::vec3(0.4), 0.0f);
-        ubo.lights[1].diffuse = glm::vec4(glm::vec3(0.7f), 0.0f);
-        ubo.lights[1].specular = glm::vec4(1.0f,1.0f,1.0f, 0.0f);
+        ubo.lights[1].ambient = glm::vec4(glm::vec3(0.4),0.0f);
+        ubo.lights[1].diffuse = glm::vec4(glm::vec3(0.7f),0.0f);
+        ubo.lights[1].specular = glm::vec4(glm::vec3(1.0f),0.0f);
         ubo.lights[1].light_color = glm::vec4(glm::vec3(1.0f, 0.55f, 0.22f),0.0f);
 
-        ubo.lights[1].radius = glm::vec4(2.0f);
+        ubo.lights[1].radius = 2.0f;
         
         camera_object.Set_Camera(swapChainExtent.width / (float) swapChainExtent.height);
         ubo.view = camera_object.matrices.view;
@@ -99,6 +99,7 @@ namespace VkRenderer
             bufferInfo.offset = 0;
             bufferInfo.range = sizeof(UniformBufferObject);
 
+
             VkDescriptorImageInfo DiffuseImageInfo{};
             DiffuseImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
             DiffuseImageInfo.imageView = meshes[i]->DiffuseTexture.textureImageView;
@@ -114,7 +115,6 @@ namespace VkRenderer
                 writeDescriptorSet(descriptorSets[i], VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 2, &NormalImageInfo, nullptr, 1),
             };
            
-            
 
             vkUpdateDescriptorSets(setup_ref->device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
         }

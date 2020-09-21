@@ -26,53 +26,58 @@ namespace VkRenderer
         meshes.emplace_back();
         
 
+        if(meshes.size() != 0)
+        {
+            meshes[2].DiffuseTexture.TEXTURE_PATH = "EngineAssets/Textures/chapel_diffuse.tga";
+            meshes[2].NormalTexture.TEXTURE_PATH = "EngineAssets/Textures/chapel_normal.tga";
+            meshes[2].model_ref.MODEL_PATH = "EngineAssets/Models/chapel_obj.obj";
 
-        meshes[2].DiffuseTexture.TEXTURE_PATH = "EngineAssets/Textures/chapel_diffuse.tga";
-        meshes[2].NormalTexture.TEXTURE_PATH = "EngineAssets/Textures/chapel_normal.tga";
-        meshes[2].model_ref.MODEL_PATH = "EngineAssets/Models/chapel_obj.obj";
+            for (int i = 0; i < meshes.size(); i++) {
+                //Textures
+                meshes[i].DiffuseTexture.image_m_ref = & image_m_ref;
+                meshes[i].NormalTexture.image_m_ref = & image_m_ref;
+                
+                //IndexBuffer
+                meshes[i].indexBuffer_ref.setup_ref = &setup_ref;
+                meshes[i].indexBuffer_ref.buffer_ref = &buffer_ref;
 
-        for (int i = 0; i < meshes.size(); i++) {
-            //Textures
-            meshes[i].DiffuseTexture.image_m_ref = & image_m_ref;
-            meshes[i].NormalTexture.image_m_ref = & image_m_ref;
+                //VertexBuffer
+                meshes[i].vertexBuffer_ref.setup_ref = &setup_ref;
+                meshes[i].vertexBuffer_ref.buffer_ref = &buffer_ref;
+                
+                //Mesh
+                meshes[i].setup_ref = &setup_ref;
+                meshes[i].memory_ref = &memory_ref;
+                meshes[i].buffer_ref = &buffer_ref;
+
+                meshes[i].InitMesh(Cbuffer_ref.commandPool);
+                uniformBuffer_ref.meshes.push_back(&meshes[i]);
+                Cbuffer_ref.meshes.push_back(&meshes[i]);
+            }
+        
+
             
-            //IndexBuffer
-            meshes[i].indexBuffer_ref.setup_ref = &setup_ref;
-            meshes[i].indexBuffer_ref.buffer_ref = &buffer_ref;
-
-            //VertexBuffer
-            meshes[i].vertexBuffer_ref.setup_ref = &setup_ref;
-            meshes[i].vertexBuffer_ref.buffer_ref = &buffer_ref;
+            uniformBuffer_ref.createUniformBuffer(); 
             
-            //Mesh
-            meshes[i].setup_ref = &setup_ref;
-            meshes[i].memory_ref = &memory_ref;
-            meshes[i].buffer_ref = &buffer_ref;
+            uniformBuffer_ref.createDescriptorPool();
+            uniformBuffer_ref.createDescriptorSets();
 
-            meshes[i].InitMesh(Cbuffer_ref.commandPool);
-            uniformBuffer_ref.meshes.push_back(&meshes[i]);
-            Cbuffer_ref.meshes.push_back(&meshes[i]);
-        }
-        
+            meshes[0].mesh_transform.translate=glm::vec3(4.0f,0.0f,-2.0f);
+            meshes[0].mesh_transform.rotation=glm::vec3(-90.0f,0.0f,-90.0f);
+            
+            meshes[1].mesh_transform.rotation=glm::vec3(-90.0f,0.0f,90.0f);
+            meshes[1].mesh_transform.translate=glm::vec3(4.0f,0.0f,2.0f);
 
-       
-        uniformBuffer_ref.createUniformBuffer(); 
-        
-        uniformBuffer_ref.createDescriptorPool();
-        uniformBuffer_ref.createDescriptorSets();
-        
+            meshes[2].mesh_transform.translate=glm::vec3(8.0f,0.0f,0.0f);
+            meshes[2].mesh_transform.scale = glm::vec3(0.002f);
+            meshes[2].mesh_transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+            
+        }     
         
 
         Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, uniformBuffer_ref.descriptorSets);
         createSyncObjects();
-
-        meshes[0].mesh_transform.translate=glm::vec3(4.0f,0.0f,-2.0f);
-        meshes[1].mesh_transform.translate=glm::vec3(4.0f,0.0f,2.0f);
-        meshes[2].mesh_transform.translate=glm::vec3(8.0f,0.0f,0.0f);
-        meshes[2].mesh_transform.scale = glm::vec3(0.002f);
-        meshes[2].mesh_transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
-        meshes[0].mesh_transform.rotation=glm::vec3(-90.0f,0.0f,-90.0f);
-        meshes[1].mesh_transform.rotation=glm::vec3(-90.0f,0.0f,90.0f);
+        
         
     }
     void Renderer::recreateSwapChain()
@@ -94,11 +99,13 @@ namespace VkRenderer
         Dbuffer_ref.createDepthResources(swap_ref.swapChainExtent);
         Fbuffer_ref.createFramebuffers();
         
-        uniformBuffer_ref.createUniformBuffer();
-        uniformBuffer_ref.createDescriptorPool();
-        uniformBuffer_ref.createDescriptorSets();
+        if(meshes.size())
+        {
+            uniformBuffer_ref.createUniformBuffer();
+            uniformBuffer_ref.createDescriptorPool();
+            uniformBuffer_ref.createDescriptorSets();
+        }
         
-
         Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, uniformBuffer_ref.descriptorSets);
         
 

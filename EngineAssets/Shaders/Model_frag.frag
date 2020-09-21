@@ -24,7 +24,7 @@ struct Light {
     vec4 specular;
     vec4 light_color;
 
-    vec4 radius;
+    float radius;
 };
 
 
@@ -32,7 +32,7 @@ layout(binding = 0) uniform UniformBufferObject {
     mat4 model;
     mat4 view;
     mat4 projection;
-    vec4 camPos;
+    vec3 camPos;
     Light lights[2];
 } ubo;
 #define lightCount 2
@@ -68,7 +68,7 @@ vec3 CalcPointLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 l
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0f);
     // attenuation
     float distance = length(vec3(light.position) - fragPos);
-    float attenuation = float(light.radius) / (pow(distance, 2.0) + 1.0);;    
+    float attenuation = light.radius / (pow(distance, 2.0) + 1.0);;    
     // combine results
     vec3 ambient = vec3(light.ambient) * vec3(texture(diffuseMap, TexCoords)) * light_color;
     vec3 diffuse = vec3(light.diffuse) * diff * vec3(texture(diffuseMap, TexCoords)) * light_color;
