@@ -4,15 +4,20 @@
 #include "VkShaderManager.h"
 #include "VkSetup.h"
 #include "Buffers/VkDepthBuffer.h"
-#include "Buffers/VkUnfiormbuffers.h"
+
 
 
 namespace VkRenderer
 {
+    struct PushConstants
+    {
+        bool Unlit;
+        int light_count;
+    };
     class VkGPipeline
     {
     public: 
-        void createGraphicsPipeline(VkExtent2D& swapChainExtent);  
+        void createGraphicsPipeline(VkExtent2D& swapChainExtent, VkDescriptorSetLayout descriptorSetLayout);  
         void createRenderPass(VkFormat& swapChainImageFormat);
         
         VkPipelineLayout pipelineLayout;
@@ -20,7 +25,6 @@ namespace VkRenderer
         VkPipeline graphicsPipeline;
 
         VkSetup *setup_ref;
-        VkuniformBuffer *uniformBuffer_ref;
         VkdepthBuffer *Dbuffer_ref;
 
     private: 

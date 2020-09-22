@@ -16,7 +16,7 @@ namespace VkRenderer
         swap_ref.createImageViews();
         gpipeline_ref.createRenderPass(swap_ref.swapChainImageFormat);
         uniformBuffer_ref.createDescriptorSetLayout();
-        gpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent);
+        gpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent, uniformBuffer_ref.descriptorSetLayout);
         Cbuffer_ref.createCommandPool(swap_ref.surface);
         Dbuffer_ref.createDepthResources(swap_ref.swapChainExtent);
         Fbuffer_ref.createFramebuffers();
@@ -103,7 +103,7 @@ namespace VkRenderer
         swap_ref.createSwapChain();
         swap_ref.createImageViews();
         gpipeline_ref.createRenderPass(swap_ref.swapChainImageFormat);
-        gpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent);
+        gpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent, uniformBuffer_ref.descriptorSetLayout);
         Dbuffer_ref.createDepthResources(swap_ref.swapChainExtent);
         Fbuffer_ref.createFramebuffers();
         
@@ -141,6 +141,8 @@ namespace VkRenderer
         for (size_t i = 0; i < meshes.size(); i++) {
             vkDestroyBuffer(setup_ref.device, uniformBuffer_ref.uniformBuffers[i], nullptr);
             vkFreeMemory(setup_ref.device, uniformBuffer_ref.uniformBuffersMemory[i], nullptr);
+            vkDestroyBuffer(setup_ref.device, uniformBuffer_ref.storageBuffers[i], nullptr);
+            vkFreeMemory(setup_ref.device, uniformBuffer_ref.storageBuffersMemory[i], nullptr);
         }
         vkDestroyDescriptorPool(setup_ref.device, uniformBuffer_ref.descriptorPool, nullptr);
     }

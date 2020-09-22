@@ -3,7 +3,7 @@
 
 namespace VkRenderer
 {
-    void VkGPipeline::createGraphicsPipeline(VkExtent2D& swapChainExtent)
+    void VkGPipeline::createGraphicsPipeline(VkExtent2D& swapChainExtent, VkDescriptorSetLayout descriptorSetLayout)
     {
         std::ifstream vertS("EngineAssets/Shaders/Model_vert.spv");
         std::ifstream fragS("EngineAssets/Shaders/Model_frag.spv");
@@ -104,7 +104,7 @@ namespace VkRenderer
         colorBlending.blendConstants[2] = 0.0f;
         colorBlending.blendConstants[3] = 0.0f;
 
-        VkPushConstantRange pushConstant = pushConstantRange(VK_SHADER_STAGE_FRAGMENT_BIT, sizeof(VkBool32), 0);
+        VkPushConstantRange pushConstant = pushConstantRange(VK_SHADER_STAGE_FRAGMENT_BIT, sizeof(PushConstants), 0);
 
 
         VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
@@ -112,7 +112,7 @@ namespace VkRenderer
         pipelineLayoutInfo.pNext = nullptr;
         pipelineLayoutInfo.flags = 0;
         pipelineLayoutInfo.setLayoutCount = 1;
-        pipelineLayoutInfo.pSetLayouts = &uniformBuffer_ref->descriptorSetLayout;
+        pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout;
         pipelineLayoutInfo.pushConstantRangeCount = 1;
         pipelineLayoutInfo.pPushConstantRanges = &pushConstant;
 

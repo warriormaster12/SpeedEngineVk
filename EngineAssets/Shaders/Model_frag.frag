@@ -27,15 +27,18 @@ struct Light {
     float radius;
 };
 
-
 layout(binding = 0) uniform UniformBufferObject {
     mat4 model;
     mat4 view;
     mat4 projection;
-    vec3 camPos;
-    Light lights[2];
+    vec4 camPos;
+    
 } ubo;
-#define lightCount 2
+layout(binding = 3) buffer LightBuffer
+{
+    Light lights[2];
+}lBuffer;
+
 vec3 CalcPointLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 light_color);
 
 void main() {
@@ -50,9 +53,9 @@ void main() {
         vec3 norm = normalize(Normal);
         vec3 viewDir = normalize(vec3(ubo.camPos) - FragPos);
         vec3 result;
-        for(int i = 0; i < lightCount; i++)
+        for(int i = 0; i < lBuffer.lights.length(); i++)
         {
-            result += CalcPointLight(ubo.lights[i], norm, FragPos, viewDir, vec3(ubo.lights[i].light_color));
+            result += CalcPointLight(lBuffer.lights[i], norm, FragPos, viewDir, vec3(lBuffer.lights[i].light_color));
         }
         outColor = vec4(result, 1.0f);
     }

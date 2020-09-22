@@ -53,7 +53,7 @@ void run()
     glfw_win_ref.HEIGHT = std::stoi(settings_array[1]);
     glfw_win_ref.initWindow(std::stoi(settings_array[2]));
     
-    renderer_ref.Cbuffer_ref.Unlit = std::stoi(settings_array[3]);
+    renderer_ref.Cbuffer_ref.push_const.Unlit = std::stoi(settings_array[3]);
 
     renderer_ref.win_ref = &glfw_win_ref;
     glfwSetCursorPosCallback(glfw_win_ref.window, mouse_callback);

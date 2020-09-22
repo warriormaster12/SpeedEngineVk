@@ -12,7 +12,6 @@ namespace VkRenderer
 
         //GraphicsPipeline
         gpipeline_ref.setup_ref = &setup_ref;
-        gpipeline_ref.uniformBuffer_ref = &uniformBuffer_ref;
         gpipeline_ref.Dbuffer_ref = &Dbuffer_ref;
 
         //UniformBuffer

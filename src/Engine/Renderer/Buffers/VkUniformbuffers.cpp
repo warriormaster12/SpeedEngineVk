@@ -5,12 +5,17 @@ namespace VkRenderer
     void VkuniformBuffer::createUniformBuffer()
     {
         VkDeviceSize bufferSize = sizeof(UniformBufferObject);
+        VkDeviceSize lightBufferSize = sizeof(LightBuffer);
 
         uniformBuffers.resize(meshes.size());
         uniformBuffersMemory.resize(meshes.size());
 
+        storageBuffers.resize(meshes.size());
+        storageBuffersMemory.resize(meshes.size());
+
         for (size_t i = 0; i < meshes.size(); i++) {
             buffer_ref->createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
+            buffer_ref->createBuffer(lightBufferSize, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, storageBuffers[i], storageBuffersMemory[i]);
         }
     }
 
@@ -23,6 +28,7 @@ namespace VkRenderer
         
         
         UniformBufferObject ubo{};
+        LightBuffer lightubo{};
         glm::mat4 ModelMatrix(1.0f);
         ubo.model = ModelMatrix;
 
@@ -32,25 +38,26 @@ namespace VkRenderer
         ubo.model= glm::rotate(ubo.model, glm::radians(meshes[DescriptorSetIndex]->mesh_transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
         ubo.model = glm::scale(ubo.model, meshes[DescriptorSetIndex]->mesh_transform.scale);	
 
-        ubo.camPos = camera_object.camera_transform.translate;
+        ubo.camPos = glm::vec4(glm::vec3(camera_object.camera_transform.translate), 0.0f);
 
-        ubo.lights[0].position = glm::vec3(2.0f, 1.0f, 1.0f);
+    
+        lightubo.lights[0].position = glm::vec3(2.0f, 1.0f, 1.0f);
 
-        ubo.lights[0].ambient = glm::vec3(0.4f);
-        ubo.lights[0].diffuse = glm::vec3(0.7f);
-        ubo.lights[0].specular = glm::vec3(1.0f);
-        ubo.lights[0].light_color = glm::vec3(1.0f, 1.0f, 1.0f);
+        lightubo.lights[0].ambient = glm::vec3(0.4f);
+        lightubo.lights[0].diffuse = glm::vec3(0.7f);
+        lightubo.lights[0].specular = glm::vec3(1.0f);
+        lightubo.lights[0].light_color = glm::vec3(1.0f, 1.0f, 1.0f);
 
-        ubo.lights[0].radius = 2.0f;
+        lightubo.lights[0].radius = 2.0f;
 
-        ubo.lights[1].position = glm::vec3(-2.0f, 1.0f, 1.0f);
+        lightubo.lights[1].position = glm::vec3(-2.0f, 1.0f, 1.0f);
 
-        ubo.lights[1].ambient = glm::vec3(0.4f);
-        ubo.lights[1].diffuse = glm::vec3(0.7f);
-        ubo.lights[1].specular = glm::vec3(1.0f);
-        ubo.lights[1].light_color = glm::vec3(1.0f, 0.55f, 0.22f);
+        lightubo.lights[1].ambient = glm::vec3(0.4f);
+        lightubo.lights[1].diffuse = glm::vec3(0.7f);
+        lightubo.lights[1].specular = glm::vec3(1.0f);
+        lightubo.lights[1].light_color = glm::vec3(1.0f, 0.55f, 0.22f);
 
-        ubo.lights[1].radius = 2.0f;
+        lightubo.lights[1].radius = 2.0f;
         
         camera_object.Set_Camera(swapChainExtent.width / (float) swapChainExtent.height);
         ubo.view = camera_object.matrices.view;
@@ -63,6 +70,10 @@ namespace VkRenderer
         vkMapMemory(setup_ref->device, uniformBuffersMemory[DescriptorSetIndex], 0, sizeof(ubo), 0, &data);
             memcpy(data, &ubo, sizeof(ubo));
         vkUnmapMemory(setup_ref->device, uniformBuffersMemory[DescriptorSetIndex]);
+
+        vkMapMemory(setup_ref->device, storageBuffersMemory[DescriptorSetIndex], 0, sizeof(lightubo), 0, &data);
+            memcpy(data, &lightubo, sizeof(lightubo));
+        vkUnmapMemory(setup_ref->device, storageBuffersMemory[DescriptorSetIndex]);
     }
 
     void VkuniformBuffer::createDescriptorPool()
@@ -70,7 +81,8 @@ namespace VkRenderer
         std::vector<VkDescriptorPoolSize> poolSizes = {
             descriptorPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, static_cast<uint32_t>(meshes.size())),
             descriptorPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, static_cast<uint32_t>(meshes.size())),
-            descriptorPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, static_cast<uint32_t>(meshes.size()))
+            descriptorPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, static_cast<uint32_t>(meshes.size())),
+            descriptorPoolSize(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, static_cast<uint32_t>(meshes.size())),
         };
         VkDescriptorPoolCreateInfo descriptorPoolInfo = descriptorPoolCreateInfo(poolSizes, static_cast<uint32_t>(meshes.size()));
         if (vkCreateDescriptorPool(setup_ref->device, &descriptorPoolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
@@ -98,6 +110,11 @@ namespace VkRenderer
             bufferInfo.buffer = uniformBuffers[i];
             bufferInfo.offset = 0;
             bufferInfo.range = sizeof(UniformBufferObject);
+            
+            VkDescriptorBufferInfo lightbufferInfo{};
+            lightbufferInfo.buffer = storageBuffers[i];
+            lightbufferInfo.offset = 0;
+            lightbufferInfo.range = sizeof(LightBuffer);
 
             VkDescriptorImageInfo DiffuseImageInfo{};
             DiffuseImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
@@ -112,6 +129,7 @@ namespace VkRenderer
                 writeDescriptorSet(descriptorSets[i], VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 0, nullptr, &bufferInfo, 1),
                 writeDescriptorSet(descriptorSets[i], VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1, &DiffuseImageInfo, nullptr, 1),
                 writeDescriptorSet(descriptorSets[i], VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 2, &NormalImageInfo, nullptr, 1),
+                writeDescriptorSet(descriptorSets[i], VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 3, nullptr, &lightbufferInfo, 1),
             };
            
 
@@ -124,6 +142,7 @@ namespace VkRenderer
             descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, 1),
             descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1, 1),
             descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 2, 1),
+            descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, 3, 1),
         };
 
         VkDescriptorSetLayoutCreateInfo descriptorLayout = descriptorSetLayoutCreateInfo(setLayoutBindings);
