@@ -25,12 +25,13 @@ namespace VkRenderer
         meshes.emplace_back();
         meshes.emplace_back();
         
-
         if(meshes.size() != 0)
         {
             meshes[2].DiffuseTexture.TEXTURE_PATH = "EngineAssets/Textures/chapel_diffuse.tga";
             meshes[2].NormalTexture.TEXTURE_PATH = "EngineAssets/Textures/chapel_normal.tga";
             meshes[2].model_ref.MODEL_PATH = "EngineAssets/Models/chapel_obj.obj";
+
+            
 
             for (int i = 0; i < meshes.size(); i++) {
                 //Textures
@@ -55,12 +56,14 @@ namespace VkRenderer
                 Cbuffer_ref.meshes.push_back(&meshes[i]);
             }
         
-
+            
             
             uniformBuffer_ref.createUniformBuffer(); 
             
             uniformBuffer_ref.createDescriptorPool();
             uniformBuffer_ref.createDescriptorSets();
+
+           
 
             meshes[0].mesh_transform.translate=glm::vec3(4.0f,0.0f,-2.0f);
             meshes[0].mesh_transform.rotation=glm::vec3(-90.0f,0.0f,-90.0f);
@@ -71,12 +74,17 @@ namespace VkRenderer
             meshes[2].mesh_transform.translate=glm::vec3(8.0f,0.0f,0.0f);
             meshes[2].mesh_transform.scale = glm::vec3(0.002f);
             meshes[2].mesh_transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+
+            
             
         }     
-        
 
+        
+        
+        
         Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, uniformBuffer_ref.descriptorSets);
         createSyncObjects();
+       
         
         
     }
@@ -99,13 +107,13 @@ namespace VkRenderer
         Dbuffer_ref.createDepthResources(swap_ref.swapChainExtent);
         Fbuffer_ref.createFramebuffers();
         
-        if(meshes.size())
+        if(meshes.size() != 0)
         {
             uniformBuffer_ref.createUniformBuffer();
             uniformBuffer_ref.createDescriptorPool();
             uniformBuffer_ref.createDescriptorSets();
         }
-        
+       
         Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, uniformBuffer_ref.descriptorSets);
         
 
@@ -180,7 +188,7 @@ namespace VkRenderer
         } else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
             throw std::runtime_error("failed to acquire swap chain image!");
         }
-
+        
         for (int i=0; i < meshes.size(); i++)
         {
             uniformBuffer_ref.updateUniformBuffer(i, swap_ref.swapChainExtent);
