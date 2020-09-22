@@ -54,6 +54,7 @@ namespace VkRenderer
 
         VkInstance instance;
         VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
+        VkPhysicalDeviceLimits physicalDeviceLimits;
         VkDevice device;
         VkQueue graphicsQueue;
         VkQueue presentQueue;

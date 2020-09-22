@@ -6,6 +6,7 @@
 #include "VkBufferCreation.h"
 #include "../Camera/Camera.h"
 #include "../../Components/Mesh.h"
+#include "../../Components/Light.h"
 
 
 
@@ -13,26 +14,18 @@
 
 namespace VkRenderer
 {
-    struct Light{
-        alignas(16) glm::vec3 position;
-
-        alignas(16) glm::vec3 ambient;
-        alignas(16) glm::vec3 diffuse;
-        alignas(16) glm::vec3 specular;
-        alignas(16) glm::vec3 light_color;
-
-        alignas(16) float radius;
-    };
+    
     struct LightBuffer
     {
-        alignas(16) std::array <Light, 2> lights;
+        std::array <Point_light, 2> point_lights;
+        Spot_light spot_light;
     };
 
     struct UniformBufferObject {
         glm::mat4 model;
         glm::mat4 view;
         glm::mat4 projection;
-        alignas(16) glm::vec4 camPos;
+        glm::vec4 camPos;
     };
     
     class VkuniformBuffer

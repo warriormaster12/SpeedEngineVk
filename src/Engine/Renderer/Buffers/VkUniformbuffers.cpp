@@ -1,4 +1,4 @@
-#include "Engine/Renderer/Buffers/VkUnfiormbuffers.h"
+#include "Engine/Renderer/Buffers/VkUniformbuffers.h"
 
 namespace VkRenderer
 {
@@ -15,7 +15,7 @@ namespace VkRenderer
 
         for (size_t i = 0; i < meshes.size(); i++) {
             buffer_ref->createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
-            buffer_ref->createBuffer(lightBufferSize, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, storageBuffers[i], storageBuffersMemory[i]);
+            buffer_ref->createBuffer(lightBufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, storageBuffers[i], storageBuffersMemory[i]);
         }
     }
 
@@ -41,23 +41,33 @@ namespace VkRenderer
         ubo.camPos = glm::vec4(glm::vec3(camera_object.camera_transform.translate), 0.0f);
 
     
-        lightubo.lights[0].position = glm::vec3(2.0f, 1.0f, 1.0f);
+        lightubo.point_lights[0].position = glm::vec4(glm::vec3(2.0f, 1.0f, 1.0f),0.0f);
 
-        lightubo.lights[0].ambient = glm::vec3(0.4f);
-        lightubo.lights[0].diffuse = glm::vec3(0.7f);
-        lightubo.lights[0].specular = glm::vec3(1.0f);
-        lightubo.lights[0].light_color = glm::vec3(1.0f, 1.0f, 1.0f);
+        lightubo.point_lights[0].ambient = glm::vec4(glm::vec3(0.4f),0.0f);
+        lightubo.point_lights[0].diffuse = glm::vec4(glm::vec3(0.7f),0.0f);
+        lightubo.point_lights[0].specular = glm::vec4(glm::vec3(1.0f),0.0f);
+        lightubo.point_lights[0].light_color = glm::vec4(glm::vec3(1.0f, 1.0f, 1.0f),0.0f);
 
-        lightubo.lights[0].radius = 2.0f;
+        lightubo.point_lights[0].radius = glm::vec4(2.0f);
 
-        lightubo.lights[1].position = glm::vec3(-2.0f, 1.0f, 1.0f);
+        lightubo.point_lights[1].position = glm::vec4(glm::vec3(-2.0f, 1.0f, 1.0f),0.0f);
 
-        lightubo.lights[1].ambient = glm::vec3(0.4f);
-        lightubo.lights[1].diffuse = glm::vec3(0.7f);
-        lightubo.lights[1].specular = glm::vec3(1.0f);
-        lightubo.lights[1].light_color = glm::vec3(1.0f, 0.55f, 0.22f);
+        lightubo.point_lights[1].ambient = glm::vec4(glm::vec3(0.4f),0.0f);
+        lightubo.point_lights[1].diffuse = glm::vec4(glm::vec3(0.7f),0.0f);
+        lightubo.point_lights[1].specular = glm::vec4(glm::vec3(1.0f),0.0f);
+        lightubo.point_lights[1].light_color = glm::vec4(glm::vec3(1.0f, 0.55f, 0.22f), 0.0f);
 
-        lightubo.lights[1].radius = 2.0f;
+        lightubo.point_lights[1].radius = glm::vec4(2.0f);
+
+        lightubo.spot_light.position = glm::vec4(glm::vec3(camera_object.camera_transform.translate), 0.0f);
+        lightubo.spot_light.direction = glm::vec4(camera_object.cameraFront, 0.0f);
+        lightubo.spot_light.ambient = glm::vec4(glm::vec3(0.0f),0.0f);
+        lightubo.spot_light.diffuse = glm::vec4(glm::vec3(1.0f),0.0f);
+        lightubo.spot_light.specular = glm::vec4(glm::vec3(1.0f),0.0f);
+        lightubo.spot_light.radius = glm::vec4(4.0f);
+        lightubo.spot_light.cutOff = glm::vec4(glm::cos(glm::radians(12.5f)));
+        lightubo.spot_light.outerCutOff = glm::vec4(glm::cos(glm::radians(15.0f)));
+        lightubo.spot_light.light_color = glm::vec4(glm::vec3(1.0f),0.0f);
         
         camera_object.Set_Camera(swapChainExtent.width / (float) swapChainExtent.height);
         ubo.view = camera_object.matrices.view;
@@ -82,7 +92,7 @@ namespace VkRenderer
             descriptorPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, static_cast<uint32_t>(meshes.size())),
             descriptorPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, static_cast<uint32_t>(meshes.size())),
             descriptorPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, static_cast<uint32_t>(meshes.size())),
-            descriptorPoolSize(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, static_cast<uint32_t>(meshes.size())),
+            descriptorPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, static_cast<uint32_t>(meshes.size())),
         };
         VkDescriptorPoolCreateInfo descriptorPoolInfo = descriptorPoolCreateInfo(poolSizes, static_cast<uint32_t>(meshes.size()));
         if (vkCreateDescriptorPool(setup_ref->device, &descriptorPoolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
@@ -129,7 +139,7 @@ namespace VkRenderer
                 writeDescriptorSet(descriptorSets[i], VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 0, nullptr, &bufferInfo, 1),
                 writeDescriptorSet(descriptorSets[i], VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1, &DiffuseImageInfo, nullptr, 1),
                 writeDescriptorSet(descriptorSets[i], VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 2, &NormalImageInfo, nullptr, 1),
-                writeDescriptorSet(descriptorSets[i], VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 3, nullptr, &lightbufferInfo, 1),
+                writeDescriptorSet(descriptorSets[i], VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 3, nullptr, &lightbufferInfo, 1),
             };
            
 
@@ -142,7 +152,7 @@ namespace VkRenderer
             descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, 1),
             descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1, 1),
             descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 2, 1),
-            descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, 3, 1),
+            descriptorSetLayoutBinding(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, 3, 1),
         };
 
         VkDescriptorSetLayoutCreateInfo descriptorLayout = descriptorSetLayoutCreateInfo(setLayoutBindings);

@@ -9,7 +9,7 @@
 #include "Buffers/VkCommandbuffers.h"
 #include "Buffers/VkBufferCreation.h"
 #include "Buffers/VkDepthBuffer.h"
-#include "Buffers/VkUnfiormbuffers.h"
+#include "Buffers/VkUniformbuffers.h"
 #include "VkMemory.h"
 #include "../Window/Window.h"
 #include "../Components/Mesh.h"
