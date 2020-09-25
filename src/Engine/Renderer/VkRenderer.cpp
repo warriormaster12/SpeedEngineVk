@@ -14,9 +14,9 @@ namespace VkRenderer
         setup_ref.createLogicalDevice(swap_ref.surface);
         swap_ref.createSwapChain();
         swap_ref.createImageViews();
-        gpipeline_ref.createRenderPass(swap_ref.swapChainImageFormat);
+        renderpass_ref.createRenderPass(setup_ref.device, swap_ref.swapChainImageFormat);
         uniformBuffer_ref.createDescriptorSetLayout();
-        gpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent, uniformBuffer_ref.descriptorSetLayout);
+        gpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent, renderpass_ref.renderPass,uniformBuffer_ref.descriptorSetLayout);
         Cbuffer_ref.createCommandPool(swap_ref.surface);
         Dbuffer_ref.createDepthResources(swap_ref.swapChainExtent);
         Fbuffer_ref.createFramebuffers();
@@ -102,8 +102,8 @@ namespace VkRenderer
 
         swap_ref.createSwapChain();
         swap_ref.createImageViews();
-        gpipeline_ref.createRenderPass(swap_ref.swapChainImageFormat);
-        gpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent, uniformBuffer_ref.descriptorSetLayout);
+        renderpass_ref.createRenderPass(setup_ref.device, swap_ref.swapChainImageFormat);
+        gpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent, renderpass_ref.renderPass,uniformBuffer_ref.descriptorSetLayout);
         Dbuffer_ref.createDepthResources(swap_ref.swapChainExtent);
         Fbuffer_ref.createFramebuffers();
         
@@ -131,7 +131,7 @@ namespace VkRenderer
 
         vkDestroyPipeline(setup_ref.device, gpipeline_ref.graphicsPipeline, nullptr);
         vkDestroyPipelineLayout(setup_ref.device, gpipeline_ref.pipelineLayout, nullptr);
-        vkDestroyRenderPass(setup_ref.device, gpipeline_ref.renderPass, nullptr);
+        vkDestroyRenderPass(setup_ref.device, renderpass_ref.renderPass, nullptr);
 
         for (auto imageView : swap_ref.swapChainImageViews) {
             vkDestroyImageView(setup_ref.device, imageView, nullptr);

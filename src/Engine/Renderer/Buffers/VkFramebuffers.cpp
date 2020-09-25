@@ -14,7 +14,7 @@ namespace VkRenderer
 
             VkFramebufferCreateInfo framebufferInfo{};
             framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-            framebufferInfo.renderPass = gpipeline_ref->renderPass;
+            framebufferInfo.renderPass = renderpass_ref->renderPass;
             framebufferInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
             framebufferInfo.pAttachments = attachments.data();
             framebufferInfo.width = swap_ref->swapChainExtent.width;

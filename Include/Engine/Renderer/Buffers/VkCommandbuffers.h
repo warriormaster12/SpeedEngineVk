@@ -3,6 +3,7 @@
 #include "../VkIncludes.h"
 #include "../VkSetup.h"
 #include "../VkGraphicsPipeline.h"
+#include "../VkRenderPass.h"
 #include "../../Components/Mesh.h"
 
 
@@ -21,6 +22,7 @@ namespace VkRenderer
 
         VkSetup *setup_ref;
         VkGPipeline *gpipeline_ref;
+        VkRenderpass *renderpass_ref;
         PushConstants push_const;
         std::vector <Mesh*> meshes;
 

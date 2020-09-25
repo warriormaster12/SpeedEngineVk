@@ -17,15 +17,13 @@ namespace VkRenderer
     class VkGPipeline
     {
     public: 
-        void createGraphicsPipeline(VkExtent2D& swapChainExtent, VkDescriptorSetLayout descriptorSetLayout);  
-        void createRenderPass(VkFormat& swapChainImageFormat);
+        void createGraphicsPipeline(VkExtent2D& swapChainExtent, VkRenderPass& renderPass,VkDescriptorSetLayout descriptorSetLayout);  
         
+        std::vector <std::string> shaders;
         VkPipelineLayout pipelineLayout;
-        VkRenderPass renderPass;
         VkPipeline graphicsPipeline;
-
         VkSetup *setup_ref;
-        VkdepthBuffer *Dbuffer_ref;
+        
 
     private: 
         VkShader shader_ref;

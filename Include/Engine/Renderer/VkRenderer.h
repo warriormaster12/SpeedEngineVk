@@ -5,6 +5,7 @@
 #include "VkSwapChain.h"
 #include "VkGraphicsPipeline.h"
 #include "VkImageManager.h"
+#include "VkRenderPass.h"
 #include "Buffers/VkFramebuffers.h"
 #include "Buffers/VkCommandbuffers.h"
 #include "Buffers/VkBufferCreation.h"
@@ -38,6 +39,7 @@ namespace VkRenderer
 
         VkSwapChain swap_ref;
         VkGPipeline gpipeline_ref;
+        VkRenderpass renderpass_ref;
         VkframeBuffer Fbuffer_ref;
         
         std::vector <Mesh> meshes;

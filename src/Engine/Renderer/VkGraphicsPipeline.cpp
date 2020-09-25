@@ -4,33 +4,34 @@
 
 namespace VkRenderer
 {
-    void VkGPipeline::createGraphicsPipeline(VkExtent2D& swapChainExtent, VkDescriptorSetLayout descriptorSetLayout)
+    void VkGPipeline::createGraphicsPipeline(VkExtent2D& swapChainExtent, VkRenderPass& renderPass, VkDescriptorSetLayout descriptorSetLayout)
     {
-        std::ifstream vertS("EngineAssets/Shaders/Model_vert.spv");
-        std::ifstream fragS("EngineAssets/Shaders/Model_frag.spv");
+        shaders = {
+            "EngineAssets/Shaders/Model_vert.vert", 
+            "EngineAssets/Shaders/Model_frag.frag",
+        };
+        std::vector <VkShaderModule> ShaderModules;
 
-        if (!vertS)
+        for(int i = 0; i < shaders.size(); i++)
         {
-            shader_ref.CompileGLSL("EngineAssets/Shaders/Model_vert.vert");
-            std::cout<<"vertex shader compiled"<<std::endl;
+            std::string::size_type remove_fileformat = shaders[i].find('.');
+            const std::string processed_shader = shaders[i].substr(0, remove_fileformat);
+            std::ifstream current_shader(processed_shader + ".spv");
+            if (!current_shader)
+            {
+                shader_ref.CompileGLSL(shaders[i]);
+                std::cout<<shaders[i] + " compiled"<<std::endl;
+            }
+            auto ShaderCode = shader_ref.readFile(processed_shader + ".spv");
+            VkShaderModule shader_mod = shader_ref.createShaderModule(ShaderCode, setup_ref->device);
+            ShaderModules.push_back(shader_mod);
         }
-        if (!fragS)
-        {
-            shader_ref.CompileGLSL("EngineAssets/Shaders/Model_frag.frag");
-            std::cout<<"fragment shader compiled"<<std::endl;
-        }
-        auto vertShaderCode = shader_ref.readFile("EngineAssets/Shaders/Model_vert.spv");
-        auto fragShaderCode = shader_ref.readFile("EngineAssets/Shaders/Model_frag.spv");
-
-
-        VkShaderModule vertShaderModule = shader_ref.createShaderModule(vertShaderCode, setup_ref->device);
-        VkShaderModule fragShaderModule = shader_ref.createShaderModule(fragShaderCode, setup_ref->device);
 
     
         std::array <VkPipelineShaderStageCreateInfo, 2> shaderStages; 
 
-        shaderStages[0] = loadShader(vertShaderModule, VK_SHADER_STAGE_VERTEX_BIT);
-        shaderStages[1] = loadShader(fragShaderModule, VK_SHADER_STAGE_FRAGMENT_BIT);
+        shaderStages[0] = loadShader(ShaderModules[0], VK_SHADER_STAGE_VERTEX_BIT);
+        shaderStages[1] = loadShader(ShaderModules[1], VK_SHADER_STAGE_FRAGMENT_BIT);
 
 
         VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
@@ -141,67 +142,13 @@ namespace VkRenderer
         if (vkCreateGraphicsPipelines(setup_ref->device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS) {
             throw std::runtime_error("failed to create graphics pipeline!");
         }
-        vkDestroyShaderModule(setup_ref->device, fragShaderModule, nullptr);
-        vkDestroyShaderModule(setup_ref->device, vertShaderModule, nullptr);
-    }
-    void VkGPipeline::createRenderPass(VkFormat& swapChainImageFormat)
-    {
-        VkAttachmentDescription colorAttachment{};
-        colorAttachment.format = swapChainImageFormat;
-        colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
-        colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-        colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-        colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-        colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-        colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-        colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-
-        VkAttachmentDescription depthAttachment{};
-        depthAttachment.format = Dbuffer_ref->findDepthFormat();
-        depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
-        depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-        depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-        depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-        depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-        depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-        depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-
-        VkAttachmentReference colorAttachmentRef{};
-        colorAttachmentRef.attachment = 0;
-        colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
-        VkAttachmentReference depthAttachmentRef{};
-        depthAttachmentRef.attachment = 1;
-        depthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-
-        VkSubpassDescription subpass{};
-        subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-        subpass.colorAttachmentCount = 1;
-        subpass.pColorAttachments = &colorAttachmentRef;
-        subpass.pDepthStencilAttachment = &depthAttachmentRef;
-
-        VkSubpassDependency dependency{};
-        dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
-        dependency.dstSubpass = 0;
-        dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-        dependency.srcAccessMask = 0;
-        dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-        dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-
-        std::array<VkAttachmentDescription, 2> attachments = {colorAttachment, depthAttachment};
-        VkRenderPassCreateInfo renderPassInfo{};
-        renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-        renderPassInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
-        renderPassInfo.pAttachments = attachments.data();
-        renderPassInfo.subpassCount = 1;
-        renderPassInfo.pSubpasses = &subpass;
-        renderPassInfo.dependencyCount = 1;
-        renderPassInfo.pDependencies = &dependency;
-
-        if (vkCreateRenderPass(setup_ref->device, &renderPassInfo, nullptr, &renderPass) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create render pass!");
+        for(int i = 0; i < ShaderModules.size(); i++)
+        {
+            vkDestroyShaderModule(setup_ref->device, ShaderModules[i], nullptr);
         }
+        
     }
+    
 
     inline VkPushConstantRange VkGPipeline::pushConstantRange(VkShaderStageFlags stageFlags,uint32_t size,uint32_t offset)
     {
