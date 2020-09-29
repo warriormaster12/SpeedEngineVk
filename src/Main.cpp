@@ -6,6 +6,7 @@
 
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void cursor_enter_callback(GLFWwindow* window, int entered);
 VkRenderer::Renderer renderer_ref;
 AppWindow glfw_win_ref;
 FileConf renderer_config;
@@ -56,6 +57,7 @@ void run()
     renderer_ref.Cbuffer_ref.push_const.Unlit = std::stoi(settings_array[3]);
 
     renderer_ref.win_ref = &glfw_win_ref;
+    glfwSetCursorEnterCallback(glfw_win_ref.window, cursor_enter_callback);
     glfwSetCursorPosCallback(glfw_win_ref.window, mouse_callback);
     renderer_ref.InitVulkan();
     mainLoop();
@@ -77,7 +79,12 @@ int main()
     return EXIT_SUCCESS;
 }
     
-    
+void cursor_enter_callback(GLFWwindow* window, int entered) {
+    if (entered)
+    {
+        glfwGetCursorPos(window, &renderer_ref.uniformBuffer_ref.camera_object.lastX, &renderer_ref.uniformBuffer_ref.camera_object.lastY);
+    }
+}   
 
  
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)

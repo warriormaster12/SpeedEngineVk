@@ -33,15 +33,16 @@ namespace VkRenderer
         void CameraUpdate(double DeltaT);
         Camera();
         void processMouse(double xpos, double ypos);
+
+        double lastX{800.0f / 2.0};
+        double lastY{600.0 / 2.0};
     private: 
         void processMovement(double DeltaT);
         
 
-        bool firstMouse{true};
         float yaw{0.0f};	
         float pitch{0.0f};
-        float lastX{800.0f / 2.0};
-        float lastY{600.0 / 2.0};
+        
     };
 }
 
