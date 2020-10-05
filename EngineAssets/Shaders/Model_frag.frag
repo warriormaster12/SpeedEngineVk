@@ -26,6 +26,8 @@ struct Point_light {
     vec4 specular;
     vec4 light_color;
 
+    vec4 visible; 
+
     vec4 radius;
 };
 struct Spot_light {
@@ -40,6 +42,8 @@ struct Spot_light {
     vec4 diffuse;
     vec4 specular;  
     vec4 light_color;
+
+    vec4 visible; 
 };
 
 layout(binding = 0) uniform UniformBufferObject {

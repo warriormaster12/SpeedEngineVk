@@ -40,6 +40,9 @@ namespace VkRenderer
 
         ubo.camPos = glm::vec4(glm::vec3(camera_object.camera_transform.translate), 0.0f);
 
+        lightubo.point_lights[0].visible = glm::vec4(bool(true));
+        lightubo.point_lights[1].visible = glm::vec4(bool(false));
+       
     
         lightubo.point_lights[0].position = glm::vec4(glm::vec3(2.0f, 1.0f, 1.0f),0.0f);
 
@@ -47,8 +50,10 @@ namespace VkRenderer
         lightubo.point_lights[0].diffuse = glm::vec4(glm::vec3(0.7f),0.0f);
         lightubo.point_lights[0].specular = glm::vec4(glm::vec3(1.0f),0.0f);
         lightubo.point_lights[0].light_color = glm::vec4(glm::vec3(1.0f, 1.0f, 1.0f),0.0f);
-
-        lightubo.point_lights[0].radius = glm::vec4(2.0f);
+        if(lightubo.point_lights[0].visible == glm::vec4(bool(true)))
+        {
+            lightubo.point_lights[0].radius = glm::vec4(2.0f);
+        }
 
         lightubo.point_lights[1].position = glm::vec4(glm::vec3(-2.0f, 1.0f, 1.0f),0.0f);
 
@@ -56,15 +61,23 @@ namespace VkRenderer
         lightubo.point_lights[1].diffuse = glm::vec4(glm::vec3(0.7f),0.0f);
         lightubo.point_lights[1].specular = glm::vec4(glm::vec3(1.0f),0.0f);
         lightubo.point_lights[1].light_color = glm::vec4(glm::vec3(1.0f, 0.55f, 0.22f), 0.0f);
-
-        lightubo.point_lights[1].radius = glm::vec4(2.0f);
-
+        if(lightubo.point_lights[1].visible == glm::vec4(bool(true)))
+        {
+            lightubo.point_lights[1].radius = glm::vec4(2.0f);
+        }
         lightubo.spot_light.position = glm::vec4(glm::vec3(camera_object.camera_transform.translate), 0.0f);
         lightubo.spot_light.direction = glm::vec4(camera_object.cameraFront, 0.0f);
         lightubo.spot_light.ambient = glm::vec4(glm::vec3(0.0f),0.0f);
         lightubo.spot_light.diffuse = glm::vec4(glm::vec3(1.0f),0.0f);
         lightubo.spot_light.specular = glm::vec4(glm::vec3(1.0f),0.0f);
-        lightubo.spot_light.radius = glm::vec4(4.0f);
+        lightubo.spot_light.visible = glm::vec4(bool(true));
+        
+        if(lightubo.spot_light.visible == glm::vec4(bool(true)))
+        {
+            lightubo.spot_light.radius = glm::vec4(4.0f);
+        }
+        
+        
         lightubo.spot_light.cutOff = glm::vec4(glm::cos(glm::radians(12.5f)));
         lightubo.spot_light.outerCutOff = glm::vec4(glm::cos(glm::radians(15.0f)));
         lightubo.spot_light.light_color = glm::vec4(glm::vec3(1.0f),0.0f);
