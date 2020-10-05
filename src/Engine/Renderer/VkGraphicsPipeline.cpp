@@ -17,11 +17,17 @@ namespace VkRenderer
             std::string::size_type remove_fileformat = shaders[i].find('.');
             const std::string processed_shader = shaders[i].substr(0, remove_fileformat);
             std::ifstream current_shader(processed_shader + ".spv");
+            
+            #ifdef NDEBUG
             if (!current_shader)
             {
                 shader_ref.CompileGLSL(shaders[i]);
                 std::cout<<shaders[i] + " compiled"<<std::endl;
             }
+            #else
+            shader_ref.CompileGLSL(shaders[i]);
+            std::cout<<shaders[i] + " compiled"<<std::endl;
+            #endif
             auto ShaderCode = shader_ref.readFile(processed_shader + ".spv");
             VkShaderModule shader_mod = shader_ref.createShaderModule(ShaderCode, setup_ref->device);
             ShaderModules.push_back(shader_mod);

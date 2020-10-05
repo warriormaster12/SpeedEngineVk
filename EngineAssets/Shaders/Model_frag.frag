@@ -55,7 +55,7 @@ layout(binding = 0) uniform UniformBufferObject {
 } ubo;
 layout(binding = 3) uniform LightBuffer
 {
-    Point_light point_lights[2];
+    Point_light point_lights[4];
     Spot_light spot_light;
 }lBuffer;
 
