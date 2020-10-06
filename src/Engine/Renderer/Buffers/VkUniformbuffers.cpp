@@ -42,10 +42,12 @@ namespace VkRenderer
 
         lightubo.point_lights[0].visible = glm::vec4(bool(true));
         lightubo.point_lights[1].visible = glm::vec4(bool(false));
+
+        
        
     
         lightubo.point_lights[0].position = glm::vec4(glm::vec3(2.0f, 1.0f, 1.0f),0.0f);
-
+        meshes[3]->mesh_transform.translate = lightubo.point_lights[0].position;
         lightubo.point_lights[0].ambient = glm::vec4(glm::vec3(0.4f),0.0f);
         lightubo.point_lights[0].diffuse = glm::vec4(glm::vec3(0.7f),0.0f);
         lightubo.point_lights[0].specular = glm::vec4(glm::vec3(1.0f),0.0f);

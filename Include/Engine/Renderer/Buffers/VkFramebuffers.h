@@ -17,7 +17,6 @@ namespace VkRenderer
 
         VkSetup *setup_ref;
         VkSwapChain *swap_ref;
-        VkGPipeline *gpipeline_ref;
         VkRenderpass *renderpass_ref;
         VkdepthBuffer *Dbuffer_ref;
     };

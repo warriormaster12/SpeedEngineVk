@@ -39,6 +39,7 @@ namespace VkRenderer
 
         VkSwapChain swap_ref;
         VkGPipeline gpipeline_ref;
+        VkGPipeline lightpipeline_ref;
         VkRenderpass renderpass_ref;
         VkframeBuffer Fbuffer_ref;
         

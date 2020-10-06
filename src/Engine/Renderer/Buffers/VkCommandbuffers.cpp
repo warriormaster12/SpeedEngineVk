@@ -53,24 +53,35 @@ namespace VkRenderer
 
             vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
                 
+                vkCmdPushConstants(commandBuffers[i], lightpipeline_ref->pipelineLayout, VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(push_const), &push_const);
                 vkCmdPushConstants(commandBuffers[i], gpipeline_ref->pipelineLayout, VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(push_const), &push_const);
-                vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, gpipeline_ref->graphicsPipeline);
+                
+
                 if (meshes.size() != 0)
                 {
                     for(int j=0; j < meshes.size(); j++)
                     {
+                        
+                            
+                        vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, gpipeline_ref->graphicsPipeline);
+                        vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, gpipeline_ref->pipelineLayout, 0, 1, &descriptorSets[j], 0, nullptr);
+                        vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, lightpipeline_ref->graphicsPipeline);
+                        vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, lightpipeline_ref->pipelineLayout, 0, 1, &descriptorSets[j], 0, nullptr);
+                        
+                        
                         VkBuffer vertexBuffers[] = {meshes[j]->vertexBuffer_ref.vertexBuffer};
                         VkDeviceSize offsets[] = {0};
                         vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
                         
 
                         vkCmdBindIndexBuffer(commandBuffers[i], meshes[j]->indexBuffer_ref.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
-
-
-                        vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, gpipeline_ref->pipelineLayout, 0, 1, &descriptorSets[j], 0, nullptr);
-            
-                    
+                        
+                        
+                        
+                        
+                
                         vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(meshes[j]->indexBuffer_ref.indices.size()), 1, 0, 0, 0);
+        
                     }
                 }
 

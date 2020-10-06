@@ -6,10 +6,6 @@ namespace VkRenderer
 {
     void VkGPipeline::createGraphicsPipeline(VkExtent2D& swapChainExtent, VkRenderPass& renderPass, VkDescriptorSetLayout descriptorSetLayout)
     {
-        shaders = {
-            "EngineAssets/Shaders/Model_vert.vert", 
-            "EngineAssets/Shaders/Model_frag.frag",
-        };
         std::vector <VkShaderModule> ShaderModules;
 
         for(int i = 0; i < shaders.size(); i++)

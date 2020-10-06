@@ -16,11 +16,15 @@ namespace VkRenderer
         swap_ref.createImageViews();
         renderpass_ref.createRenderPass(setup_ref.device, swap_ref.swapChainImageFormat);
         uniformBuffer_ref.createDescriptorSetLayout();
+        gpipeline_ref.shaders = {"EngineAssets/Shaders/Model_vert.vert", "EngineAssets/Shaders/Model_frag.frag",};
         gpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent, renderpass_ref.renderPass,uniformBuffer_ref.descriptorSetLayout);
+        lightpipeline_ref.shaders = {"EngineAssets/Shaders/light_cube_vert.vert", "EngineAssets/Shaders/light_cube_frag.frag",};;
+        lightpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent, renderpass_ref.renderPass,uniformBuffer_ref.descriptorSetLayout);
         Cbuffer_ref.createCommandPool(swap_ref.surface);
         Dbuffer_ref.createDepthResources(swap_ref.swapChainExtent);
         Fbuffer_ref.createFramebuffers();
     
+        meshes.emplace_back();
         meshes.emplace_back();
         meshes.emplace_back();
         meshes.emplace_back();
@@ -30,6 +34,7 @@ namespace VkRenderer
             meshes[2].DiffuseTexture.TEXTURE_PATH = "EngineAssets/Textures/chapel_diffuse.tga";
             meshes[2].NormalTexture.TEXTURE_PATH = "EngineAssets/Textures/chapel_normal.tga";
             meshes[2].model_ref.MODEL_PATH = "EngineAssets/Models/chapel_obj.obj";
+            meshes[3].model_ref.MODEL_PATH = "EngineAssets/Models/cube.obj";
 
             
 
@@ -63,7 +68,7 @@ namespace VkRenderer
             uniformBuffer_ref.createDescriptorPool();
             uniformBuffer_ref.createDescriptorSets();
 
-           
+            
 
             meshes[0].mesh_transform.translate=glm::vec3(4.0f,0.0f,-2.0f);
             meshes[0].mesh_transform.rotation=glm::vec3(-90.0f,0.0f,-90.0f);
@@ -74,6 +79,7 @@ namespace VkRenderer
             meshes[2].mesh_transform.translate=glm::vec3(8.0f,0.0f,0.0f);
             meshes[2].mesh_transform.scale = glm::vec3(0.002f);
             meshes[2].mesh_transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+            meshes[3].mesh_transform.scale = glm::vec3(0.1);
 
             
             
@@ -104,6 +110,7 @@ namespace VkRenderer
         swap_ref.createImageViews();
         renderpass_ref.createRenderPass(setup_ref.device, swap_ref.swapChainImageFormat);
         gpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent, renderpass_ref.renderPass,uniformBuffer_ref.descriptorSetLayout);
+        lightpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent, renderpass_ref.renderPass,uniformBuffer_ref.descriptorSetLayout);
         Dbuffer_ref.createDepthResources(swap_ref.swapChainExtent);
         Fbuffer_ref.createFramebuffers();
         
@@ -131,6 +138,8 @@ namespace VkRenderer
 
         vkDestroyPipeline(setup_ref.device, gpipeline_ref.graphicsPipeline, nullptr);
         vkDestroyPipelineLayout(setup_ref.device, gpipeline_ref.pipelineLayout, nullptr);
+        vkDestroyPipeline(setup_ref.device, lightpipeline_ref.graphicsPipeline, nullptr);
+        vkDestroyPipelineLayout(setup_ref.device, lightpipeline_ref.pipelineLayout, nullptr);
         vkDestroyRenderPass(setup_ref.device, renderpass_ref.renderPass, nullptr);
 
         for (auto imageView : swap_ref.swapChainImageViews) {

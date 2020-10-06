@@ -12,6 +12,7 @@ namespace VkRenderer
 
         //GraphicsPipeline
         gpipeline_ref.setup_ref = &setup_ref;
+        lightpipeline_ref.setup_ref = &setup_ref;
 
         //RenderPass
         renderpass_ref.Dbuffer_ref = &Dbuffer_ref;
@@ -31,12 +32,12 @@ namespace VkRenderer
         //CommandBuffer
         Cbuffer_ref.setup_ref = &setup_ref;
         Cbuffer_ref.gpipeline_ref = &gpipeline_ref;
+        Cbuffer_ref.lightpipeline_ref = &lightpipeline_ref;
         Cbuffer_ref.renderpass_ref = &renderpass_ref;
 
         //FrameBuffer
         Fbuffer_ref.setup_ref = &setup_ref;
         Fbuffer_ref.swap_ref = &swap_ref;
-        Fbuffer_ref.gpipeline_ref = &gpipeline_ref;
         Fbuffer_ref.renderpass_ref = &renderpass_ref;
         Fbuffer_ref.Dbuffer_ref = &Dbuffer_ref;
 

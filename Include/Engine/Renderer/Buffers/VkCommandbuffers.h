@@ -22,6 +22,7 @@ namespace VkRenderer
 
         VkSetup *setup_ref;
         VkGPipeline *gpipeline_ref;
+        VkGPipeline *lightpipeline_ref;
         VkRenderpass *renderpass_ref;
         PushConstants push_const;
         std::vector <Mesh*> meshes;
