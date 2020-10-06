@@ -41,12 +41,12 @@ namespace VkRenderer
         ubo.camPos = glm::vec4(glm::vec3(camera_object.camera_transform.translate), 0.0f);
 
         lightubo.point_lights[0].visible = glm::vec4(bool(true));
-        lightubo.point_lights[1].visible = glm::vec4(bool(false));
+        lightubo.point_lights[1].visible = glm::vec4(bool(true));
 
         
        
     
-        lightubo.point_lights[0].position = glm::vec4(glm::vec3(2.0f, 1.0f, 1.0f),0.0f);
+        lightubo.point_lights[0].position = glm::vec4(glm::vec3(4.0f, 1.5f, 2.0f),0.0f);
         meshes[3]->mesh_transform.translate = lightubo.point_lights[0].position;
         lightubo.point_lights[0].ambient = glm::vec4(glm::vec3(0.4f),0.0f);
         lightubo.point_lights[0].diffuse = glm::vec4(glm::vec3(0.7f),0.0f);
@@ -54,10 +54,10 @@ namespace VkRenderer
         lightubo.point_lights[0].light_color = glm::vec4(glm::vec3(1.0f, 1.0f, 1.0f),0.0f);
         if(lightubo.point_lights[0].visible == glm::vec4(bool(true)))
         {
-            lightubo.point_lights[0].radius = glm::vec4(2.0f);
+            lightubo.point_lights[0].radius = glm::vec4(0.5f);
         }
 
-        lightubo.point_lights[1].position = glm::vec4(glm::vec3(-2.0f, 1.0f, 1.0f),0.0f);
+        lightubo.point_lights[1].position = glm::vec4(glm::vec3(4.0f, 1.5f, -3.0f),0.0f);
 
         lightubo.point_lights[1].ambient = glm::vec4(glm::vec3(0.4f),0.0f);
         lightubo.point_lights[1].diffuse = glm::vec4(glm::vec3(0.7f),0.0f);
@@ -65,7 +65,7 @@ namespace VkRenderer
         lightubo.point_lights[1].light_color = glm::vec4(glm::vec3(1.0f, 0.55f, 0.22f), 0.0f);
         if(lightubo.point_lights[1].visible == glm::vec4(bool(true)))
         {
-            lightubo.point_lights[1].radius = glm::vec4(2.0f);
+            lightubo.point_lights[1].radius = glm::vec4(0.5f);
         }
         lightubo.spot_light.position = glm::vec4(glm::vec3(camera_object.camera_transform.translate), 0.0f);
         lightubo.spot_light.direction = glm::vec4(camera_object.cameraFront, 0.0f);
