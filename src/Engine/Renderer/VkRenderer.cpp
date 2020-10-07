@@ -18,7 +18,8 @@ namespace VkRenderer
         uniformBuffer_ref.createDescriptorSetLayout();
         gpipeline_ref.shaders = {"EngineAssets/Shaders/Model_vert.vert", "EngineAssets/Shaders/Model_frag.frag",};
         gpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent, renderpass_ref.renderPass,uniformBuffer_ref.descriptorSetLayout);
-        lightpipeline_ref.shaders = {"EngineAssets/Shaders/light_cube_vert.vert", "EngineAssets/Shaders/light_cube_frag.frag",};;
+        lightpipeline_ref.shaders = {"EngineAssets/Shaders/light_cube_vert.vert", "EngineAssets/Shaders/light_cube_frag.frag",};
+        lightpipeline_ref.vertex_attributes = 1; 
         lightpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent, renderpass_ref.renderPass,uniformBuffer_ref.descriptorSetLayout);
         Cbuffer_ref.createCommandPool(swap_ref.surface);
         Dbuffer_ref.createDepthResources(swap_ref.swapChainExtent);
