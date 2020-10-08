@@ -45,6 +45,16 @@ struct Spot_light {
 
     vec4 visible; 
 };
+struct DirLight {
+    vec4 direction;
+	
+    vec4 ambient;
+    vec4 diffuse;
+    vec4 specular;
+    vec4 light_color;
+
+    vec4 visible; 
+};
 
 layout(binding = 0) uniform UniformBufferObject {
     mat4 model;
@@ -55,10 +65,12 @@ layout(binding = 0) uniform UniformBufferObject {
 } ubo;
 layout(binding = 3) uniform LightBuffer
 {
-    Point_light point_lights[4];
+    Point_light point_lights[2];
     Spot_light spot_light;
+    DirLight directional_light;
 }lBuffer;
 
+vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec3 light_color);
 vec3 CalcPointLight(Point_light light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 light_color);
 vec3 CalcSpotLight(Spot_light light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 light_color);
 
@@ -73,7 +85,7 @@ void main() {
 
         vec3 norm = normalize(Normal);
         vec3 viewDir = normalize(vec3(ubo.camPos) - FragPos);
-        vec3 result;
+        vec3 result = CalcDirLight(lBuffer.directional_light, norm, viewDir, vec3(lBuffer.directional_light.light_color));
         for(int i = 0; i < lBuffer.point_lights.length(); i++)
         {
             result += CalcPointLight(lBuffer.point_lights[i], norm, FragPos, viewDir, vec3(lBuffer.point_lights[i].light_color));
@@ -83,6 +95,20 @@ void main() {
         outColor = vec4(result, 1.0f);
     }
     
+}
+vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec3 light_color)
+{
+    vec3 lightDir = normalize(vec3(-light.direction));
+    // diffuse shading
+    float diff = max(dot(normal, lightDir), 0.0);
+    // specular shading
+    vec3 reflectDir = reflect(-lightDir, normal);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0f);
+    // combine results
+    vec3 ambient = vec3(light.ambient) * vec3(texture(diffuseMap, TexCoords)) * light_color;
+    vec3 diffuse = vec3(light.diffuse) * diff * vec3(texture(diffuseMap, TexCoords)) * light_color;
+    vec3 specular = vec3(light.specular) * spec * vec3(0.35f) * light_color;
+    return (ambient + diffuse + specular);
 }
 vec3 CalcPointLight(Point_light light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 light_color)
 {

@@ -17,8 +17,9 @@ namespace VkRenderer
     
     struct LightBuffer
     {
-        std::array <Point_light, 4> point_lights;
+        std::array <Point_light, 2> point_lights;
         Spot_light spot_light;
+        Directional_light directional_light;
     };
 
     struct UniformBufferObject {
