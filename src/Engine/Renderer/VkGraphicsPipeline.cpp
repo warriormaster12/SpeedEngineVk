@@ -30,10 +30,7 @@ namespace VkRenderer
         }
 
     
-        std::array <VkPipelineShaderStageCreateInfo, 2> shaderStages; 
-
-        shaderStages[0] = loadShader(ShaderModules[0], VK_SHADER_STAGE_VERTEX_BIT);
-        shaderStages[1] = loadShader(ShaderModules[1], VK_SHADER_STAGE_FRAGMENT_BIT);
+        std::vector <VkPipelineShaderStageCreateInfo> shaderStages {loadShader(ShaderModules[0], VK_SHADER_STAGE_VERTEX_BIT), loadShader(ShaderModules[1], VK_SHADER_STAGE_FRAGMENT_BIT)}; 
 
 
         VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
