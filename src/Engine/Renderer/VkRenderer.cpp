@@ -151,8 +151,7 @@ namespace VkRenderer
 
         vkDestroySwapchainKHR(setup_ref.device, swap_ref.swapChain, nullptr);
         for (size_t i = 0; i < meshes.size(); i++) {
-            vkDestroyBuffer(setup_ref.device, uniformBuffer_ref.uniformBuffers[i], nullptr);
-            vkFreeMemory(setup_ref.device, uniformBuffer_ref.uniformBuffersMemory[i], nullptr);
+            vmaDestroyBuffer(memory_alloc.allocator, uniformBuffer_ref.uniformBuffers[i], uniformBuffer_ref.allocation[i]);
             vkDestroyBuffer(setup_ref.device, uniformBuffer_ref.storageBuffers[i], nullptr);
             vkFreeMemory(setup_ref.device, uniformBuffer_ref.storageBuffersMemory[i], nullptr);
         }

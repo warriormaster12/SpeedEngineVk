@@ -4,17 +4,26 @@ namespace VkRenderer
 {
     void VkuniformBuffer::createUniformBuffer()
     {
-        VkDeviceSize bufferSize = sizeof(UniformBufferObject);
+        VkBufferCreateInfo UniformBufferInfo = { VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO };
+        UniformBufferInfo.size = sizeof(UniformBufferObject);
+        UniformBufferInfo.usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+        VkBufferCreateInfo LightBufferInfo = { VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO };
+        UniformBufferInfo.size = sizeof(LightBuffer);
+        UniformBufferInfo.usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+
+        VmaAllocationCreateInfo allocInfo = {};
+        allocInfo.usage = VMA_MEMORY_USAGE_CPU_TO_GPU;
+
         VkDeviceSize lightBufferSize = sizeof(LightBuffer);
 
         uniformBuffers.resize(meshes.size());
-        uniformBuffersMemory.resize(meshes.size());
+        allocation.resize(meshes.size());
 
         storageBuffers.resize(meshes.size());
         storageBuffersMemory.resize(meshes.size());
 
         for (size_t i = 0; i < meshes.size(); i++) {
-            buffer_ref->createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
+            vmaCreateBuffer(memory_alloc_ref->allocator, &UniformBufferInfo, &allocInfo, &uniformBuffers[i], &allocation[i], nullptr);
             buffer_ref->createBuffer(lightBufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, storageBuffers[i], storageBuffersMemory[i]);
         }
     }
@@ -96,9 +105,9 @@ namespace VkRenderer
     
 
         void* data;
-        vkMapMemory(setup_ref->device, uniformBuffersMemory[DescriptorSetIndex], 0, sizeof(ubo), 0, &data);
+        vmaMapMemory(memory_alloc_ref->allocator, allocation[DescriptorSetIndex], &data);
             memcpy(data, &ubo, sizeof(ubo));
-        vkUnmapMemory(setup_ref->device, uniformBuffersMemory[DescriptorSetIndex]);
+        vmaUnmapMemory(memory_alloc_ref->allocator, allocation[DescriptorSetIndex]);
 
         vkMapMemory(setup_ref->device, storageBuffersMemory[DescriptorSetIndex], 0, sizeof(lightubo), 0, &data);
             memcpy(data, &lightubo, sizeof(lightubo));

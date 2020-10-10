@@ -19,8 +19,8 @@ namespace VkRenderer
 
         //UniformBuffer
         uniformBuffer_ref.setup_ref = &setup_ref;
-        uniformBuffer_ref.memory_ref = &memory_ref;
         uniformBuffer_ref.buffer_ref = &buffer_ref;
+        uniformBuffer_ref.memory_alloc_ref = &memory_alloc;
         uniformBuffer_ref.camera_object.win_ref = &win_ref;
         
         //BufferCreation

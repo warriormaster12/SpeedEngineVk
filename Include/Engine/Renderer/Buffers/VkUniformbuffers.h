@@ -2,9 +2,9 @@
 
 #include "../VkIncludes.h"
 #include "../VkSetup.h"
-#include "../VkMemory.h"
 #include "VkBufferCreation.h"
 #include "../Camera/Camera.h"
+#include "../VkMemoryAllocator.h"
 #include "../../Components/Mesh.h"
 #include "../../Components/Light.h"
 
@@ -42,13 +42,12 @@ namespace VkRenderer
         VkDescriptorPool descriptorPool;
         std::vector<VkDescriptorSet> descriptorSets;
         std::vector<VkBuffer> uniformBuffers;
-        std::vector<VkDeviceMemory> uniformBuffersMemory;
         std::vector<VkBuffer> storageBuffers;
         std::vector<VkDeviceMemory> storageBuffersMemory;
 
-
+        VkMemoryAllocator *memory_alloc_ref;
+        std::vector <VmaAllocation> allocation;
         VkSetup *setup_ref;
-        VkMemory *memory_ref;
         VkbufferCreation *buffer_ref;
         std::vector <Mesh*> meshes;
         Camera camera_object;
