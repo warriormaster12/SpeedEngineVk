@@ -38,6 +38,7 @@ namespace VkRenderer
     class VkSetup
     {
     public: 
+        void Initialize();
         void createInstance();
         void setupDebugMessenger();
         void DestroyDebugUtilsMessengerEXT(VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);

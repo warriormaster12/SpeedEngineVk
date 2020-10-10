@@ -32,6 +32,7 @@ namespace VkRenderer
     class VkuniformBuffer
     {
     public: 
+        void Initialize(VkSetup* setup, VkMemoryAllocator* memory_alloc, VkbufferCreation* buffer);
         void createDescriptorSetLayout();
         void createDescriptorPool();
         void createDescriptorSets();

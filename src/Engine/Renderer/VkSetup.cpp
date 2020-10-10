@@ -5,6 +5,11 @@
 
 namespace VkRenderer
 {
+    void VkSetup::Initialize()
+    {
+        createInstance();
+        setupDebugMessenger();
+    }
     void VkSetup::createInstance()
     {
         if (enableValidationLayers && !checkValidationLayerSupport()) {

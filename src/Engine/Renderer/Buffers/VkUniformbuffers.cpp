@@ -2,6 +2,14 @@
 
 namespace VkRenderer
 {
+    void VkuniformBuffer::Initialize(VkSetup* setup, VkMemoryAllocator* memory_alloc, VkbufferCreation* buffer)
+    {
+        setup_ref = setup;
+        memory_alloc_ref = memory_alloc;
+        buffer_ref = buffer;
+
+        createDescriptorSetLayout();
+    }
     void VkuniformBuffer::createUniformBuffer()
     {
         VkBufferCreateInfo UniformBufferInfo = { VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO };

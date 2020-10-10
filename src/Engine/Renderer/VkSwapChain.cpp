@@ -4,14 +4,22 @@
 
 namespace VkRenderer
 {
-   void VkSwapChain::createSurface()
-   {
-       if (glfwCreateWindowSurface(setup_ref->instance, (*win_ref)->window, nullptr, &surface) != VK_SUCCESS) {
+    void VkSwapChain::Initialize(VkSetup* setup, AppWindow* win, VkImageManager* image_m)
+    {
+        setup_ref = setup;
+        win_ref = &win;
+        image_m_ref = image_m;
+        createSurface();
+        pickPhysicalDevice();
+    }
+    void VkSwapChain::createSurface()
+    {
+        if (glfwCreateWindowSurface(setup_ref->instance, (*win_ref)->window, nullptr, &surface) != VK_SUCCESS) {
             throw std::runtime_error("failed to create window surface!");
         }
-   } 
-   void VkSwapChain::createSwapChain()
-   {
+    } 
+    void VkSwapChain::createSwapChain()
+    {
         SwapChainSupportDetails swapChainSupport = querySwapChainSupport(setup_ref->physicalDevice);
 
         VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
@@ -62,17 +70,17 @@ namespace VkRenderer
 
         swapChainImageFormat = surfaceFormat.format;
         swapChainExtent = extent;
-   }
-   void VkSwapChain::createImageViews()
-   {
+    }
+    void VkSwapChain::createImageViews()
+    {
         swapChainImageViews.resize(swapChainImages.size());
 
         for (size_t i = 0; i < swapChainImages.size(); i++) {
             swapChainImageViews[i] = image_m_ref->createImageView(swapChainImages[i], swapChainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1);
         } 
-   }
+    }
 
-   
+
     VkSurfaceFormatKHR VkSwapChain::chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats)
     {
         for (const auto& availableFormat : availableFormats) {

@@ -4,11 +4,6 @@ namespace VkRenderer
 {
     Renderer::Renderer()
     {
-        
-        //SwapChain
-        swap_ref.win_ref = &win_ref;
-        swap_ref.setup_ref = &setup_ref;
-        swap_ref.image_m_ref = &image_m_ref;
 
         //GraphicsPipeline
         gpipeline_ref.setup_ref = &setup_ref;
@@ -18,9 +13,6 @@ namespace VkRenderer
         renderpass_ref.Dbuffer_ref = &Dbuffer_ref;
 
         //UniformBuffer
-        uniformBuffer_ref.setup_ref = &setup_ref;
-        uniformBuffer_ref.buffer_ref = &buffer_ref;
-        uniformBuffer_ref.memory_alloc_ref = &memory_alloc;
         uniformBuffer_ref.camera_object.win_ref = &win_ref;
         
         //BufferCreation

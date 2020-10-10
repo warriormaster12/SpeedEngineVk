@@ -18,6 +18,7 @@ namespace VkRenderer
     public:
 
         VkSurfaceKHR surface;
+        void Initialize(VkSetup* setup, AppWindow* win, VkImageManager* image_m);
         void createSurface();
         void createSwapChain();
         void createImageViews();

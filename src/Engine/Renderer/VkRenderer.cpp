@@ -7,16 +7,14 @@ namespace VkRenderer
     void Renderer::InitVulkan()
     {
         
-        setup_ref.createInstance();
-        setup_ref.setupDebugMessenger();
-        swap_ref.createSurface();
-        swap_ref.pickPhysicalDevice();
+        setup_ref.Initialize();
+        swap_ref.Initialize(&setup_ref, win_ref, &image_m_ref);
         setup_ref.createLogicalDevice(swap_ref.surface);
         memory_alloc.createAllocator(setup_ref);
         swap_ref.createSwapChain();
         swap_ref.createImageViews();
         renderpass_ref.createRenderPass(setup_ref.device, swap_ref.swapChainImageFormat);
-        uniformBuffer_ref.createDescriptorSetLayout();
+        uniformBuffer_ref.Initialize(&setup_ref, &memory_alloc, &buffer_ref);
         gpipeline_ref.shaders = {"EngineAssets/Shaders/Model_vert.vert", "EngineAssets/Shaders/Model_frag.frag",};
         gpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent, renderpass_ref.renderPass,uniformBuffer_ref.descriptorSetLayout);
         lightpipeline_ref.shaders = {"EngineAssets/Shaders/light_cube_vert.vert", "EngineAssets/Shaders/light_cube_frag.frag",};
