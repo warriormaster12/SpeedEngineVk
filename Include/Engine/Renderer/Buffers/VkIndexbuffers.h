@@ -2,8 +2,7 @@
 
 #include "../VkIncludes.h"
 #include "../VkSetup.h"
-#include "VkBufferCreation.h"
-#include "../VkMemory.h"
+#include "../VkMemoryAllocator.h"
 
 namespace VkRenderer
 {
@@ -13,12 +12,12 @@ namespace VkRenderer
     {
     public: 
         VkBuffer indexBuffer;
-        VkDeviceMemory indexBufferMemory;
         std::vector<uint32_t> indices;
 
-        void createIndexBuffer(VkCommandPool& commandPool);
+        void createIndexBuffer();
 
         VkSetup *setup_ref;
-        VkbufferCreation *buffer_ref;
+        VkMemoryAllocator *memory_alloc_ref;
+        VmaAllocation allocation;
     };
 }

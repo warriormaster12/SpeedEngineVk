@@ -2,25 +2,29 @@
 
 namespace VkRenderer
 {
-    void VkvertexBuffer::createVertexBuffer(VkCommandPool& commandPool)
+    void VkvertexBuffer::createVertexBuffer()
     {
-        VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
+             
+
+        VkBufferCreateInfo bufferInfo = { VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO };
+        bufferInfo.size = sizeof(vertices[0]) * vertices.size();
+        bufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+
+        VmaAllocationCreateInfo allocInfo = {};
+        allocInfo.usage = VMA_MEMORY_USAGE_CPU_TO_GPU;
 
         VkBuffer stagingBuffer;
-        VkDeviceMemory stagingBufferMemory;
-        buffer_ref->createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+        vmaCreateBuffer(memory_alloc_ref->allocator, &bufferInfo, &allocInfo, &stagingBuffer, &allocation, nullptr);
 
         void* data;
-        vkMapMemory(setup_ref->device, stagingBufferMemory, 0, bufferSize, 0, &data);
-            memcpy(data, vertices.data(), (size_t) bufferSize);
-        vkUnmapMemory(setup_ref->device, stagingBufferMemory);
+        vmaMapMemory(memory_alloc_ref->allocator, allocation, &data);
+            memcpy(data, vertices.data(), (size_t) bufferInfo.size);
+        vmaUnmapMemory(memory_alloc_ref->allocator, allocation);
 
-        buffer_ref->createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory);
-
-        buffer_ref->copyBuffer(commandPool, stagingBuffer, vertexBuffer, bufferSize);
-
-        vkDestroyBuffer(setup_ref->device, stagingBuffer, nullptr);
-        vkFreeMemory(setup_ref->device, stagingBufferMemory, nullptr);
+        bufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+        vmaDestroyBuffer(memory_alloc_ref->allocator, stagingBuffer, allocation);
+        vmaCreateBuffer(memory_alloc_ref->allocator, &bufferInfo, &allocInfo, &vertexBuffer, &allocation, nullptr);
+        
 
     }
 }

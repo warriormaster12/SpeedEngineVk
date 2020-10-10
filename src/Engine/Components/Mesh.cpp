@@ -16,8 +16,8 @@ namespace VkRenderer
 
         
         model_ref.loadModel();
-        vertexBuffer_ref.createVertexBuffer(commandPool);
-        indexBuffer_ref.createIndexBuffer(commandPool);
+        vertexBuffer_ref.createVertexBuffer();
+        indexBuffer_ref.createIndexBuffer();
         
     }
 
@@ -27,10 +27,8 @@ namespace VkRenderer
         DiffuseTexture.DestroyTexture();
         NormalTexture.DestroyTexture();
 
-        vkDestroyBuffer(setup_ref->device, indexBuffer_ref.indexBuffer, nullptr);
-        vkFreeMemory(setup_ref->device, indexBuffer_ref.indexBufferMemory, nullptr);
+        vmaDestroyBuffer(indexBuffer_ref.memory_alloc_ref->allocator, indexBuffer_ref.indexBuffer, indexBuffer_ref.allocation);
 
-        vkDestroyBuffer(setup_ref->device, vertexBuffer_ref.vertexBuffer, nullptr);
-        vkFreeMemory(setup_ref->device, vertexBuffer_ref.vertexBufferMemory, nullptr);
+        vmaDestroyBuffer(vertexBuffer_ref.memory_alloc_ref->allocator, vertexBuffer_ref.vertexBuffer, vertexBuffer_ref.allocation);
     }
 }

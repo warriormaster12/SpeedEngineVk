@@ -12,6 +12,7 @@ namespace VkRenderer
         swap_ref.createSurface();
         swap_ref.pickPhysicalDevice();
         setup_ref.createLogicalDevice(swap_ref.surface);
+        memory_alloc.createAllocator(setup_ref);
         swap_ref.createSwapChain();
         swap_ref.createImageViews();
         renderpass_ref.createRenderPass(setup_ref.device, swap_ref.swapChainImageFormat);
@@ -46,11 +47,11 @@ namespace VkRenderer
                 
                 //IndexBuffer
                 meshes[i].indexBuffer_ref.setup_ref = &setup_ref;
-                meshes[i].indexBuffer_ref.buffer_ref = &buffer_ref;
+                meshes[i].indexBuffer_ref.memory_alloc_ref = &memory_alloc;
 
                 //VertexBuffer
                 meshes[i].vertexBuffer_ref.setup_ref = &setup_ref;
-                meshes[i].vertexBuffer_ref.buffer_ref = &buffer_ref;
+                meshes[i].vertexBuffer_ref.memory_alloc_ref = &memory_alloc;
                 
                 //Mesh
                 meshes[i].setup_ref = &setup_ref;
@@ -128,6 +129,7 @@ namespace VkRenderer
     }
     void Renderer::cleanupSwapChain()
     {
+        
         vkDestroyImageView(setup_ref.device, Dbuffer_ref.depthImageView, nullptr);
         vkDestroyImage(setup_ref.device, Dbuffer_ref.depthImage, nullptr);
         vkFreeMemory(setup_ref.device, Dbuffer_ref.depthImageMemory, nullptr);
@@ -161,12 +163,14 @@ namespace VkRenderer
         cleanupSwapChain();
         
         
+        
 
         vkDestroyDescriptorSetLayout(setup_ref.device, uniformBuffer_ref.descriptorSetLayout, nullptr);  
         for (int i=meshes.size()-1; i >= 0; i--)
         {
             meshes[i].DestroyMesh();
         }
+        
 
         
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
@@ -176,6 +180,7 @@ namespace VkRenderer
         }
         vkDestroyCommandPool(setup_ref.device, Cbuffer_ref.commandPool, nullptr);
         
+        vmaDestroyAllocator(memory_alloc.allocator);
         vkDestroyDevice(setup_ref.device, nullptr);
         if (enableValidationLayers) {
             setup_ref.DestroyDebugUtilsMessengerEXT(setup_ref.debugMessenger, nullptr);

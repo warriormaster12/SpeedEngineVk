@@ -2,8 +2,7 @@
 
 #include "../VkIncludes.h"
 #include "../VkSetup.h"
-#include "../VkMemory.h"
-#include "VkBufferCreation.h"
+#include "../VkMemoryAllocator.h"
 
 namespace VkRenderer
 {
@@ -47,11 +46,11 @@ namespace VkRenderer
     class VkvertexBuffer
     {
     public: 
-        void createVertexBuffer(VkCommandPool& commandPool);
+        void createVertexBuffer();
         VkBuffer vertexBuffer;
-        VkDeviceMemory vertexBufferMemory;
         VkSetup *setup_ref;
-        VkbufferCreation *buffer_ref;
+        VkMemoryAllocator *memory_alloc_ref;
+        VmaAllocation allocation;
         std::vector<Vertex> vertices;
     };
 }

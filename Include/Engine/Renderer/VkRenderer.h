@@ -12,6 +12,7 @@
 #include "Buffers/VkDepthBuffer.h"
 #include "Buffers/VkUniformbuffers.h"
 #include "VkMemory.h"
+#include "VkMemoryAllocator.h"
 #include "../Window/Window.h"
 #include "../Components/Mesh.h"
 
@@ -42,7 +43,7 @@ namespace VkRenderer
         VkGPipeline lightpipeline_ref;
         VkRenderpass renderpass_ref;
         VkframeBuffer Fbuffer_ref;
-        
+        VkMemoryAllocator memory_alloc;
         std::vector <Mesh> meshes;
         
         VkImageManager image_m_ref;
