@@ -83,6 +83,8 @@ namespace VkRenderer
                 //Textures
                 meshes[i].DiffuseTexture.image_m_ref = & image_m_ref;
                 meshes[i].NormalTexture.image_m_ref = & image_m_ref;
+                meshes[i].DiffuseTexture.memory_alloc_ref = & memory_alloc;
+                meshes[i].NormalTexture.memory_alloc_ref = & memory_alloc;
                 
                 //IndexBuffer
                 meshes[i].indexBuffer_ref.setup_ref = &setup_ref;

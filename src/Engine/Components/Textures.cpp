@@ -20,15 +20,21 @@ void Texture2D::createTextureImage(VkCommandPool& commandPool)
     if (!pixels) {
         throw std::runtime_error("failed to load texture image!");
     }
+    VkBufferCreateInfo bufferInfo = { VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO };
+    bufferInfo.size = imageSize;
+    bufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+
+    VmaAllocationCreateInfo allocInfo = {};
+    allocInfo.usage = VMA_MEMORY_USAGE_CPU_TO_GPU;
 
     VkBuffer stagingBuffer;
-    VkDeviceMemory stagingBufferMemory;
-    image_m_ref->buffer_ref->createBuffer(imageSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+    VmaAllocation stagingAllocation;
+    vmaCreateBuffer(memory_alloc_ref->allocator, &bufferInfo, &allocInfo, &stagingBuffer, &stagingAllocation, nullptr );
 
     void* data;
-    vkMapMemory(image_m_ref->setup_ref->device, stagingBufferMemory, 0, imageSize, 0, &data);
+    vmaMapMemory(memory_alloc_ref->allocator, stagingAllocation, &data);
         memcpy(data, pixels, static_cast<size_t>(imageSize));
-    vkUnmapMemory(image_m_ref->setup_ref->device, stagingBufferMemory);
+    vmaUnmapMemory(memory_alloc_ref->allocator, stagingAllocation);
 
     stbi_image_free(pixels);
 
@@ -38,8 +44,7 @@ void Texture2D::createTextureImage(VkCommandPool& commandPool)
     image_m_ref->copyBufferToImage(stagingBuffer, textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight), commandPool);
     //transitioned to VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL while generating mipmaps
 
-    vkDestroyBuffer(image_m_ref->setup_ref->device, stagingBuffer, nullptr);
-    vkFreeMemory(image_m_ref->setup_ref->device, stagingBufferMemory, nullptr);
+    vmaDestroyBuffer(memory_alloc_ref->allocator, stagingBuffer, stagingAllocation);
 
     image_m_ref->generateMipmaps(textureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, mipLevels, commandPool);
 }
