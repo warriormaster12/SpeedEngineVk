@@ -2,37 +2,37 @@
 
 namespace VkRenderer
 {
-    void VkuniformBuffer::Initialize(VkSetup* setup, VkMemoryAllocator* memory_alloc, VkbufferCreation* buffer)
+    void VkuniformBuffer::Initialize(VkSetup* setup, VkMemoryAllocator* memory_alloc)
     {
         setup_ref = setup;
         memory_alloc_ref = memory_alloc;
-        buffer_ref = buffer;
 
         createDescriptorSetLayout();
     }
     void VkuniformBuffer::createUniformBuffer()
     {
+        uniformBuffers.resize(meshes.size());
+        lightBuffers.resize(meshes.size());
+        
+        VkBufferCreateInfo LightBufferInfo = { VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO };
+        LightBufferInfo.size = sizeof(LightBuffer);
+        LightBufferInfo.usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+
         VkBufferCreateInfo UniformBufferInfo = { VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO };
         UniformBufferInfo.size = sizeof(UniformBufferObject);
-        UniformBufferInfo.usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
-        VkBufferCreateInfo LightBufferInfo = { VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO };
-        UniformBufferInfo.size = sizeof(LightBuffer);
         UniformBufferInfo.usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
 
         VmaAllocationCreateInfo allocInfo = {};
         allocInfo.usage = VMA_MEMORY_USAGE_CPU_TO_GPU;
+    
+        
+        uboAllocation.resize(meshes.size());
+        lightAllocation.resize(meshes.size());
 
-        VkDeviceSize lightBufferSize = sizeof(LightBuffer);
-
-        uniformBuffers.resize(meshes.size());
-        allocation.resize(meshes.size());
-
-        storageBuffers.resize(meshes.size());
-        storageBuffersMemory.resize(meshes.size());
 
         for (size_t i = 0; i < meshes.size(); i++) {
-            vmaCreateBuffer(memory_alloc_ref->allocator, &UniformBufferInfo, &allocInfo, &uniformBuffers[i], &allocation[i], nullptr);
-            buffer_ref->createBuffer(lightBufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, storageBuffers[i], storageBuffersMemory[i]);
+            vmaCreateBuffer(memory_alloc_ref->allocator, &LightBufferInfo, &allocInfo, &lightBuffers[i], &lightAllocation[i], nullptr);
+            vmaCreateBuffer(memory_alloc_ref->allocator, &UniformBufferInfo, &allocInfo, &uniformBuffers[i], &uboAllocation[i], nullptr);
         }
     }
 
@@ -113,13 +113,12 @@ namespace VkRenderer
     
 
         void* data;
-        vmaMapMemory(memory_alloc_ref->allocator, allocation[DescriptorSetIndex], &data);
+        vmaMapMemory(memory_alloc_ref->allocator, uboAllocation[DescriptorSetIndex], &data);
             memcpy(data, &ubo, sizeof(ubo));
-        vmaUnmapMemory(memory_alloc_ref->allocator, allocation[DescriptorSetIndex]);
-
-        vkMapMemory(setup_ref->device, storageBuffersMemory[DescriptorSetIndex], 0, sizeof(lightubo), 0, &data);
+        vmaUnmapMemory(memory_alloc_ref->allocator, uboAllocation[DescriptorSetIndex]);
+        vmaMapMemory(memory_alloc_ref->allocator, lightAllocation[DescriptorSetIndex], &data);
             memcpy(data, &lightubo, sizeof(lightubo));
-        vkUnmapMemory(setup_ref->device, storageBuffersMemory[DescriptorSetIndex]);
+        vmaUnmapMemory(memory_alloc_ref->allocator, lightAllocation[DescriptorSetIndex]);
     }
 
     void VkuniformBuffer::createDescriptorPool()
@@ -158,7 +157,7 @@ namespace VkRenderer
             bufferInfo.range = sizeof(UniformBufferObject);
             
             VkDescriptorBufferInfo lightbufferInfo{};
-            lightbufferInfo.buffer = storageBuffers[i];
+            lightbufferInfo.buffer = lightBuffers[i];
             lightbufferInfo.offset = 0;
             lightbufferInfo.range = sizeof(LightBuffer);
 
@@ -180,6 +179,13 @@ namespace VkRenderer
            
 
             vkUpdateDescriptorSets(setup_ref->device, static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
+        }
+    }
+    void VkuniformBuffer::DestroyUniformBuffer()
+    {
+        for (size_t i = 0; i < meshes.size(); i++) {
+            vmaDestroyBuffer(memory_alloc_ref->allocator, lightBuffers[i], lightAllocation[i]);
+            vmaDestroyBuffer(memory_alloc_ref->allocator, uniformBuffers[i], uboAllocation[i]);
         }
     }
     void VkuniformBuffer::createDescriptorSetLayout()

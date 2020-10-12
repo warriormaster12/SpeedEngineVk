@@ -55,7 +55,7 @@ namespace VkRenderer
         swap_ref.createSwapChain();
         swap_ref.createImageViews();
         renderpass_ref.createRenderPass(setup_ref.device, swap_ref.swapChainImageFormat);
-        uniformBuffer_ref.Initialize(&setup_ref, &memory_alloc, &buffer_ref);
+        uniformBuffer_ref.Initialize(&setup_ref, &memory_alloc);
         gpipeline_ref.shaders = {"EngineAssets/Shaders/Model_vert.vert", "EngineAssets/Shaders/Model_frag.frag",};
         gpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent, renderpass_ref.renderPass,uniformBuffer_ref.descriptorSetLayout);
         lightpipeline_ref.shaders = {"EngineAssets/Shaders/light_cube_vert.vert", "EngineAssets/Shaders/light_cube_frag.frag",};
@@ -189,11 +189,7 @@ namespace VkRenderer
         }
 
         vkDestroySwapchainKHR(setup_ref.device, swap_ref.swapChain, nullptr);
-        for (size_t i = 0; i < meshes.size(); i++) {
-            vmaDestroyBuffer(memory_alloc.allocator, uniformBuffer_ref.uniformBuffers[i], uniformBuffer_ref.allocation[i]);
-            vkDestroyBuffer(setup_ref.device, uniformBuffer_ref.storageBuffers[i], nullptr);
-            vkFreeMemory(setup_ref.device, uniformBuffer_ref.storageBuffersMemory[i], nullptr);
-        }
+        uniformBuffer_ref.DestroyUniformBuffer();
         vkDestroyDescriptorPool(setup_ref.device, uniformBuffer_ref.descriptorPool, nullptr);
     }
     void Renderer::DestroyVulkan()

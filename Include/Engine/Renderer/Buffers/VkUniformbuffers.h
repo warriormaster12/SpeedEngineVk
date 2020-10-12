@@ -2,7 +2,6 @@
 
 #include "../VkIncludes.h"
 #include "../VkSetup.h"
-#include "VkBufferCreation.h"
 #include "../Camera/Camera.h"
 #include "../VkMemoryAllocator.h"
 #include "../../Components/Mesh.h"
@@ -32,24 +31,24 @@ namespace VkRenderer
     class VkuniformBuffer
     {
     public: 
-        void Initialize(VkSetup* setup, VkMemoryAllocator* memory_alloc, VkbufferCreation* buffer);
+        void Initialize(VkSetup* setup, VkMemoryAllocator* memory_alloc);
         void createDescriptorSetLayout();
         void createDescriptorPool();
         void createDescriptorSets();
         void createUniformBuffer();
         void updateUniformBuffer(uint32_t DescriptorSetIndex, VkExtent2D& swapChainExtent);
+        void DestroyUniformBuffer();
 
         VkDescriptorSetLayout descriptorSetLayout;
         VkDescriptorPool descriptorPool;
         std::vector<VkDescriptorSet> descriptorSets;
         std::vector<VkBuffer> uniformBuffers;
-        std::vector<VkBuffer> storageBuffers;
-        std::vector<VkDeviceMemory> storageBuffersMemory;
+        std::vector<VkBuffer> lightBuffers;
 
         VkMemoryAllocator *memory_alloc_ref;
-        std::vector <VmaAllocation> allocation;
+        std::vector <VmaAllocation> uboAllocation;
+        std::vector <VmaAllocation> lightAllocation;
         VkSetup *setup_ref;
-        VkbufferCreation *buffer_ref;
         std::vector <Mesh*> meshes;
         Camera camera_object;
     private: 
