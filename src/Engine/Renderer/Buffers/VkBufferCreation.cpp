@@ -3,43 +3,6 @@
 
 namespace VkRenderer
 {
-    void VkbufferCreation::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)
-    {
-        VkBufferCreateInfo bufferInfo{};
-        bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-        bufferInfo.size = size;
-        bufferInfo.usage = usage;
-        bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-
-        if (vkCreateBuffer(setup_ref->device, &bufferInfo, nullptr, &buffer) != VK_SUCCESS) {
-            throw std::runtime_error("failed to create buffer!");
-        }
-
-        VkMemoryRequirements memRequirements;
-        vkGetBufferMemoryRequirements(setup_ref->device, buffer, &memRequirements);
-
-        VkMemoryAllocateInfo allocInfo{};
-        allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-        allocInfo.allocationSize = memRequirements.size;
-        allocInfo.memoryTypeIndex = memory_ref->findMemoryType(memRequirements.memoryTypeBits, properties, setup_ref->physicalDevice);
-
-        if (vkAllocateMemory(setup_ref->device, &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS) {
-            throw std::runtime_error("failed to allocate buffer memory!");
-        }
-
-        vkBindBufferMemory(setup_ref->device, buffer, bufferMemory, 0);   
-    }
-
-    void VkbufferCreation::copyBuffer(VkCommandPool& commandPool, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
-    {
-        VkCommandBuffer commandBuffer = beginSingleTimeCommands(commandPool);
-
-        VkBufferCopy copyRegion{};
-        copyRegion.size = size;
-        vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
-
-        endSingleTimeCommands(commandBuffer, commandPool);
-    }
 
     VkCommandBuffer VkbufferCreation::beginSingleTimeCommands(VkCommandPool& commandPool) {
         VkCommandBufferAllocateInfo allocInfo{};

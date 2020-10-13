@@ -18,7 +18,6 @@ namespace VkRenderer
         
         //BufferCreation
         buffer_ref.setup_ref = &setup_ref;
-        buffer_ref.memory_ref = &memory_ref;
         
         
 
