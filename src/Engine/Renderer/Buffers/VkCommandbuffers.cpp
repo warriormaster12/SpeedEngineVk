@@ -61,7 +61,7 @@ namespace VkRenderer
                 for(int j=0; j < meshes.size(); j++)
                 {
                     
-                    if(j < 3)
+                    if(meshes[j]->current_mesh_type == mesh_types::user_mesh)
                     {
                         vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, gpipeline_ref->graphicsPipeline);
                         vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, gpipeline_ref->pipelineLayout, 0, 1, &descriptorSets[j], 0, nullptr);

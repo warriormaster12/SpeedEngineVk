@@ -75,6 +75,7 @@ namespace VkRenderer
             meshes[2].NormalTexture.TEXTURE_PATH = "EngineAssets/Textures/chapel_normal.tga";
             meshes[2].model_ref.MODEL_PATH = "EngineAssets/Models/chapel_obj.obj";
             meshes[3].model_ref.MODEL_PATH = "EngineAssets/Models/cube.obj";
+            meshes[3].current_mesh_type = mesh_types::preview;
 
             
 
