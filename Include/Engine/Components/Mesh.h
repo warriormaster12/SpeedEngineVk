@@ -29,7 +29,7 @@ namespace VkRenderer
         Transform3D mesh_transform;
         Texture2D DiffuseTexture;
         Texture2D NormalTexture;
-        mesh_type current_mesh_type = mesh_types::user_mesh;
+        mesh_types current_mesh_type = mesh_types::user_mesh;
         
         void InitMesh(VkSetup* setup, VkMemoryAllocator* memory_alloc, VkImageManager* image_m, VkCommandPool& commandPool);
         void update(uint32_t imageIndex);
