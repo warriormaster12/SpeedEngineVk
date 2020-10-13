@@ -11,7 +11,6 @@
 #include "Buffers/VkBufferCreation.h"
 #include "Buffers/VkDepthBuffer.h"
 #include "Buffers/VkUniformbuffers.h"
-#include "VkMemory.h"
 #include "VkMemoryAllocator.h"
 #include "../Window/Window.h"
 #include "../Components/Mesh.h"
@@ -47,7 +46,6 @@ namespace VkRenderer
         std::vector <Mesh> meshes;
         
         VkImageManager image_m_ref;
-        VkMemory memory_ref;
         VkbufferCreation buffer_ref;
         VkdepthBuffer Dbuffer_ref;
 
