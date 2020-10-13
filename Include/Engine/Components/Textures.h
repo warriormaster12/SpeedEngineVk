@@ -20,7 +20,7 @@ struct Texture2D
 
     uint32_t mipLevels;
     VkImage textureImage;
-    VkDeviceMemory textureImageMemory;
+    VmaAllocation textureImageAllocation;
 
     VkImageView textureImageView;
     VkSampler textureSampler;

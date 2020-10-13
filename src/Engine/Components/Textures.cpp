@@ -37,8 +37,15 @@ void Texture2D::createTextureImage(VkCommandPool& commandPool)
     vmaUnmapMemory(memory_alloc_ref->allocator, stagingAllocation);
 
     stbi_image_free(pixels);
+    VkImageCreateInfo textureInfo{};
+    textureInfo.extent.width = texWidth;
+    textureInfo.extent.height = texHeight;
+    textureInfo.mipLevels = mipLevels;
+    textureInfo.format = VK_FORMAT_R8G8B8A8_SRGB;
+    textureInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+    textureInfo.usage = VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
 
-    image_m_ref->createImage(texWidth, texHeight, mipLevels, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, textureImage, textureImageMemory);
+    image_m_ref->createImage(textureInfo, textureImage, textureImageAllocation);
 
     image_m_ref->transitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, commandPool,mipLevels);
     image_m_ref->copyBufferToImage(stagingBuffer, textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight), commandPool);
@@ -82,6 +89,5 @@ void Texture2D::DestroyTexture()
     vkDestroySampler(image_m_ref->setup_ref->device, textureSampler, nullptr);
     vkDestroyImageView(image_m_ref->setup_ref->device, textureImageView, nullptr);
     
-    vkDestroyImage(image_m_ref->setup_ref->device, textureImage, nullptr);
-    vkFreeMemory(image_m_ref->setup_ref->device, textureImageMemory, nullptr);
+    vmaDestroyImage(memory_alloc_ref->allocator, textureImage, textureImageAllocation);
 }

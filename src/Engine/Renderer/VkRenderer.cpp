@@ -42,7 +42,7 @@ namespace VkRenderer
         //imageManager
         image_m_ref.setup_ref = &setup_ref;
         image_m_ref.buffer_ref = &buffer_ref;
-        image_m_ref.memory_ref = &memory_ref;
+        image_m_ref.memory_alloc_ref = &memory_alloc;
     }
     
     void Renderer::InitVulkan()
@@ -172,8 +172,7 @@ namespace VkRenderer
     {
         
         vkDestroyImageView(setup_ref.device, Dbuffer_ref.depthImageView, nullptr);
-        vkDestroyImage(setup_ref.device, Dbuffer_ref.depthImage, nullptr);
-        vkFreeMemory(setup_ref.device, Dbuffer_ref.depthImageMemory, nullptr);
+        vmaDestroyImage(memory_alloc.allocator, Dbuffer_ref.depthImage, Dbuffer_ref.depthImageAllocation);
         for (auto framebuffer : Fbuffer_ref.swapChainFramebuffers) {
             vkDestroyFramebuffer(setup_ref.device, framebuffer, nullptr);
         }

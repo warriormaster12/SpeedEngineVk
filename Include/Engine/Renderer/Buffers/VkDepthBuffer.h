@@ -10,7 +10,7 @@ namespace VkRenderer
     {
     public: 
         VkImage depthImage;
-        VkDeviceMemory depthImageMemory;
+        VmaAllocation depthImageAllocation;
         VkImageView depthImageView;
 
         VkSetup *setup_ref;

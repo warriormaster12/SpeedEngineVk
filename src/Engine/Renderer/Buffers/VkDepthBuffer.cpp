@@ -6,8 +6,16 @@ namespace VkRenderer
     void VkdepthBuffer::createDepthResources(VkExtent2D& swapChainExtent)
     {
         VkFormat depthFormat = findDepthFormat();
+        VkImageCreateInfo depthInfo{};
+        depthInfo.extent.width = swapChainExtent.width;
+        depthInfo.extent.height = swapChainExtent.height;
+        depthInfo.mipLevels = 1;
+        depthInfo.format = depthFormat;
+        depthInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+        depthInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
 
-        image_m_ref->createImage(swapChainExtent.width, swapChainExtent.height, 1, depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, depthImage, depthImageMemory);
+
+        image_m_ref->createImage(depthInfo, depthImage, depthImageAllocation);
         depthImageView = image_m_ref->createImageView(depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, 1);
     }
     VkFormat VkdepthBuffer::findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) {
