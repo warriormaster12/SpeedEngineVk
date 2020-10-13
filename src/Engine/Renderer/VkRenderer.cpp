@@ -7,39 +7,32 @@ namespace VkRenderer
     {
 
         //GraphicsPipeline
-        gpipeline_ref.setup_ref = &setup_ref;
-        lightpipeline_ref.setup_ref = &setup_ref;
+        gpipeline_ref.setup_ref = &vkobjects.setup;
+        lightpipeline_ref.setup_ref = &vkobjects.setup;
 
         //RenderPass
         renderpass_ref.Dbuffer_ref = &Dbuffer_ref;
 
         //UniformBuffer
-        uniformBuffer_ref.camera_object.win_ref = &win_ref;
+        vkobjects.uniformBuffer.camera_object.win_ref = &win_ref;
         
         //BufferCreation
-        buffer_ref.setup_ref = &setup_ref;
+        buffer_ref.setup_ref = &vkobjects.setup;
         
         
 
         //CommandBuffer
-        Cbuffer_ref.setup_ref = &setup_ref;
-        Cbuffer_ref.gpipeline_ref = &gpipeline_ref;
-        Cbuffer_ref.lightpipeline_ref = &lightpipeline_ref;
-        Cbuffer_ref.renderpass_ref = &renderpass_ref;
-
-        //FrameBuffer
-        Fbuffer_ref.setup_ref = &setup_ref;
-        Fbuffer_ref.swap_ref = &swap_ref;
-        Fbuffer_ref.renderpass_ref = &renderpass_ref;
-        Fbuffer_ref.Dbuffer_ref = &Dbuffer_ref;
-
+        vkobjects.Cbuffer.setup_ref = &vkobjects.setup;
+        vkobjects.Cbuffer.gpipeline_ref = &gpipeline_ref;
+        vkobjects.Cbuffer.lightpipeline_ref = &lightpipeline_ref;
+        vkobjects.Cbuffer.renderpass_ref = &renderpass_ref;
         
         //DepthBuffer
-        Dbuffer_ref.setup_ref = &setup_ref;
+        Dbuffer_ref.setup_ref = &vkobjects.setup;
         Dbuffer_ref.image_m_ref = &image_m_ref;
 
         //imageManager
-        image_m_ref.setup_ref = &setup_ref;
+        image_m_ref.setup_ref = &vkobjects.setup;
         image_m_ref.buffer_ref = &buffer_ref;
         image_m_ref.memory_alloc_ref = &memory_alloc;
     }
@@ -47,22 +40,22 @@ namespace VkRenderer
     void Renderer::InitVulkan()
     {
         
-        setup_ref.Initialize();
-        swap_ref.Initialize(&setup_ref, win_ref, &image_m_ref);
-        setup_ref.createLogicalDevice(swap_ref.surface);
-        memory_alloc.createAllocator(setup_ref);
-        swap_ref.createSwapChain();
-        swap_ref.createImageViews();
-        renderpass_ref.createRenderPass(setup_ref.device, swap_ref.swapChainImageFormat);
-        uniformBuffer_ref.Initialize(&setup_ref, &memory_alloc);
+        vkobjects.setup.Initialize();
+        vkobjects.swap.Initialize(&vkobjects.setup, win_ref, &image_m_ref);
+        vkobjects.setup.createLogicalDevice(vkobjects.swap.surface);
+        memory_alloc.createAllocator(vkobjects.setup);
+        vkobjects.swap.createSwapChain();
+        vkobjects.swap.createImageViews();
+        renderpass_ref.createRenderPass(vkobjects.setup.device, vkobjects.swap.swapChainImageFormat);
+        vkobjects.uniformBuffer.Initialize(&vkobjects.setup, &memory_alloc);
         gpipeline_ref.shaders = {"EngineAssets/Shaders/Model_vert.vert", "EngineAssets/Shaders/Model_frag.frag",};
-        gpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent, renderpass_ref.renderPass,uniformBuffer_ref.descriptorSetLayout);
+        gpipeline_ref.createGraphicsPipeline(vkobjects.swap.swapChainExtent, renderpass_ref.renderPass,vkobjects.uniformBuffer.descriptorSetLayout);
         lightpipeline_ref.shaders = {"EngineAssets/Shaders/light_cube_vert.vert", "EngineAssets/Shaders/light_cube_frag.frag",};
         lightpipeline_ref.vertex_attributes = 1; 
-        lightpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent, renderpass_ref.renderPass,uniformBuffer_ref.descriptorSetLayout);
-        Cbuffer_ref.createCommandPool(swap_ref.surface);
-        Dbuffer_ref.createDepthResources(swap_ref.swapChainExtent);
-        Fbuffer_ref.createFramebuffers();
+        lightpipeline_ref.createGraphicsPipeline(vkobjects.swap.swapChainExtent, renderpass_ref.renderPass,vkobjects.uniformBuffer.descriptorSetLayout);
+        vkobjects.Cbuffer.createCommandPool(vkobjects.swap.surface);
+        Dbuffer_ref.createDepthResources(vkobjects.swap.swapChainExtent);
+        Fbuffer_ref.createFramebuffers(&vkobjects, &Dbuffer_ref, &renderpass_ref);
     
         meshes.emplace_back();
         meshes.emplace_back();
@@ -80,17 +73,17 @@ namespace VkRenderer
             
 
             for (int i = 0; i < meshes.size(); i++) {
-                meshes[i].InitMesh(&setup_ref, &memory_alloc, &image_m_ref,Cbuffer_ref.commandPool);
-                uniformBuffer_ref.meshes.push_back(&meshes[i]);
-                Cbuffer_ref.meshes.push_back(&meshes[i]);
+                meshes[i].InitMesh(&vkobjects.setup, &memory_alloc, &image_m_ref,vkobjects.Cbuffer.commandPool);
+                vkobjects.uniformBuffer.meshes.push_back(&meshes[i]);
+                vkobjects.Cbuffer.meshes.push_back(&meshes[i]);
             }
         
             
             
-            uniformBuffer_ref.createUniformBuffer(); 
+            vkobjects.uniformBuffer.createUniformBuffer(); 
             
-            uniformBuffer_ref.createDescriptorPool();
-            uniformBuffer_ref.createDescriptorSets();
+            vkobjects.uniformBuffer.createDescriptorPool();
+            vkobjects.uniformBuffer.createDescriptorSets();
 
             
 
@@ -110,7 +103,7 @@ namespace VkRenderer
         
         
         
-        Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, uniformBuffer_ref.descriptorSets);
+        vkobjects.Cbuffer.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,vkobjects.swap.swapChainExtent, vkobjects.uniformBuffer.descriptorSets);
         createSyncObjects();
        
         
@@ -124,53 +117,53 @@ namespace VkRenderer
             glfwGetFramebufferSize(win_ref->window, &width, &height);
             glfwWaitEvents();
         }
-        vkDeviceWaitIdle(setup_ref.device);
+        vkDeviceWaitIdle(vkobjects.setup.device);
 
         cleanupSwapChain();
 
-        swap_ref.createSwapChain();
-        swap_ref.createImageViews();
-        renderpass_ref.createRenderPass(setup_ref.device, swap_ref.swapChainImageFormat);
-        gpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent, renderpass_ref.renderPass,uniformBuffer_ref.descriptorSetLayout);
-        lightpipeline_ref.createGraphicsPipeline(swap_ref.swapChainExtent, renderpass_ref.renderPass,uniformBuffer_ref.descriptorSetLayout);
-        Dbuffer_ref.createDepthResources(swap_ref.swapChainExtent);
-        Fbuffer_ref.createFramebuffers();
+        vkobjects.swap.createSwapChain();
+        vkobjects.swap.createImageViews();
+        renderpass_ref.createRenderPass(vkobjects.setup.device, vkobjects.swap.swapChainImageFormat);
+        gpipeline_ref.createGraphicsPipeline(vkobjects.swap.swapChainExtent, renderpass_ref.renderPass,vkobjects.uniformBuffer.descriptorSetLayout);
+        lightpipeline_ref.createGraphicsPipeline(vkobjects.swap.swapChainExtent, renderpass_ref.renderPass,vkobjects.uniformBuffer.descriptorSetLayout);
+        Dbuffer_ref.createDepthResources(vkobjects.swap.swapChainExtent);
+        Fbuffer_ref.createFramebuffers(&vkobjects, &Dbuffer_ref, &renderpass_ref);
         
         if(meshes.size() != 0)
         {
-            uniformBuffer_ref.createUniformBuffer();
-            uniformBuffer_ref.createDescriptorPool();
-            uniformBuffer_ref.createDescriptorSets();
+            vkobjects.uniformBuffer.createUniformBuffer();
+            vkobjects.uniformBuffer.createDescriptorPool();
+            vkobjects.uniformBuffer.createDescriptorSets();
         }
        
-        Cbuffer_ref.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap_ref.swapChainExtent, uniformBuffer_ref.descriptorSets);
+        vkobjects.Cbuffer.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,vkobjects.swap.swapChainExtent, vkobjects.uniformBuffer.descriptorSets);
         
 
     }
     void Renderer::cleanupSwapChain()
     {
         
-        vkDestroyImageView(setup_ref.device, Dbuffer_ref.depthImageView, nullptr);
+        vkDestroyImageView(vkobjects.setup.device, Dbuffer_ref.depthImageView, nullptr);
         vmaDestroyImage(memory_alloc.allocator, Dbuffer_ref.depthImage, Dbuffer_ref.depthImageAllocation);
         for (auto framebuffer : Fbuffer_ref.swapChainFramebuffers) {
-            vkDestroyFramebuffer(setup_ref.device, framebuffer, nullptr);
+            vkDestroyFramebuffer(vkobjects.setup.device, framebuffer, nullptr);
         }
 
-        vkFreeCommandBuffers(setup_ref.device, Cbuffer_ref.commandPool, static_cast<uint32_t>(Cbuffer_ref.commandBuffers.size()), Cbuffer_ref.commandBuffers.data());
+        vkFreeCommandBuffers(vkobjects.setup.device, vkobjects.Cbuffer.commandPool, static_cast<uint32_t>(vkobjects.Cbuffer.commandBuffers.size()), vkobjects.Cbuffer.commandBuffers.data());
 
-        vkDestroyPipeline(setup_ref.device, gpipeline_ref.graphicsPipeline, nullptr);
-        vkDestroyPipelineLayout(setup_ref.device, gpipeline_ref.pipelineLayout, nullptr);
-        vkDestroyPipeline(setup_ref.device, lightpipeline_ref.graphicsPipeline, nullptr);
-        vkDestroyPipelineLayout(setup_ref.device, lightpipeline_ref.pipelineLayout, nullptr);
-        vkDestroyRenderPass(setup_ref.device, renderpass_ref.renderPass, nullptr);
+        vkDestroyPipeline(vkobjects.setup.device, gpipeline_ref.graphicsPipeline, nullptr);
+        vkDestroyPipelineLayout(vkobjects.setup.device, gpipeline_ref.pipelineLayout, nullptr);
+        vkDestroyPipeline(vkobjects.setup.device, lightpipeline_ref.graphicsPipeline, nullptr);
+        vkDestroyPipelineLayout(vkobjects.setup.device, lightpipeline_ref.pipelineLayout, nullptr);
+        vkDestroyRenderPass(vkobjects.setup.device, renderpass_ref.renderPass, nullptr);
 
-        for (auto imageView : swap_ref.swapChainImageViews) {
-            vkDestroyImageView(setup_ref.device, imageView, nullptr);
+        for (auto imageView : vkobjects.swap.swapChainImageViews) {
+            vkDestroyImageView(vkobjects.setup.device, imageView, nullptr);
         }
 
-        vkDestroySwapchainKHR(setup_ref.device, swap_ref.swapChain, nullptr);
-        uniformBuffer_ref.DestroyUniformBuffer();
-        vkDestroyDescriptorPool(setup_ref.device, uniformBuffer_ref.descriptorPool, nullptr);
+        vkDestroySwapchainKHR(vkobjects.setup.device, vkobjects.swap.swapChain, nullptr);
+        vkobjects.uniformBuffer.DestroyUniformBuffer();
+        vkDestroyDescriptorPool(vkobjects.setup.device, vkobjects.uniformBuffer.descriptorPool, nullptr);
     }
     void Renderer::DestroyVulkan()
     {  
@@ -179,7 +172,7 @@ namespace VkRenderer
         
         
 
-        vkDestroyDescriptorSetLayout(setup_ref.device, uniformBuffer_ref.descriptorSetLayout, nullptr);  
+        vkDestroyDescriptorSetLayout(vkobjects.setup.device, vkobjects.uniformBuffer.descriptorSetLayout, nullptr);  
         for (int i=meshes.size()-1; i >= 0; i--)
         {
             meshes[i].DestroyMesh();
@@ -188,19 +181,19 @@ namespace VkRenderer
 
         
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-            vkDestroySemaphore(setup_ref.device, renderFinishedSemaphores[i], nullptr);
-            vkDestroySemaphore(setup_ref.device, imageAvailableSemaphores[i], nullptr);
-            vkDestroyFence(setup_ref.device, inFlightFences[i], nullptr);
+            vkDestroySemaphore(vkobjects.setup.device, renderFinishedSemaphores[i], nullptr);
+            vkDestroySemaphore(vkobjects.setup.device, imageAvailableSemaphores[i], nullptr);
+            vkDestroyFence(vkobjects.setup.device, inFlightFences[i], nullptr);
         }
-        vkDestroyCommandPool(setup_ref.device, Cbuffer_ref.commandPool, nullptr);
+        vkDestroyCommandPool(vkobjects.setup.device, vkobjects.Cbuffer.commandPool, nullptr);
         
         vmaDestroyAllocator(memory_alloc.allocator);
-        vkDestroyDevice(setup_ref.device, nullptr);
+        vkDestroyDevice(vkobjects.setup.device, nullptr);
         if (enableValidationLayers) {
-            setup_ref.DestroyDebugUtilsMessengerEXT(setup_ref.debugMessenger, nullptr);
+            vkobjects.setup.DestroyDebugUtilsMessengerEXT(vkobjects.setup.debugMessenger, nullptr);
         }
-        vkDestroySurfaceKHR(setup_ref.instance, swap_ref.surface, nullptr);
-        vkDestroyInstance(setup_ref.instance, nullptr);
+        vkDestroySurfaceKHR(vkobjects.setup.instance, vkobjects.swap.surface, nullptr);
+        vkDestroyInstance(vkobjects.setup.instance, nullptr);
         
         
     }
@@ -208,10 +201,10 @@ namespace VkRenderer
 
      void Renderer::drawFrame()
     {
-        vkWaitForFences(setup_ref.device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
+        vkWaitForFences(vkobjects.setup.device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
         uint32_t imageIndex;
-        VkResult result = vkAcquireNextImageKHR(setup_ref.device, swap_ref.swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
+        VkResult result = vkAcquireNextImageKHR(vkobjects.setup.device, vkobjects.swap.swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
         
         if (result == VK_ERROR_OUT_OF_DATE_KHR) {
             recreateSwapChain();
@@ -222,13 +215,13 @@ namespace VkRenderer
         
         for (int i=0; i < meshes.size(); i++)
         {
-            uniformBuffer_ref.updateUniformBuffer(i, swap_ref.swapChainExtent);
+            vkobjects.uniformBuffer.updateUniformBuffer(i, vkobjects.swap.swapChainExtent);
         }
 
         
 
         if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) {
-            vkWaitForFences(setup_ref.device, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
+            vkWaitForFences(vkobjects.setup.device, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
         }
         imagesInFlight[imageIndex] = inFlightFences[currentFrame];
 
@@ -242,15 +235,15 @@ namespace VkRenderer
         submitInfo.pWaitDstStageMask = waitStages;
 
         submitInfo.commandBufferCount = 1;
-        submitInfo.pCommandBuffers = &Cbuffer_ref.commandBuffers[imageIndex];
+        submitInfo.pCommandBuffers = &vkobjects.Cbuffer.commandBuffers[imageIndex];
 
         VkSemaphore signalSemaphores[] = {renderFinishedSemaphores[currentFrame]};
         submitInfo.signalSemaphoreCount = 1;
         submitInfo.pSignalSemaphores = signalSemaphores;
 
-        vkResetFences(setup_ref.device, 1, &inFlightFences[currentFrame]);
+        vkResetFences(vkobjects.setup.device, 1, &inFlightFences[currentFrame]);
 
-        if (vkQueueSubmit(setup_ref.graphicsQueue, 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS) {
+        if (vkQueueSubmit(vkobjects.setup.graphicsQueue, 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS) {
             throw std::runtime_error("failed to submit draw command buffer!");
         }
 
@@ -260,13 +253,13 @@ namespace VkRenderer
         presentInfo.waitSemaphoreCount = 1;
         presentInfo.pWaitSemaphores = signalSemaphores;
 
-        VkSwapchainKHR swapChains[] = {swap_ref.swapChain};
+        VkSwapchainKHR swapChains[] = {vkobjects.swap.swapChain};
         presentInfo.swapchainCount = 1;
         presentInfo.pSwapchains = swapChains;
 
         presentInfo.pImageIndices = &imageIndex;
 
-        result = vkQueuePresentKHR(setup_ref.presentQueue, &presentInfo);
+        result = vkQueuePresentKHR(vkobjects.setup.presentQueue, &presentInfo);
 
         if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || win_ref->framebufferResized) {
             win_ref->framebufferResized = false;
@@ -283,7 +276,7 @@ namespace VkRenderer
         imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
         renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
         inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
-        imagesInFlight.resize(swap_ref.swapChainImages.size(), VK_NULL_HANDLE);
+        imagesInFlight.resize(vkobjects.swap.swapChainImages.size(), VK_NULL_HANDLE);
 
         VkSemaphoreCreateInfo semaphoreInfo{};
         semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
@@ -293,9 +286,9 @@ namespace VkRenderer
         fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
         for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-            if (vkCreateSemaphore(setup_ref.device, &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]) != VK_SUCCESS ||
-                vkCreateSemaphore(setup_ref.device, &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS ||
-                vkCreateFence(setup_ref.device, &fenceInfo, nullptr, &inFlightFences[i]) != VK_SUCCESS) {
+            if (vkCreateSemaphore(vkobjects.setup.device, &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]) != VK_SUCCESS ||
+                vkCreateSemaphore(vkobjects.setup.device, &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS ||
+                vkCreateFence(vkobjects.setup.device, &fenceInfo, nullptr, &inFlightFences[i]) != VK_SUCCESS) {
                 throw std::runtime_error("failed to create synchronization objects for a frame!");
             }
         }

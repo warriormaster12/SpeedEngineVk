@@ -31,7 +31,7 @@ void mainLoop()
             glfwSetWindowShouldClose(glfw_win_ref.window, true);
         }
     }
-    vkDeviceWaitIdle(renderer_ref.setup_ref.device);
+    vkDeviceWaitIdle(renderer_ref.vkobjects.setup.device);
 }
 
 void run()
@@ -54,7 +54,7 @@ void run()
     glfw_win_ref.HEIGHT = std::stoi(settings_array[1]);
     glfw_win_ref.initWindow(std::stoi(settings_array[2]));
     
-    renderer_ref.Cbuffer_ref.push_const.Unlit = std::stoi(settings_array[3]);
+    renderer_ref.vkobjects.Cbuffer.push_const.Unlit = std::stoi(settings_array[3]);
 
     renderer_ref.win_ref = &glfw_win_ref;
     glfwSetCursorEnterCallback(glfw_win_ref.window, cursor_enter_callback);
@@ -82,13 +82,13 @@ int main()
 void cursor_enter_callback(GLFWwindow* window, int entered) {
     if (entered)
     {
-        glfwGetCursorPos(window, &renderer_ref.uniformBuffer_ref.camera_object.lastX, &renderer_ref.uniformBuffer_ref.camera_object.lastY);
+        glfwGetCursorPos(window, &renderer_ref.vkobjects.uniformBuffer.camera_object.lastX, &renderer_ref.vkobjects.uniformBuffer.camera_object.lastY);
     }
 }   
 
  
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
-    renderer_ref.uniformBuffer_ref.camera_object.processMouse(xpos, ypos);
+    renderer_ref.vkobjects.uniformBuffer.camera_object.processMouse(xpos, ypos);
 }
 

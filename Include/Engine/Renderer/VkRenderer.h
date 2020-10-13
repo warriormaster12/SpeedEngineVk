@@ -1,16 +1,13 @@
 #pragma once 
 
 #include "VkIncludes.h"
-#include "VkSetup.h"
-#include "VkSwapChain.h"
+#include "VkObjects.h"
 #include "VkGraphicsPipeline.h"
 #include "VkImageManager.h"
 #include "VkRenderPass.h"
 #include "Buffers/VkFramebuffers.h"
-#include "Buffers/VkCommandbuffers.h"
 #include "Buffers/VkBufferCreation.h"
 #include "Buffers/VkDepthBuffer.h"
-#include "Buffers/VkUniformbuffers.h"
 #include "VkMemoryAllocator.h"
 #include "../Window/Window.h"
 #include "../Components/Mesh.h"
@@ -29,15 +26,14 @@ namespace VkRenderer
         void recreateSwapChain();
         void cleanupSwapChain();
         void DestroyVulkan();
-        VkSetup setup_ref;
+        VkMasterObject vkobjects;
         AppWindow *win_ref;
-        VkuniformBuffer uniformBuffer_ref;
-        VkcommandBuffer Cbuffer_ref;
+        
         
     private:  
         
 
-        VkSwapChain swap_ref;
+        
         VkGPipeline gpipeline_ref;
         VkGPipeline lightpipeline_ref;
         VkRenderpass renderpass_ref;

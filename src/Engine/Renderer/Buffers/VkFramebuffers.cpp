@@ -2,13 +2,13 @@
 
 namespace VkRenderer
 {
-    void VkframeBuffer::createFramebuffers()
+    void VkframeBuffer::createFramebuffers(VkMasterObject *vkobjects_ref, VkdepthBuffer *Dbuffer_ref,VkRenderpass *renderpass_ref)
     {
-        swapChainFramebuffers.resize(swap_ref->swapChainImageViews.size());
+        swapChainFramebuffers.resize(vkobjects_ref->swap.swapChainImageViews.size());
 
-        for (size_t i = 0; i < swap_ref->swapChainImageViews.size(); i++) {
+        for (size_t i = 0; i < vkobjects_ref->swap.swapChainImageViews.size(); i++) {
             std::array<VkImageView, 2> attachments = {
-                swap_ref->swapChainImageViews[i],
+                vkobjects_ref->swap.swapChainImageViews[i],
                 Dbuffer_ref->depthImageView
             };
 
@@ -17,11 +17,11 @@ namespace VkRenderer
             framebufferInfo.renderPass = renderpass_ref->renderPass;
             framebufferInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
             framebufferInfo.pAttachments = attachments.data();
-            framebufferInfo.width = swap_ref->swapChainExtent.width;
-            framebufferInfo.height = swap_ref->swapChainExtent.height;
+            framebufferInfo.width = vkobjects_ref->swap.swapChainExtent.width;
+            framebufferInfo.height = vkobjects_ref->swap.swapChainExtent.height;
             framebufferInfo.layers = 1;
 
-            if (vkCreateFramebuffer(setup_ref->device, &framebufferInfo, nullptr, &swapChainFramebuffers[i]) != VK_SUCCESS) {
+            if (vkCreateFramebuffer(vkobjects_ref->setup.device, &framebufferInfo, nullptr, &swapChainFramebuffers[i]) != VK_SUCCESS) {
                 throw std::runtime_error("failed to create framebuffer!");
             }
         }
