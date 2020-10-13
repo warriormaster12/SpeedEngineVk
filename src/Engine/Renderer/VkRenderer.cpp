@@ -79,26 +79,7 @@ namespace VkRenderer
             
 
             for (int i = 0; i < meshes.size(); i++) {
-                //Textures
-                meshes[i].DiffuseTexture.image_m_ref = & image_m_ref;
-                meshes[i].NormalTexture.image_m_ref = & image_m_ref;
-                meshes[i].DiffuseTexture.memory_alloc_ref = & memory_alloc;
-                meshes[i].NormalTexture.memory_alloc_ref = & memory_alloc;
-                
-                //IndexBuffer
-                meshes[i].indexBuffer_ref.setup_ref = &setup_ref;
-                meshes[i].indexBuffer_ref.memory_alloc_ref = &memory_alloc;
-
-                //VertexBuffer
-                meshes[i].vertexBuffer_ref.setup_ref = &setup_ref;
-                meshes[i].vertexBuffer_ref.memory_alloc_ref = &memory_alloc;
-                
-                //Mesh
-                meshes[i].setup_ref = &setup_ref;
-                meshes[i].memory_ref = &memory_ref;
-                meshes[i].buffer_ref = &buffer_ref;
-
-                meshes[i].InitMesh(Cbuffer_ref.commandPool);
+                meshes[i].InitMesh(&setup_ref, &memory_alloc, &image_m_ref,Cbuffer_ref.commandPool);
                 uniformBuffer_ref.meshes.push_back(&meshes[i]);
                 Cbuffer_ref.meshes.push_back(&meshes[i]);
             }
@@ -122,8 +103,6 @@ namespace VkRenderer
             meshes[2].mesh_transform.scale = glm::vec3(0.002f);
             meshes[2].mesh_transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
             meshes[3].mesh_transform.scale = glm::vec3(0.1);
-
-            
             
         }     
 

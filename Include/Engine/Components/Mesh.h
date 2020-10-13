@@ -5,7 +5,6 @@
 #include "../Renderer/Buffers/VkVertexbuffers.h"
 #include "../Renderer/Buffers/VkIndexbuffers.h"
 #include "../Renderer/Buffers/VkBufferCreation.h"
-#include "../Renderer/VkMemory.h"
 #include "../Math/Math3D.h"
 #include "Textures.h"
 
@@ -26,14 +25,12 @@ namespace VkRenderer
 
         
         VkSetup *setup_ref;
-        VkMemory *memory_ref;
-        VkbufferCreation *buffer_ref;
         
         Transform3D mesh_transform;
         Texture2D DiffuseTexture;
         Texture2D NormalTexture;
         
-        void InitMesh(VkCommandPool& commandPool);
+        void InitMesh(VkSetup* setup, VkMemoryAllocator* memory_alloc, VkImageManager* image_m, VkCommandPool& commandPool);
         void update(uint32_t imageIndex);
         void DestroyMesh();
     };

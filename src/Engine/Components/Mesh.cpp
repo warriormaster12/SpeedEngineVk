@@ -3,8 +3,21 @@
 namespace VkRenderer
 {
 
-    void Mesh::InitMesh(VkCommandPool& commandPool)
+    void Mesh::InitMesh(VkSetup* setup, VkMemoryAllocator* memory_alloc, VkImageManager* image_m, VkCommandPool& commandPool)
     {
+        DiffuseTexture.image_m_ref = image_m;
+        NormalTexture.image_m_ref = image_m;
+        DiffuseTexture.memory_alloc_ref = memory_alloc;
+        NormalTexture.memory_alloc_ref = memory_alloc;
+
+        indexBuffer_ref.setup_ref = setup_ref;
+        indexBuffer_ref.memory_alloc_ref = memory_alloc;
+
+        vertexBuffer_ref.setup_ref = setup;
+        vertexBuffer_ref.memory_alloc_ref = memory_alloc;
+        
+        setup_ref = setup;
+
         DiffuseTexture.BindTexture(commandPool);
         NormalTexture.BindTexture(commandPool);
 
