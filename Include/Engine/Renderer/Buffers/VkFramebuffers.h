@@ -1,7 +1,8 @@
 #pragma once 
 
 #include "../VkIncludes.h"
-#include "../VkObjects.h"
+#include "../VkSetup.h"
+#include "../VkSwapChain.h"
 #include "../VkGraphicsPipeline.h"
 #include "../VkRenderPass.h"
 #include "VkDepthBuffer.h"
@@ -12,6 +13,6 @@ namespace VkRenderer
     {
     public: 
         std::vector<VkFramebuffer> swapChainFramebuffers;
-        void createFramebuffers(VkMasterObject *vkobjects_ref, VkdepthBuffer *Dbuffer_ref,VkRenderpass *renderpass_ref);
+        void createFramebuffers(VkSetup *setup_ref, VkSwapChain *swap_ref, VkdepthBuffer *Dbuffer_ref,VkRenderpass *renderpass_ref);
     };
 }
