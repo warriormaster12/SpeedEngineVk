@@ -74,9 +74,13 @@ namespace VkRenderer
     void VkSwapChain::createImageViews()
     {
         swapChainImageViews.resize(swapChainImages.size());
-
+        VkImageViewCreateInfo swapViewInfo{};
+        swapViewInfo.format = swapChainImageFormat;
+        swapViewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        swapViewInfo.subresourceRange.levelCount = 1;
         for (size_t i = 0; i < swapChainImages.size(); i++) {
-            swapChainImageViews[i] = image_m_ref->createImageView(swapChainImages[i], swapChainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1);
+            swapViewInfo.image = swapChainImages[i];
+            swapChainImageViews[i] = image_m_ref->createImageView(swapViewInfo);
         } 
     }
 

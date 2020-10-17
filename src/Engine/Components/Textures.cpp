@@ -56,7 +56,12 @@ void Texture2D::createTextureImage(VkCommandPool& commandPool)
     image_m_ref->generateMipmaps(textureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, mipLevels, commandPool);
 }
 void Texture2D::createTextureImageView() {
-    textureImageView = image_m_ref->createImageView(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, mipLevels);
+    VkImageViewCreateInfo textureViewInfo{};
+    textureViewInfo.image = textureImage;
+    textureViewInfo.format = VK_FORMAT_R8G8B8A8_SRGB;
+    textureViewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    textureViewInfo.subresourceRange.levelCount = mipLevels;
+    textureImageView = image_m_ref->createImageView(textureViewInfo);
 }
 
 void Texture2D::createTextureSampler()

@@ -14,9 +14,15 @@ namespace VkRenderer
         depthInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
         depthInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
 
-
         image_m_ref->createImage(depthInfo, depthImage, depthImageAllocation);
-        depthImageView = image_m_ref->createImageView(depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, 1);
+
+        VkImageViewCreateInfo depthViewInfo{};
+        depthViewInfo.image = depthImage;
+        depthViewInfo.format = depthFormat;
+        depthViewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+        depthViewInfo.subresourceRange.levelCount = 1;
+
+        depthImageView = image_m_ref->createImageView(depthViewInfo);
     }
     VkFormat VkdepthBuffer::findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) {
         for (VkFormat format : candidates) {
