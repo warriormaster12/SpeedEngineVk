@@ -12,9 +12,9 @@ namespace VkRenderer
     {
     public: 
         
-        VkImageView createImageView(VkImageViewCreateInfo Info);
+        VkImageView createImageView(VkImageViewCreateInfo& Info);
         void createImage(VkImageCreateInfo& Info, VkImage& image, VmaAllocation& imageAllocation);
-        void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, VkCommandPool& commandPool, uint32_t mipLevels);
+        void transitionImageLayout(VkImageMemoryBarrier& barrierInfo, VkCommandPool& commandPool);
         void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, VkCommandPool& commandPool);
         void generateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels, VkCommandPool& commandPool);
 
