@@ -14,6 +14,7 @@
 #include "VkMemoryAllocator.h"
 #include "../Window/Window.h"
 #include "../Components/Mesh.h"
+#include "../Components/Camera.h"
 
 namespace VkRenderer
 {
@@ -34,6 +35,7 @@ namespace VkRenderer
         VkSwapChain swap;
         VkuniformBuffer uniformBuffer;
         VkcommandBuffer Cbuffer;
+        Camera camera_object;
         AppWindow *win_ref; 
     private:  
         

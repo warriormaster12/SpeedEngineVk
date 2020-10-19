@@ -9,6 +9,8 @@ namespace VkRenderer
         NormalTexture.image_m_ref = image_m;
         DiffuseTexture.memory_alloc_ref = memory_alloc;
         NormalTexture.memory_alloc_ref = memory_alloc;
+        cube_map.image_m_ref = image_m;
+        cube_map.memory_alloc_ref = memory_alloc;
 
         indexBuffer_ref.setup_ref = setup_ref;
         indexBuffer_ref.memory_alloc_ref = memory_alloc;
@@ -20,6 +22,7 @@ namespace VkRenderer
 
         DiffuseTexture.BindTexture(commandPool);
         NormalTexture.BindTexture(commandPool);
+        //cube_map.BindTexture(commandPool);
 
         model_ref.indexBuffer_ref = &indexBuffer_ref;
         model_ref.vertexBuffer_ref = &vertexBuffer_ref;

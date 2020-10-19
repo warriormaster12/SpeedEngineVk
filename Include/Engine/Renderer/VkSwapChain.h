@@ -23,6 +23,7 @@ namespace VkRenderer
         void createSwapChain();
         void createImageViews();
         void pickPhysicalDevice();
+        void destroySwap();
         SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice& device);
         VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
         VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);

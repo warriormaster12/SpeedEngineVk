@@ -6,7 +6,6 @@ namespace VkRenderer
     {
         setup_ref = setup;
         memory_alloc_ref = memory_alloc;
-
         createDescriptorSetLayout();
     }
     void VkuniformBuffer::createUniformBuffer()
@@ -36,7 +35,7 @@ namespace VkRenderer
         }
     }
 
-    void VkuniformBuffer::updateUniformBuffer(uint32_t DescriptorSetIndex, VkExtent2D& swapChainExtent)
+    void VkuniformBuffer::updateUniformBuffer(uint32_t DescriptorSetIndex, VkExtent2D& swapChainExtent, Camera& camera_object)
     {
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
@@ -104,12 +103,13 @@ namespace VkRenderer
         lightubo.spot_light.cutOff = glm::vec4(glm::cos(glm::radians(12.5f)));
         lightubo.spot_light.outerCutOff = glm::vec4(glm::cos(glm::radians(15.0f)));
         lightubo.spot_light.light_color = glm::vec4(glm::vec3(1.0f),0.0f);
+        camera_object.CameraUpdate(swapChainExtent.width / (float) swapChainExtent.height, deltaTime);
         
-        camera_object.Set_Camera(swapChainExtent.width / (float) swapChainExtent.height);
+        
         ubo.view = camera_object.matrices.view;
         ubo.projection = camera_object.matrices.perspective;
-
-        camera_object.CameraUpdate(deltaTime);
+        
+        
     
 
         void* data;

@@ -18,6 +18,7 @@ namespace VkRenderer
     {
     public: 
         void createGraphicsPipeline(VkExtent2D& swapChainExtent, VkRenderPass& renderPass,VkDescriptorSetLayout descriptorSetLayout);  
+        void destroyPipeline();
         
         std::vector <std::string> shaders;
         size_t vertex_attributes = 4;

@@ -1,4 +1,4 @@
-#include "Engine/Renderer/Camera/Camera.h"
+#include "Engine/Components/Camera.h"
 
 namespace VkRenderer
 {
@@ -6,20 +6,18 @@ namespace VkRenderer
     {
         camera_transform.translate = glm::vec3(3.0f, 1.0f, 0.0f);
     }
-    void Camera::Set_Camera(float aspect)
+    void Camera::Set_Camera(AppWindow **win)
     {
-        
+        win_ref = win;   
+    }
+
+    void Camera::CameraUpdate(float aspect, double DeltaT)
+    {
         matrices.view = glm::lookAt(camera_transform.translate, camera_transform.translate + cameraFront, cameraUp);; 
 
         matrices.perspective = glm::perspective(glm::radians(fov), aspect, znear, zfar);
-		matrices.perspective[1][1] *= -1.0f;
-    }
-
-    void Camera::CameraUpdate(double DeltaT)
-    {
-       processMovement(DeltaT);
-
-
+        matrices.perspective[1][1] *= -1.0f;
+        processMovement(DeltaT);
     }
     void Camera::processMovement(double DeltaT)
     {

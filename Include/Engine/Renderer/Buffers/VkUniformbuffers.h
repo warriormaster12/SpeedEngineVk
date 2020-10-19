@@ -2,10 +2,11 @@
 
 #include "../VkIncludes.h"
 #include "../VkSetup.h"
-#include "../Camera/Camera.h"
+#include "../../Components/Camera.h"
 #include "../VkMemoryAllocator.h"
 #include "../../Components/Mesh.h"
 #include "../../Components/Light.h"
+
 
 
 
@@ -36,7 +37,7 @@ namespace VkRenderer
         void createDescriptorPool();
         void createDescriptorSets();
         void createUniformBuffer();
-        void updateUniformBuffer(uint32_t DescriptorSetIndex, VkExtent2D& swapChainExtent);
+        void updateUniformBuffer(uint32_t DescriptorSetIndex, VkExtent2D& swapChainExtent, Camera& camera_object);
         void DestroyUniformBuffer();
 
         VkDescriptorSetLayout descriptorSetLayout;
@@ -50,7 +51,6 @@ namespace VkRenderer
         std::vector <VmaAllocation> lightAllocation;
         VkSetup *setup_ref;
         std::vector <Mesh*> meshes;
-        Camera camera_object;
     private: 
         float deltaTime = 0.0f;
         float lastFrame = 0.0f;

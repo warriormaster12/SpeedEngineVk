@@ -100,3 +100,72 @@ void Texture2D::DestroyTexture()
     
     vmaDestroyImage(memory_alloc_ref->allocator, textureImage, textureImageAllocation);
 }
+
+
+void CubeMapTexture::BindTexture(VkCommandPool& commandPool)
+{
+    createCubeMapTextureImage(commandPool);
+    //createCubeMapTextureImageView();
+    //createCubeMapTextureSampler();
+};
+
+void CubeMapTexture::createCubeMapTextureImage(VkCommandPool& commandPool)
+{
+    int texWidth, texHeight, texChannels;
+    stbi_uc* pixels;
+    for(int i = 0; i < TEXTURE_PATHS.size(); i++)
+    {
+        pixels = stbi_load(TEXTURE_PATHS[i].c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+    }
+    VkDeviceSize imageSize = texWidth * texHeight * 4;
+    mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texWidth, texHeight)))) + 1;
+
+    if (!pixels) {
+        throw std::runtime_error("failed to load texture image!");
+    }
+    VkBufferCreateInfo bufferInfo = { VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO };
+    bufferInfo.size = imageSize;
+    bufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+
+    VmaAllocationCreateInfo allocInfo = {};
+    allocInfo.usage = VMA_MEMORY_USAGE_CPU_TO_GPU;
+
+    VkBuffer stagingBuffer;
+    VmaAllocation stagingAllocation;
+    vmaCreateBuffer(memory_alloc_ref->allocator, &bufferInfo, &allocInfo, &stagingBuffer, &stagingAllocation, nullptr );
+
+    void* data;
+    vmaMapMemory(memory_alloc_ref->allocator, stagingAllocation, &data);
+        memcpy(data, pixels, static_cast<size_t>(imageSize));
+    vmaUnmapMemory(memory_alloc_ref->allocator, stagingAllocation);
+
+    stbi_image_free(pixels);
+    VkImageCreateInfo textureInfo{};
+    textureInfo.extent.width = texWidth;
+    textureInfo.extent.height = texHeight;
+    textureInfo.mipLevels = mipLevels;
+    textureInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
+    textureInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+    if (!(textureInfo.usage & VK_IMAGE_USAGE_TRANSFER_DST_BIT))
+    {
+        textureInfo.usage |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+    }
+    // Cube faces count as array layers in Vulkan
+    textureInfo.arrayLayers = 6;
+    // This flag is required for cube map images
+    textureInfo.flags = VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT;
+
+    image_m_ref->createImage(textureInfo, textureImage, textureImageAllocation);
+    VkImageMemoryBarrier barrierInfo{};
+    barrierInfo.image = textureImage;
+    barrierInfo.oldLayout =  VK_IMAGE_LAYOUT_UNDEFINED;
+    barrierInfo.newLayout =  VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+    barrierInfo.subresourceRange.levelCount = mipLevels;
+    image_m_ref->transitionImageLayout(barrierInfo, commandPool);
+    image_m_ref->copyBufferToImage(stagingBuffer, textureImage, static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight), commandPool);
+    //transitioned to VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL while generating mipmaps
+
+    vmaDestroyBuffer(memory_alloc_ref->allocator, stagingBuffer, stagingAllocation);
+
+    image_m_ref->generateMipmaps(textureImage, VK_FORMAT_R8G8B8A8_SRGB, texWidth, texHeight, mipLevels, commandPool);    
+}

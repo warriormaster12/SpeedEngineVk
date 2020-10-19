@@ -82,13 +82,13 @@ int main()
 void cursor_enter_callback(GLFWwindow* window, int entered) {
     if (entered)
     {
-        glfwGetCursorPos(window, &renderer_ref.uniformBuffer.camera_object.lastX, &renderer_ref.uniformBuffer.camera_object.lastY);
+        glfwGetCursorPos(window, &renderer_ref.camera_object.lastX, &renderer_ref.camera_object.lastY);
     }
 }   
 
  
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
-    renderer_ref.uniformBuffer.camera_object.processMouse(xpos, ypos);
+    renderer_ref.camera_object.processMouse(xpos, ypos);
 }
 

@@ -13,8 +13,6 @@ namespace VkRenderer
         //RenderPass
         renderpass_ref.Dbuffer_ref = &Dbuffer_ref;
 
-        //UniformBuffer
-        uniformBuffer.camera_object.win_ref = &win_ref;
         
         //BufferCreation
         buffer_ref.setup_ref = &setup;
@@ -101,7 +99,7 @@ namespace VkRenderer
         }     
 
         
-        
+        camera_object.Set_Camera(&win_ref);
         
         Cbuffer.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap.swapChainExtent, uniformBuffer.descriptorSets);
         createSyncObjects();
@@ -151,17 +149,11 @@ namespace VkRenderer
 
         vkFreeCommandBuffers(setup.device, Cbuffer.commandPool, static_cast<uint32_t>(Cbuffer.commandBuffers.size()), Cbuffer.commandBuffers.data());
 
-        vkDestroyPipeline(setup.device, gpipeline_ref.graphicsPipeline, nullptr);
-        vkDestroyPipelineLayout(setup.device, gpipeline_ref.pipelineLayout, nullptr);
-        vkDestroyPipeline(setup.device, lightpipeline_ref.graphicsPipeline, nullptr);
-        vkDestroyPipelineLayout(setup.device, lightpipeline_ref.pipelineLayout, nullptr);
+        gpipeline_ref.destroyPipeline();
+        lightpipeline_ref.destroyPipeline();
         vkDestroyRenderPass(setup.device, renderpass_ref.renderPass, nullptr);
 
-        for (auto imageView : swap.swapChainImageViews) {
-            vkDestroyImageView(setup.device, imageView, nullptr);
-        }
-
-        vkDestroySwapchainKHR(setup.device, swap.swapChain, nullptr);
+        swap.destroySwap();
         uniformBuffer.DestroyUniformBuffer();
         vkDestroyDescriptorPool(setup.device, uniformBuffer.descriptorPool, nullptr);
     }
@@ -215,7 +207,7 @@ namespace VkRenderer
         
         for (int i=0; i < meshes.size(); i++)
         {
-            uniformBuffer.updateUniformBuffer(i, swap.swapChainExtent);
+            uniformBuffer.updateUniformBuffer(i, swap.swapChainExtent, camera_object);
         }
 
         

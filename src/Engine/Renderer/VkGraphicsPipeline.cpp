@@ -147,7 +147,11 @@ namespace VkRenderer
         }
         
     }
-    
+    void VkGPipeline::destroyPipeline()
+    {
+        vkDestroyPipeline(setup_ref->device, graphicsPipeline, nullptr);
+        vkDestroyPipelineLayout(setup_ref->device, pipelineLayout, nullptr);
+    }
 
     inline VkPushConstantRange VkGPipeline::pushConstantRange(VkShaderStageFlags stageFlags,uint32_t size,uint32_t offset)
     {

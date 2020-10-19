@@ -1,8 +1,8 @@
 #pragma once 
 
-#include "../VkIncludes.h"
-#include "../../Math/Math3D.h"
-#include "../../Window/Window.h"
+#include "../Renderer/VkIncludes.h"
+#include "../Math/Math3D.h"
+#include "../Window/Window.h"
 
 
 namespace VkRenderer
@@ -29,8 +29,8 @@ namespace VkRenderer
        
 
 
-        void Set_Camera(float aspect);
-        void CameraUpdate(double DeltaT);
+        void Set_Camera(AppWindow **win);
+        void CameraUpdate(float aspect, double DeltaT);
         Camera();
         void processMouse(double xpos, double ypos);
 

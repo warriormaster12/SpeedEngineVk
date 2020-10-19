@@ -71,6 +71,14 @@ namespace VkRenderer
         swapChainImageFormat = surfaceFormat.format;
         swapChainExtent = extent;
     }
+    void VkSwapChain::destroySwap()
+    {
+        for (auto imageView : swapChainImageViews) {
+            vkDestroyImageView(setup_ref->device, imageView, nullptr);
+        }
+
+        vkDestroySwapchainKHR(setup_ref->device, swapChain, nullptr);
+    }
     void VkSwapChain::createImageViews()
     {
         swapChainImageViews.resize(swapChainImages.size());
