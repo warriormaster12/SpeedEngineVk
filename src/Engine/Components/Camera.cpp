@@ -13,7 +13,7 @@ namespace VkRenderer
 
     void Camera::CameraUpdate(float aspect, double DeltaT)
     {
-        matrices.view = glm::lookAt(camera_transform.translate, camera_transform.translate + cameraFront, cameraUp);; 
+        matrices.view = glm::lookAt(camera_transform.translate, camera_transform.translate + cameraFront, cameraUp);
 
         matrices.perspective = glm::perspective(glm::radians(fov), aspect, znear, zfar);
         matrices.perspective[1][1] *= -1.0f;
