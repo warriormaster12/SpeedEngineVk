@@ -37,7 +37,7 @@ namespace VkRenderer
         void createDescriptorPool();
         void createDescriptorSets();
         void createUniformBuffer();
-        void updateUniformBuffer(uint32_t DescriptorSetIndex, VkExtent2D& swapChainExtent, Camera& camera_object);
+        void updateUniformBuffer(uint32_t DescriptorSetIndex, Camera& camera_object);
         void DestroyUniformBuffer();
 
         VkDescriptorSetLayout descriptorSetLayout;

@@ -99,7 +99,7 @@ namespace VkRenderer
         }     
 
         
-        camera_object.Set_Camera(&win);
+        camera_object.Set_Camera(&win, &swap);
         
         Cbuffer.createCommandBuffers(Fbuffer.swapChainFramebuffers,swap.swapChainExtent, uniformBuffer.descriptorSets);
         createSyncObjects();
@@ -207,7 +207,7 @@ namespace VkRenderer
         
         for (int i=0; i < meshes.size(); i++)
         {
-            uniformBuffer.updateUniformBuffer(i, swap.swapChainExtent, camera_object);
+            uniformBuffer.updateUniformBuffer(i, camera_object);
         }
 
         

@@ -3,6 +3,7 @@
 #include "../Renderer/VkIncludes.h"
 #include "../Math/Math3D.h"
 #include "../Window/Window.h"
+#include "../Renderer/VkSwapChain.h"
 
 
 namespace VkRenderer
@@ -29,8 +30,8 @@ namespace VkRenderer
        
 
 
-        void Set_Camera(AppWindow **win);
-        void CameraUpdate(float aspect, double DeltaT);
+        void Set_Camera(AppWindow **win, VkSwapChain* swap);
+        void CameraUpdate(double DeltaT);
         Camera();
         void processMouse(double xpos, double ypos);
 
@@ -38,8 +39,8 @@ namespace VkRenderer
         double lastY{600.0 / 2.0};
     private: 
         void processMovement(double DeltaT);
-        
-
+        float aspect;
+        VkSwapChain* swap_ref;
         float yaw{0.0f};	
         float pitch{0.0f};
         

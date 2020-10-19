@@ -6,13 +6,15 @@ namespace VkRenderer
     {
         camera_transform.translate = glm::vec3(3.0f, 1.0f, 0.0f);
     }
-    void Camera::Set_Camera(AppWindow **win)
+    void Camera::Set_Camera(AppWindow **win, VkSwapChain* swap)
     {
         win_ref = win;   
+        swap_ref = swap;
     }
 
-    void Camera::CameraUpdate(float aspect, double DeltaT)
+    void Camera::CameraUpdate(double DeltaT)
     {
+        aspect = swap_ref->swapChainExtent.width / (float) swap_ref->swapChainExtent.height;
         matrices.view = glm::lookAt(camera_transform.translate, camera_transform.translate + cameraFront, cameraUp);
 
         matrices.perspective = glm::perspective(glm::radians(fov), aspect, znear, zfar);
