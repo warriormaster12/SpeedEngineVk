@@ -19,9 +19,9 @@ namespace VkRenderer
     class Mesh 
     {
     public: 
-        ModelLoader model_ref;
-        VkvertexBuffer vertexBuffer_ref;
-        VkindexBuffer indexBuffer_ref;  
+        ModelLoader model;
+        VkvertexBuffer vertexBuffer;
+        VkindexBuffer indexBuffer;  
 
         
         VkSetup *setup_ref;

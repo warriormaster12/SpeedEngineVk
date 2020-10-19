@@ -76,18 +76,18 @@ namespace VkRenderer
                     
                     
                     
-                    VkBuffer vertexBuffers[] = {meshes[j]->vertexBuffer_ref.vertexBuffer};
+                    VkBuffer vertexBuffers[] = {meshes[j]->vertexBuffer.vertexBuffer};
                     VkDeviceSize offsets[] = {0};
                     vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
                     
 
-                    vkCmdBindIndexBuffer(commandBuffers[i], meshes[j]->indexBuffer_ref.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+                    vkCmdBindIndexBuffer(commandBuffers[i], meshes[j]->indexBuffer.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
                     
                     
                     
                     
             
-                    vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(meshes[j]->indexBuffer_ref.indices.size()), 1, 0, 0, 0);
+                    vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(meshes[j]->indexBuffer.indices.size()), 1, 0, 0, 0);
     
                 }
                 

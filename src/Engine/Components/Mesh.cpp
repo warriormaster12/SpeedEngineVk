@@ -12,11 +12,11 @@ namespace VkRenderer
         cube_map.image_m_ref = image_m;
         cube_map.memory_alloc_ref = memory_alloc;
 
-        indexBuffer_ref.setup_ref = setup_ref;
-        indexBuffer_ref.memory_alloc_ref = memory_alloc;
+        indexBuffer.setup_ref = setup_ref;
+        indexBuffer.memory_alloc_ref = memory_alloc;
 
-        vertexBuffer_ref.setup_ref = setup;
-        vertexBuffer_ref.memory_alloc_ref = memory_alloc;
+        vertexBuffer.setup_ref = setup;
+        vertexBuffer.memory_alloc_ref = memory_alloc;
         
         setup_ref = setup;
 
@@ -24,16 +24,16 @@ namespace VkRenderer
         NormalTexture.BindTexture(commandPool);
         //cube_map.BindTexture(commandPool);
 
-        model_ref.indexBuffer_ref = &indexBuffer_ref;
-        model_ref.vertexBuffer_ref = &vertexBuffer_ref;
+        model.indexBuffer_ref = &indexBuffer;
+        model.vertexBuffer_ref = &vertexBuffer;
 
         mesh_transform.translate = glm::vec3(0.0f,0.0f,0.0f);
         mesh_transform.scale = glm::vec3(1.0f,1.0f,1.0f);
 
         
-        model_ref.loadModel();
-        vertexBuffer_ref.createVertexBuffer();
-        indexBuffer_ref.createIndexBuffer();
+        model.loadModel();
+        vertexBuffer.createVertexBuffer();
+        indexBuffer.createIndexBuffer();
         
     }
 
@@ -43,8 +43,8 @@ namespace VkRenderer
         DiffuseTexture.DestroyTexture();
         NormalTexture.DestroyTexture();
 
-        vmaDestroyBuffer(indexBuffer_ref.memory_alloc_ref->allocator, indexBuffer_ref.indexBuffer, indexBuffer_ref.allocation);
+        vmaDestroyBuffer(indexBuffer.memory_alloc_ref->allocator, indexBuffer.indexBuffer, indexBuffer.allocation);
 
-        vmaDestroyBuffer(vertexBuffer_ref.memory_alloc_ref->allocator, vertexBuffer_ref.vertexBuffer, vertexBuffer_ref.allocation);
+        vmaDestroyBuffer(vertexBuffer.memory_alloc_ref->allocator, vertexBuffer.vertexBuffer, vertexBuffer.allocation);
     }
 }

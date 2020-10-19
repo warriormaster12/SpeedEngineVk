@@ -7,53 +7,53 @@ namespace VkRenderer
     {
 
         //GraphicsPipeline
-        gpipeline_ref.setup_ref = &setup;
-        lightpipeline_ref.setup_ref = &setup;
+        gpipeline.setup_ref = &setup;
+        lightpipeline.setup_ref = &setup;
 
         //RenderPass
-        renderpass_ref.Dbuffer_ref = &Dbuffer_ref;
+        renderpass.Dbuffer_ref = &Dbuffer;
 
         
         //BufferCreation
-        buffer_ref.setup_ref = &setup;
+        buffer.setup_ref = &setup;
         
         
 
         //CommandBuffer
         Cbuffer.setup_ref = &setup;
-        Cbuffer.gpipeline_ref = &gpipeline_ref;
-        Cbuffer.lightpipeline_ref = &lightpipeline_ref;
-        Cbuffer.renderpass_ref = &renderpass_ref;
+        Cbuffer.gpipeline_ref = &gpipeline;
+        Cbuffer.lightpipeline_ref = &lightpipeline;
+        Cbuffer.renderpass_ref = &renderpass;
         
         //DepthBuffer
-        Dbuffer_ref.setup_ref = &setup;
-        Dbuffer_ref.image_m_ref = &image_m_ref;
+        Dbuffer.setup_ref = &setup;
+        Dbuffer.image_m_ref = &image_m;
 
         //imageManager
-        image_m_ref.setup_ref = &setup;
-        image_m_ref.buffer_ref = &buffer_ref;
-        image_m_ref.memory_alloc_ref = &memory_alloc;
+        image_m.setup_ref = &setup;
+        image_m.buffer_ref = &buffer;
+        image_m.memory_alloc_ref = &memory_alloc;
     }
     
     void Renderer::InitVulkan()
     {
         
         setup.Initialize();
-        swap.Initialize(&setup, win_ref, &image_m_ref);
+        swap.Initialize(&setup, win, &image_m);
         setup.createLogicalDevice(swap.surface);
         memory_alloc.createAllocator(setup);
         swap.createSwapChain();
         swap.createImageViews();
-        renderpass_ref.createRenderPass(setup.device, swap.swapChainImageFormat);
+        renderpass.createRenderPass(setup.device, swap.swapChainImageFormat);
         uniformBuffer.Initialize(&setup, &memory_alloc);
-        gpipeline_ref.shaders = {"EngineAssets/Shaders/Model_vert.vert", "EngineAssets/Shaders/Model_frag.frag",};
-        gpipeline_ref.createGraphicsPipeline(swap.swapChainExtent, renderpass_ref.renderPass,uniformBuffer.descriptorSetLayout);
-        lightpipeline_ref.shaders = {"EngineAssets/Shaders/light_cube_vert.vert", "EngineAssets/Shaders/light_cube_frag.frag",};
-        lightpipeline_ref.vertex_attributes = 1; 
-        lightpipeline_ref.createGraphicsPipeline(swap.swapChainExtent, renderpass_ref.renderPass,uniformBuffer.descriptorSetLayout);
+        gpipeline.shaders = {"EngineAssets/Shaders/Model_vert.vert", "EngineAssets/Shaders/Model_frag.frag",};
+        gpipeline.createGraphicsPipeline(swap.swapChainExtent, renderpass.renderPass,uniformBuffer.descriptorSetLayout);
+        lightpipeline.shaders = {"EngineAssets/Shaders/light_cube_vert.vert", "EngineAssets/Shaders/light_cube_frag.frag",};
+        lightpipeline.vertex_attributes = 1; 
+        lightpipeline.createGraphicsPipeline(swap.swapChainExtent, renderpass.renderPass,uniformBuffer.descriptorSetLayout);
         Cbuffer.createCommandPool(swap.surface);
-        Dbuffer_ref.createDepthResources(swap.swapChainExtent);
-        Fbuffer_ref.createFramebuffers(&setup, &swap, &Dbuffer_ref, &renderpass_ref);
+        Dbuffer.createDepthResources(swap.swapChainExtent);
+        Fbuffer.createFramebuffers(&setup, &swap, &Dbuffer, &renderpass);
     
         meshes.emplace_back();
         meshes.emplace_back();
@@ -64,14 +64,14 @@ namespace VkRenderer
         {
             meshes[2].DiffuseTexture.TEXTURE_PATH = "EngineAssets/Textures/chapel_diffuse.tga";
             meshes[2].NormalTexture.TEXTURE_PATH = "EngineAssets/Textures/chapel_normal.tga";
-            meshes[2].model_ref.MODEL_PATH = "EngineAssets/Models/chapel_obj.obj";
-            meshes[3].model_ref.MODEL_PATH = "EngineAssets/Models/cube.obj";
+            meshes[2].model.MODEL_PATH = "EngineAssets/Models/chapel_obj.obj";
+            meshes[3].model.MODEL_PATH = "EngineAssets/Models/cube.obj";
             meshes[3].current_mesh_type = mesh_types::preview;
 
             
 
             for (int i = 0; i < meshes.size(); i++) {
-                meshes[i].InitMesh(&setup, &memory_alloc, &image_m_ref,Cbuffer.commandPool);
+                meshes[i].InitMesh(&setup, &memory_alloc, &image_m,Cbuffer.commandPool);
                 uniformBuffer.meshes.push_back(&meshes[i]);
                 Cbuffer.meshes.push_back(&meshes[i]);
             }
@@ -99,9 +99,9 @@ namespace VkRenderer
         }     
 
         
-        camera_object.Set_Camera(&win_ref);
+        camera_object.Set_Camera(&win);
         
-        Cbuffer.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap.swapChainExtent, uniformBuffer.descriptorSets);
+        Cbuffer.createCommandBuffers(Fbuffer.swapChainFramebuffers,swap.swapChainExtent, uniformBuffer.descriptorSets);
         createSyncObjects();
        
         
@@ -110,9 +110,9 @@ namespace VkRenderer
     void Renderer::recreateSwapChain()
     {
         int width = 0, height = 0;
-        glfwGetFramebufferSize(win_ref->window, &width, &height);
+        glfwGetFramebufferSize(win->window, &width, &height);
         while (width == 0 || height == 0) {
-            glfwGetFramebufferSize(win_ref->window, &width, &height);
+            glfwGetFramebufferSize(win->window, &width, &height);
             glfwWaitEvents();
         }
         vkDeviceWaitIdle(setup.device);
@@ -121,11 +121,11 @@ namespace VkRenderer
 
         swap.createSwapChain();
         swap.createImageViews();
-        renderpass_ref.createRenderPass(setup.device, swap.swapChainImageFormat);
-        gpipeline_ref.createGraphicsPipeline(swap.swapChainExtent, renderpass_ref.renderPass,uniformBuffer.descriptorSetLayout);
-        lightpipeline_ref.createGraphicsPipeline(swap.swapChainExtent, renderpass_ref.renderPass,uniformBuffer.descriptorSetLayout);
-        Dbuffer_ref.createDepthResources(swap.swapChainExtent);
-        Fbuffer_ref.createFramebuffers(&setup, &swap, &Dbuffer_ref, &renderpass_ref);
+        renderpass.createRenderPass(setup.device, swap.swapChainImageFormat);
+        gpipeline.createGraphicsPipeline(swap.swapChainExtent, renderpass.renderPass,uniformBuffer.descriptorSetLayout);
+        lightpipeline.createGraphicsPipeline(swap.swapChainExtent, renderpass.renderPass,uniformBuffer.descriptorSetLayout);
+        Dbuffer.createDepthResources(swap.swapChainExtent);
+        Fbuffer.createFramebuffers(&setup, &swap, &Dbuffer, &renderpass);
         
         if(meshes.size() != 0)
         {
@@ -134,24 +134,24 @@ namespace VkRenderer
             uniformBuffer.createDescriptorSets();
         }
        
-        Cbuffer.createCommandBuffers(Fbuffer_ref.swapChainFramebuffers,swap.swapChainExtent, uniformBuffer.descriptorSets);
+        Cbuffer.createCommandBuffers(Fbuffer.swapChainFramebuffers,swap.swapChainExtent, uniformBuffer.descriptorSets);
         
 
     }
     void Renderer::cleanupSwapChain()
     {
         
-        vkDestroyImageView(setup.device, Dbuffer_ref.depthImageView, nullptr);
-        vmaDestroyImage(memory_alloc.allocator, Dbuffer_ref.depthImage, Dbuffer_ref.depthImageAllocation);
-        for (auto framebuffer : Fbuffer_ref.swapChainFramebuffers) {
+        vkDestroyImageView(setup.device, Dbuffer.depthImageView, nullptr);
+        vmaDestroyImage(memory_alloc.allocator, Dbuffer.depthImage, Dbuffer.depthImageAllocation);
+        for (auto framebuffer : Fbuffer.swapChainFramebuffers) {
             vkDestroyFramebuffer(setup.device, framebuffer, nullptr);
         }
 
         vkFreeCommandBuffers(setup.device, Cbuffer.commandPool, static_cast<uint32_t>(Cbuffer.commandBuffers.size()), Cbuffer.commandBuffers.data());
 
-        gpipeline_ref.destroyPipeline();
-        lightpipeline_ref.destroyPipeline();
-        vkDestroyRenderPass(setup.device, renderpass_ref.renderPass, nullptr);
+        gpipeline.destroyPipeline();
+        lightpipeline.destroyPipeline();
+        vkDestroyRenderPass(setup.device, renderpass.renderPass, nullptr);
 
         swap.destroySwap();
         uniformBuffer.DestroyUniformBuffer();
@@ -253,8 +253,8 @@ namespace VkRenderer
 
         result = vkQueuePresentKHR(setup.presentQueue, &presentInfo);
 
-        if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || win_ref->framebufferResized) {
-            win_ref->framebufferResized = false;
+        if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || win->framebufferResized) {
+            win->framebufferResized = false;
             recreateSwapChain();
         } else if (result != VK_SUCCESS) {
             throw std::runtime_error("failed to present swap chain image!");

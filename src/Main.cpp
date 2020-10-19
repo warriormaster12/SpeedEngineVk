@@ -56,7 +56,7 @@ void run()
     
     renderer_ref.Cbuffer.push_const.Unlit = std::stoi(settings_array[3]);
 
-    renderer_ref.win_ref = &glfw_win_ref;
+    renderer_ref.win = &glfw_win_ref;
     glfwSetCursorEnterCallback(glfw_win_ref.window, cursor_enter_callback);
     glfwSetCursorPosCallback(glfw_win_ref.window, mouse_callback);
     renderer_ref.InitVulkan();

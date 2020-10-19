@@ -18,7 +18,7 @@ namespace VkRenderer
             glm::mat4 view;
         } matrices;
         
-        float fov = 60.0f;
+        float fov = 90.0f;
 	    float znear = 0.1f, zfar=100.0f;
         float movement_speed = 1.0f;
         AppWindow **win_ref;

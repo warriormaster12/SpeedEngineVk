@@ -36,21 +36,21 @@ namespace VkRenderer
         VkuniformBuffer uniformBuffer;
         VkcommandBuffer Cbuffer;
         Camera camera_object;
-        AppWindow *win_ref; 
+        AppWindow *win; 
     private:  
         
 
         
-        VkGPipeline gpipeline_ref;
-        VkGPipeline lightpipeline_ref;
-        VkRenderpass renderpass_ref;
-        VkframeBuffer Fbuffer_ref;
+        VkGPipeline gpipeline;
+        VkGPipeline lightpipeline;
+        VkRenderpass renderpass;
+        VkframeBuffer Fbuffer;
         VkMemoryAllocator memory_alloc;
         std::vector <Mesh> meshes;
         
-        VkImageManager image_m_ref;
-        VkbufferCreation buffer_ref;
-        VkdepthBuffer Dbuffer_ref;
+        VkImageManager image_m;
+        VkbufferCreation buffer;
+        VkdepthBuffer Dbuffer;
 
         
 
