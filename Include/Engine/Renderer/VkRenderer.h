@@ -13,8 +13,7 @@
 #include "Buffers/VkDepthBuffer.h"
 #include "VkMemoryAllocator.h"
 #include "../Window/Window.h"
-#include "../Components/Mesh.h"
-#include "../Components/Camera.h"
+#include "../Components/Scene.h"
 
 namespace VkRenderer
 {
@@ -35,7 +34,7 @@ namespace VkRenderer
         VkSwapChain swap;
         VkuniformBuffer uniformBuffer;
         VkcommandBuffer Cbuffer;
-        Camera camera_object;
+        Scene scene; 
         AppWindow *win; 
     private:  
         
@@ -46,7 +45,7 @@ namespace VkRenderer
         VkRenderpass renderpass;
         VkframeBuffer Fbuffer;
         VkMemoryAllocator memory_alloc;
-        std::vector <Mesh> meshes;
+        
         
         VkImageManager image_m;
         VkbufferCreation buffer;

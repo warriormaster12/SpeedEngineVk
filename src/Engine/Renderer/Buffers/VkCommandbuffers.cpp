@@ -58,10 +58,10 @@ namespace VkRenderer
                 
 
                 
-                for(int j=0; j < meshes.size(); j++)
+                for(int j=0; j < scene_ref->meshes.size(); j++)
                 {
                     
-                    if(meshes[j]->current_mesh_type == mesh_types::user_mesh)
+                    if(scene_ref->meshes[j].current_mesh_type == mesh_types::user_mesh)
                     {
                         vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, gpipeline_ref->graphicsPipeline);
                         vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, gpipeline_ref->pipelineLayout, 0, 1, &descriptorSets[j], 0, nullptr);
@@ -76,18 +76,18 @@ namespace VkRenderer
                     
                     
                     
-                    VkBuffer vertexBuffers[] = {meshes[j]->vertexBuffer.vertexBuffer};
+                    VkBuffer vertexBuffers[] = {scene_ref->meshes[j].vertexBuffer.vertexBuffer};
                     VkDeviceSize offsets[] = {0};
                     vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
                     
 
-                    vkCmdBindIndexBuffer(commandBuffers[i], meshes[j]->indexBuffer.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+                    vkCmdBindIndexBuffer(commandBuffers[i], scene_ref->meshes[j].indexBuffer.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
                     
                     
                     
                     
             
-                    vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(meshes[j]->indexBuffer.indices.size()), 1, 0, 0, 0);
+                    vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(scene_ref->meshes[j].indexBuffer.indices.size()), 1, 0, 0, 0);
     
                 }
                 

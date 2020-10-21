@@ -45,7 +45,7 @@ namespace VkRenderer
         swap.createSwapChain();
         swap.createImageViews();
         renderpass.createRenderPass(setup.device, swap.swapChainImageFormat);
-        uniformBuffer.Initialize(&setup, &memory_alloc);
+        uniformBuffer.Initialize(&setup, &memory_alloc, &scene);
         gpipeline.shaders = {"EngineAssets/Shaders/Model_vert.vert", "EngineAssets/Shaders/Model_frag.frag",};
         gpipeline.createGraphicsPipeline(swap.swapChainExtent, renderpass.renderPass,uniformBuffer.descriptorSetLayout);
         lightpipeline.shaders = {"EngineAssets/Shaders/light_cube_vert.vert", "EngineAssets/Shaders/light_cube_frag.frag",};
@@ -54,52 +54,14 @@ namespace VkRenderer
         Cbuffer.createCommandPool(swap.surface);
         Dbuffer.createDepthResources(swap.swapChainExtent);
         Fbuffer.createFramebuffers(&setup, &swap, &Dbuffer, &renderpass);
-    
-        meshes.emplace_back();
-        meshes.emplace_back();
-        meshes.emplace_back();
-        meshes.emplace_back();
+
+        scene.initScene(&setup, &memory_alloc, &image_m, Cbuffer.commandPool);
+        uniformBuffer.createUniformBuffer(); 
         
-        if(meshes.size() != 0)
-        {
-            meshes[2].DiffuseTexture.TEXTURE_PATH = "EngineAssets/Textures/chapel_diffuse.tga";
-            meshes[2].NormalTexture.TEXTURE_PATH = "EngineAssets/Textures/chapel_normal.tga";
-            meshes[2].model.MODEL_PATH = "EngineAssets/Models/chapel_obj.obj";
-            meshes[3].model.MODEL_PATH = "EngineAssets/Models/cube.obj";
-            meshes[3].current_mesh_type = mesh_types::preview;
-
-            
-
-            for (int i = 0; i < meshes.size(); i++) {
-                meshes[i].InitMesh(&setup, &memory_alloc, &image_m,Cbuffer.commandPool);
-                uniformBuffer.meshes.push_back(&meshes[i]);
-                Cbuffer.meshes.push_back(&meshes[i]);
-            }
-        
-            
-            
-            uniformBuffer.createUniformBuffer(); 
-            
-            uniformBuffer.createDescriptorPool();
-            uniformBuffer.createDescriptorSets();
-
-            
-
-            meshes[0].mesh_transform.translate=glm::vec3(4.0f,0.0f,-2.0f);
-            meshes[0].mesh_transform.rotation=glm::vec3(-90.0f,0.0f,-90.0f);
-            
-            meshes[1].mesh_transform.rotation=glm::vec3(-90.0f,0.0f,90.0f);
-            meshes[1].mesh_transform.translate=glm::vec3(4.0f,0.0f,2.0f);
-
-            meshes[2].mesh_transform.translate=glm::vec3(8.0f,0.0f,0.0f);
-            meshes[2].mesh_transform.scale = glm::vec3(0.002f);
-            meshes[2].mesh_transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
-            meshes[3].mesh_transform.scale = glm::vec3(0.1);
-            
-        }     
-
-        
-        camera_object.Set_Camera(&win, &swap);
+        uniformBuffer.createDescriptorPool();
+        uniformBuffer.createDescriptorSets(); 
+        scene.camera.Set_Camera(&win, &swap);
+        Cbuffer.scene_ref = &scene;
         
         Cbuffer.createCommandBuffers(Fbuffer.swapChainFramebuffers,swap.swapChainExtent, uniformBuffer.descriptorSets);
         createSyncObjects();
@@ -127,12 +89,12 @@ namespace VkRenderer
         Dbuffer.createDepthResources(swap.swapChainExtent);
         Fbuffer.createFramebuffers(&setup, &swap, &Dbuffer, &renderpass);
         
-        if(meshes.size() != 0)
-        {
-            uniformBuffer.createUniformBuffer();
-            uniformBuffer.createDescriptorPool();
-            uniformBuffer.createDescriptorSets();
-        }
+        
+        
+        uniformBuffer.createUniformBuffer();
+        uniformBuffer.createDescriptorPool();
+        uniformBuffer.createDescriptorSets();
+        
        
         Cbuffer.createCommandBuffers(Fbuffer.swapChainFramebuffers,swap.swapChainExtent, uniformBuffer.descriptorSets);
         
@@ -165,10 +127,7 @@ namespace VkRenderer
         
 
         vkDestroyDescriptorSetLayout(setup.device, uniformBuffer.descriptorSetLayout, nullptr);  
-        for (int i=meshes.size()-1; i >= 0; i--)
-        {
-            meshes[i].DestroyMesh();
-        }
+        scene.destroyScene();
         
 
         
@@ -205,9 +164,9 @@ namespace VkRenderer
             throw std::runtime_error("failed to acquire swap chain image!");
         }
         
-        for (int i=0; i < meshes.size(); i++)
+        for (int i=0; i < scene.meshes.size(); i++)
         {
-            uniformBuffer.updateUniformBuffer(i, camera_object);
+            uniformBuffer.updateUniformBuffer(i);
         }
 
         

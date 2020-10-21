@@ -4,7 +4,7 @@
 #include "../VkSetup.h"
 #include "../VkGraphicsPipeline.h"
 #include "../VkRenderPass.h"
-#include "../../Components/Mesh.h"
+#include "../../Components/Scene.h"
 
 
 
@@ -25,7 +25,7 @@ namespace VkRenderer
         VkGPipeline *lightpipeline_ref;
         VkRenderpass *renderpass_ref;
         PushConstants push_const;
-        std::vector <Mesh*> meshes;
+        Scene *scene_ref;
 
     };
 }

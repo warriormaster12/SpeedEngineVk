@@ -2,16 +2,17 @@
 
 namespace VkRenderer
 {
-    void VkuniformBuffer::Initialize(VkSetup* setup, VkMemoryAllocator* memory_alloc)
+    void VkuniformBuffer::Initialize(VkSetup* setup, VkMemoryAllocator* memory_alloc, Scene* scene)
     {
         setup_ref = setup;
         memory_alloc_ref = memory_alloc;
+        scene_ref = scene;
         createDescriptorSetLayout();
     }
     void VkuniformBuffer::createUniformBuffer()
     {
-        uniformBuffers.resize(meshes.size());
-        lightBuffers.resize(meshes.size());
+        uniformBuffers.resize(scene_ref->meshes.size());
+        lightBuffers.resize(scene_ref->meshes.size());
         
         VkBufferCreateInfo LightBufferInfo = { VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO };
         LightBufferInfo.size = sizeof(LightBuffer);
@@ -25,21 +26,22 @@ namespace VkRenderer
         allocInfo.usage = VMA_MEMORY_USAGE_CPU_TO_GPU;
     
         
-        uboAllocation.resize(meshes.size());
-        lightAllocation.resize(meshes.size());
+        uboAllocation.resize(scene_ref->meshes.size());
+        lightAllocation.resize(scene_ref->meshes.size());
 
 
-        for (size_t i = 0; i < meshes.size(); i++) {
+        for (size_t i = 0; i < scene_ref->meshes.size(); i++) {
             vmaCreateBuffer(memory_alloc_ref->allocator, &LightBufferInfo, &allocInfo, &lightBuffers[i], &lightAllocation[i], nullptr);
             vmaCreateBuffer(memory_alloc_ref->allocator, &UniformBufferInfo, &allocInfo, &uniformBuffers[i], &uboAllocation[i], nullptr);
         }
     }
 
-    void VkuniformBuffer::updateUniformBuffer(uint32_t DescriptorSetIndex, Camera& camera_object)
+    void VkuniformBuffer::updateUniformBuffer(int DescriptorSetIndex)
     {
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+        scene_ref->updateScene(deltaTime);
         
         
         
@@ -48,13 +50,13 @@ namespace VkRenderer
         glm::mat4 ModelMatrix(1.0f);
         ubo.model = ModelMatrix;
 
-        ubo.model = glm::translate(ubo.model, meshes[DescriptorSetIndex]->mesh_transform.translate);
-        ubo.model = glm::rotate(ubo.model, glm::radians(meshes[DescriptorSetIndex]->mesh_transform.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-        ubo.model= glm::rotate(ubo.model, glm::radians(meshes[DescriptorSetIndex]->mesh_transform.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-        ubo.model= glm::rotate(ubo.model, glm::radians(meshes[DescriptorSetIndex]->mesh_transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-        ubo.model = glm::scale(ubo.model, meshes[DescriptorSetIndex]->mesh_transform.scale);	
+        ubo.model = glm::translate(ubo.model, scene_ref->meshes[DescriptorSetIndex].mesh_transform.translate);
+        ubo.model = glm::rotate(ubo.model, glm::radians(scene_ref->meshes[DescriptorSetIndex].mesh_transform.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+        ubo.model= glm::rotate(ubo.model, glm::radians(scene_ref->meshes[DescriptorSetIndex].mesh_transform.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+        ubo.model= glm::rotate(ubo.model, glm::radians(scene_ref->meshes[DescriptorSetIndex].mesh_transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+        ubo.model = glm::scale(ubo.model, scene_ref->meshes[DescriptorSetIndex].mesh_transform.scale);	
 
-        ubo.camPos = glm::vec4(glm::vec3(camera_object.camera_transform.translate), 0.0f);
+        ubo.camPos = glm::vec4(glm::vec3(scene_ref->camera.camera_transform.translate), 0.0f);
 
         lightubo.directional_light.direction = glm::vec4(glm::vec3(-0.2f, -1.0f, -0.3f), 0.0f);
         lightubo.directional_light.ambient = glm::vec4(glm::vec3(0.25f),0.0f);
@@ -67,7 +69,7 @@ namespace VkRenderer
 
     
         lightubo.point_lights[0].position = glm::vec4(glm::vec3(4.0f, 1.5f, 2.0f),0.0f);
-        meshes[3]->mesh_transform.translate = lightubo.point_lights[0].position;
+        scene_ref->meshes[3].mesh_transform.translate = lightubo.point_lights[0].position;
         lightubo.point_lights[0].ambient = glm::vec4(glm::vec3(0.4f),0.0f);
         lightubo.point_lights[0].diffuse = glm::vec4(glm::vec3(0.7f),0.0f);
         lightubo.point_lights[0].specular = glm::vec4(glm::vec3(1.0f),0.0f);
@@ -87,8 +89,8 @@ namespace VkRenderer
         {
             lightubo.point_lights[1].radius = glm::vec4(0.5f);
         }
-        lightubo.spot_light.position = glm::vec4(glm::vec3(camera_object.camera_transform.translate), 0.0f);
-        lightubo.spot_light.direction = glm::vec4(camera_object.cameraFront, 0.0f);
+        lightubo.spot_light.position = glm::vec4(glm::vec3(scene_ref->camera.camera_transform.translate), 0.0f);
+        lightubo.spot_light.direction = glm::vec4(scene_ref->camera.cameraFront, 0.0f);
         lightubo.spot_light.ambient = glm::vec4(glm::vec3(0.0f),0.0f);
         lightubo.spot_light.diffuse = glm::vec4(glm::vec3(1.0f),0.0f);
         lightubo.spot_light.specular = glm::vec4(glm::vec3(1.0f),0.0f);
@@ -103,11 +105,11 @@ namespace VkRenderer
         lightubo.spot_light.cutOff = glm::vec4(glm::cos(glm::radians(12.5f)));
         lightubo.spot_light.outerCutOff = glm::vec4(glm::cos(glm::radians(15.0f)));
         lightubo.spot_light.light_color = glm::vec4(glm::vec3(1.0f),0.0f);
-        camera_object.CameraUpdate(deltaTime);
+        scene_ref->camera.CameraUpdate(deltaTime);
         
         
-        ubo.view = camera_object.matrices.view;
-        ubo.projection = camera_object.matrices.perspective;
+        ubo.view = scene_ref->camera.matrices.view;
+        ubo.projection = scene_ref->camera.matrices.perspective;
         
         
     
@@ -124,21 +126,21 @@ namespace VkRenderer
     void VkuniformBuffer::createDescriptorPool()
     {
         std::vector<VkDescriptorPoolSize> poolSizes = {
-            descriptorPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, static_cast<uint32_t>(meshes.size())),
-            descriptorPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, static_cast<uint32_t>(meshes.size())),
-            descriptorPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, static_cast<uint32_t>(meshes.size())),
-            descriptorPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, static_cast<uint32_t>(meshes.size())),
+            descriptorPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, static_cast<uint32_t>(scene_ref->meshes.size())),
+            descriptorPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, static_cast<uint32_t>(scene_ref->meshes.size())),
+            descriptorPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, static_cast<uint32_t>(scene_ref->meshes.size())),
+            descriptorPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, static_cast<uint32_t>(scene_ref->meshes.size())),
         };
-        VkDescriptorPoolCreateInfo descriptorPoolInfo = descriptorPoolCreateInfo(poolSizes, static_cast<uint32_t>(meshes.size()));
+        VkDescriptorPoolCreateInfo descriptorPoolInfo = descriptorPoolCreateInfo(poolSizes, static_cast<uint32_t>(scene_ref->meshes.size()));
         if (vkCreateDescriptorPool(setup_ref->device, &descriptorPoolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
             throw std::runtime_error("failed to create descriptor pool!");
         }   
     }
     void VkuniformBuffer::createDescriptorSets()
     {
-        descriptorSets.resize(meshes.size());
-        for (size_t i = 0; i < meshes.size(); i++) {
-            std::vector<VkDescriptorSetLayout> layouts(meshes.size(), descriptorSetLayout);
+        descriptorSets.resize(scene_ref->meshes.size());
+        for (size_t i = 0; i < scene_ref->meshes.size(); i++) {
+            std::vector<VkDescriptorSetLayout> layouts(scene_ref->meshes.size(), descriptorSetLayout);
             VkDescriptorSetAllocateInfo allocInfo{};
             allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
             allocInfo.descriptorPool = descriptorPool;
@@ -163,13 +165,13 @@ namespace VkRenderer
 
             VkDescriptorImageInfo DiffuseImageInfo{};
             DiffuseImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-            DiffuseImageInfo.imageView = meshes[i]->DiffuseTexture.textureImageView;
-            DiffuseImageInfo.sampler = meshes[i]->DiffuseTexture.textureSampler;
+            DiffuseImageInfo.imageView = scene_ref->meshes[i].DiffuseTexture.textureImageView;
+            DiffuseImageInfo.sampler = scene_ref->meshes[i].DiffuseTexture.textureSampler;
 
             VkDescriptorImageInfo NormalImageInfo{};
             NormalImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-            NormalImageInfo.imageView = meshes[i]->NormalTexture.textureImageView;
-            NormalImageInfo.sampler = meshes[i]->NormalTexture.textureSampler;
+            NormalImageInfo.imageView = scene_ref->meshes[i].NormalTexture.textureImageView;
+            NormalImageInfo.sampler = scene_ref->meshes[i].NormalTexture.textureSampler;
             std::vector<VkWriteDescriptorSet> descriptorWrites = {
                 writeDescriptorSet(descriptorSets[i], VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 0, nullptr, &bufferInfo, 1),
                 writeDescriptorSet(descriptorSets[i], VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1, &DiffuseImageInfo, nullptr, 1),
@@ -183,7 +185,7 @@ namespace VkRenderer
     }
     void VkuniformBuffer::DestroyUniformBuffer()
     {
-        for (size_t i = 0; i < meshes.size(); i++) {
+        for (size_t i = 0; i < scene_ref->meshes.size(); i++) {
             vmaDestroyBuffer(memory_alloc_ref->allocator, lightBuffers[i], lightAllocation[i]);
             vmaDestroyBuffer(memory_alloc_ref->allocator, uniformBuffers[i], uboAllocation[i]);
         }

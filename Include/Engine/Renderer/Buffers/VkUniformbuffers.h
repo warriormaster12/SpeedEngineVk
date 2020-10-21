@@ -2,9 +2,8 @@
 
 #include "../VkIncludes.h"
 #include "../VkSetup.h"
-#include "../../Components/Camera.h"
 #include "../VkMemoryAllocator.h"
-#include "../../Components/Mesh.h"
+#include "../../Components/Scene.h"
 #include "../../Components/Light.h"
 
 
@@ -32,12 +31,12 @@ namespace VkRenderer
     class VkuniformBuffer
     {
     public: 
-        void Initialize(VkSetup* setup, VkMemoryAllocator* memory_alloc);
+        void Initialize(VkSetup* setup, VkMemoryAllocator* memory_alloc, Scene* scene);
         void createDescriptorSetLayout();
         void createDescriptorPool();
         void createDescriptorSets();
         void createUniformBuffer();
-        void updateUniformBuffer(uint32_t DescriptorSetIndex, Camera& camera_object);
+        void updateUniformBuffer(int DescriptorSetIndex);
         void DestroyUniformBuffer();
 
         VkDescriptorSetLayout descriptorSetLayout;
@@ -50,7 +49,7 @@ namespace VkRenderer
         std::vector <VmaAllocation> uboAllocation;
         std::vector <VmaAllocation> lightAllocation;
         VkSetup *setup_ref;
-        std::vector <Mesh*> meshes;
+        Scene *scene_ref;
     private: 
         float deltaTime = 0.0f;
         float lastFrame = 0.0f;
