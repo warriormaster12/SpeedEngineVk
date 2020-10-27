@@ -2,9 +2,13 @@
 
 namespace Renderer
 {
-    void Vulkan::initVulkan()
+    void Vulkan::initVulkan(AppWindow& win)
     {
-        vulkanDevices.InitializeDevices();
+        vulkanDevices.initializeDevices();
+        vulkanSwapChain.initializeSwapChain(vulkanDevices, win);
+        vulkanDevices.createLogicalDevice(vulkanSwapChain.surface);
+        vulkanSwapChain.createSwapChain(win);
+        vulkanSwapChain.createImageViews();
     }
 
     void Vulkan::updateVulkan(double deltaTime)
@@ -14,6 +18,7 @@ namespace Renderer
 
     void Vulkan::destroyVulkan()
     {
+        vulkanSwapChain.destroySwapChain();
         vulkanDevices.destroyDevices();
     }
 }

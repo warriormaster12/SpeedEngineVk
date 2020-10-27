@@ -12,7 +12,7 @@ enum class API
 class RenderLoop
 {
 public: 
-    void initLoop();
+    void initLoop(AppWindow& win);
     void updateLoop(double deltaTime);
     void destroyLoop();
     Renderer::Vulkan vulkan_api;

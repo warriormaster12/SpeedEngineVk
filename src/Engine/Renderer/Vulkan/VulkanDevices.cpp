@@ -2,7 +2,7 @@
 
 namespace Renderer
 {
-    void VulkanDevices::InitializeDevices()
+    void VulkanDevices::initializeDevices()
     {
         createInstance();
         setupDebugMessenger();

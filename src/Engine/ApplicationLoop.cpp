@@ -3,7 +3,7 @@
 void Application::InitApplication()
 {
     win.initWindow();
-    renderLoop.initLoop();   
+    renderLoop.initLoop(win);   
 }
 
 void Application::UpdateApplication()

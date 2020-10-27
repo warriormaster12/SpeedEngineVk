@@ -33,7 +33,7 @@ namespace Renderer
     class VulkanDevices
     {
     public: 
-        void InitializeDevices();
+        void initializeDevices();
         void createInstance();
         void setupDebugMessenger();
         void DestroyDebugUtilsMessengerEXT(VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);

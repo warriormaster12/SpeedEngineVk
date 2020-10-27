@@ -1,10 +1,10 @@
 #include "Engine/Renderer/RenderLoop.h"
 
-void RenderLoop::initLoop()
+void RenderLoop::initLoop(AppWindow& win)
 {
     if(apis == API::Vulkan)
     {
-        vulkan_api.initVulkan();
+        vulkan_api.initVulkan(win);
     }
     else
     {
