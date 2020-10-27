@@ -20,12 +20,12 @@ int main()
 }
     
 void cursor_enter_callback(GLFWwindow* window, int entered) {
-    application.cursor_enter_callback(window, entered);
+    //application.cursor_enter_callback(window, entered);
 }   
 
  
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
-    application.mouse_callback(window, xpos, ypos);
+    //application.mouse_callback(window, xpos, ypos);
 }
 

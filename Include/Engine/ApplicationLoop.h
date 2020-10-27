@@ -1,13 +1,12 @@
 #pragma once 
 
 #include "Window/Window.h"
-#include "Renderer/VkRenderer.h"
 #include "Config/EngineConf.h"
+#include "Renderer/RenderLoop.h"
 
 class Application 
 {
-public: 
-    VkRenderer::Renderer renderer;
+public:
     AppWindow win;
 
     void InitApplication();
@@ -18,6 +17,7 @@ public:
     void cursor_enter_callback(GLFWwindow* window, int entered);
 
 private:
+    RenderLoop renderLoop;
     FileConf renderer_config;
     window_mode mode;
 };

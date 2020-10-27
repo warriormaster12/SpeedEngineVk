@@ -1,32 +1,31 @@
 #include "Engine/Window/Window.h"
-#include "Engine/Renderer/VkRenderer.h"
 
 void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
     auto app = reinterpret_cast<AppWindow*>(glfwGetWindowUserPointer(window));
     app->framebufferResized = true;
 }
 
- void AppWindow::initWindow(int window_mode)
+ void AppWindow::initWindow()
 {
     glfwInit();
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-    
-    set_window_mode(window_mode);
+    set_window_mode();
 
     glfwSetWindowUserPointer(window, this);
     glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    
 
 }
 
-void AppWindow::set_window_mode(int window_mode)
+void AppWindow::set_window_mode()
 {
-    if(window_mode == 1)
+    if(window_modes == window_mode::fullscreen)
     {
         get_resolution();
         window = glfwCreateWindow(WIDTH, HEIGHT, "SpeedEngineVk", glfwGetPrimaryMonitor(), nullptr);
     }
-    else if (window_mode == 0)
+    else if (window_modes == window_mode::windowed)
     {
        window = glfwCreateWindow(WIDTH, HEIGHT, "SpeedEngineVk", nullptr, nullptr); 
     }

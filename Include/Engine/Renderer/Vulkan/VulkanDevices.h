@@ -1,13 +1,8 @@
 #pragma once 
 
-#include "VkIncludes.h"
+#include "VulkanIncludes.h"
 
-
-
-
-
-
-namespace VkRenderer
+namespace Renderer
 {
     const std::vector<const char*> validationLayers = {
         "VK_LAYER_KHRONOS_validation"
@@ -35,14 +30,15 @@ namespace VkRenderer
         const bool enableValidationLayers = true;
     #endif
 
-    class VkSetup
+    class VulkanDevices
     {
     public: 
-        void Initialize();
+        void InitializeDevices();
         void createInstance();
         void setupDebugMessenger();
         void DestroyDebugUtilsMessengerEXT(VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);
         void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
+        void destroyDevices();
         
         void createLogicalDevice(VkSurfaceKHR& surface);
         QueueFamilyIndices findQueueFamilies(VkPhysicalDevice& device, VkSurfaceKHR& surface);

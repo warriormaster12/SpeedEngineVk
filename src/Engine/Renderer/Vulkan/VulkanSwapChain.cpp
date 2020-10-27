@@ -1,8 +1,8 @@
-#include "Engine/Renderer/VkSwapChain.h"
+#include "Engine/Renderer/Vulkan/VulkanSwapChain.h"
 
 
 
-namespace VkRenderer
+namespace VulkanRenderer
 {
     void VkSwapChain::Initialize(VkSetup* setup, AppWindow* win, VkImageManager* image_m)
     {
@@ -88,7 +88,7 @@ namespace VkRenderer
         swapViewInfo.subresourceRange.levelCount = 1;
         for (size_t i = 0; i < swapChainImages.size(); i++) {
             swapViewInfo.image = swapChainImages[i];
-            swapChainImageViews[i] = image_m_ref->createImageView(swapViewInfo);
+            //swapChainImageViews[i] = image_m_ref->createImageView(swapViewInfo);
         } 
     }
 
