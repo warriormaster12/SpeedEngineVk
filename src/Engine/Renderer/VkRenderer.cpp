@@ -6,9 +6,7 @@ namespace VkRenderer
     Renderer::Renderer()
     {
 
-        //GraphicsPipeline
-        gpipeline.setup_ref = &setup;
-        lightpipeline.setup_ref = &setup;
+        
 
         //RenderPass
         renderpass.Dbuffer_ref = &Dbuffer;
@@ -21,8 +19,6 @@ namespace VkRenderer
 
         //CommandBuffer
         Cbuffer.setup_ref = &setup;
-        Cbuffer.gpipeline_ref = &gpipeline;
-        Cbuffer.lightpipeline_ref = &lightpipeline;
         Cbuffer.renderpass_ref = &renderpass;
         
         //DepthBuffer
@@ -46,20 +42,47 @@ namespace VkRenderer
         swap.createImageViews();
         renderpass.createRenderPass(setup.device, swap.swapChainImageFormat);
         uniformBuffer.Initialize(&setup, &memory_alloc, &scene);
-        gpipeline.shaders = {"EngineAssets/Shaders/Model_vert.vert", "EngineAssets/Shaders/Model_frag.frag",};
-        gpipeline.createGraphicsPipeline(swap.swapChainExtent, renderpass.renderPass,uniformBuffer.descriptorSetLayout);
-        lightpipeline.shaders = {"EngineAssets/Shaders/light_cube_vert.vert", "EngineAssets/Shaders/light_cube_frag.frag",};
-        lightpipeline.vertex_attributes = 1; 
-        lightpipeline.createGraphicsPipeline(swap.swapChainExtent, renderpass.renderPass,uniformBuffer.descriptorSetLayout);
+        
+        
         Cbuffer.createCommandPool(swap.surface);
         Dbuffer.createDepthResources(swap.swapChainExtent);
         Fbuffer.createFramebuffers(&setup, &swap, &Dbuffer, &renderpass);
 
         scene.initScene(&setup, &memory_alloc, &image_m, Cbuffer.commandPool);
         uniformBuffer.createUniformBuffer(); 
-        
         uniformBuffer.createDescriptorPool();
         uniformBuffer.createDescriptorSets(); 
+        for(int i = 0; i < scene.meshes.size(); i++)
+        {
+            std::vector<std::string> last_shaders;
+            std::vector<std::string> current_shaders = scene.meshes[i].shaders;
+            size_t current_vertex_attributes = scene.meshes[i].vertex_attributes;
+            if(i == 0)
+            {
+                gpipeline.emplace_back();
+                gpipeline[0].shaders = current_shaders;
+            }
+            for(int j =0; j < scene.meshes.size()-1; j++)
+            {
+                last_shaders = scene.meshes[j].shaders;
+            }
+            if(current_shaders != last_shaders)
+            {
+                gpipeline.emplace_back();
+                for(int j = gpipeline.size()-1; j < gpipeline.size(); j++)
+                {
+                    gpipeline[j].shaders = current_shaders;
+                    gpipeline[j].vertex_attributes = current_vertex_attributes;
+                }
+            }
+        }
+        for(int i = 0; i < gpipeline.size(); i++)
+        {
+            gpipeline[i].setup_ref = &setup;
+            Cbuffer.gpipeline_ref.push_back(&gpipeline[i]);
+            gpipeline[i].createGraphicsPipeline(swap.swapChainExtent, renderpass.renderPass,uniformBuffer.descriptorSetLayout);
+        }
+
         scene.camera.Set_Camera(&win, &swap);
         Cbuffer.scene_ref = &scene;
         
@@ -84,16 +107,18 @@ namespace VkRenderer
         swap.createSwapChain();
         swap.createImageViews();
         renderpass.createRenderPass(setup.device, swap.swapChainImageFormat);
-        gpipeline.createGraphicsPipeline(swap.swapChainExtent, renderpass.renderPass,uniformBuffer.descriptorSetLayout);
-        lightpipeline.createGraphicsPipeline(swap.swapChainExtent, renderpass.renderPass,uniformBuffer.descriptorSetLayout);
+        
         Dbuffer.createDepthResources(swap.swapChainExtent);
         Fbuffer.createFramebuffers(&setup, &swap, &Dbuffer, &renderpass);
-        
-        
         
         uniformBuffer.createUniformBuffer();
         uniformBuffer.createDescriptorPool();
         uniformBuffer.createDescriptorSets();
+
+        for(int i = 0; i < gpipeline.size(); i++)
+        {
+            gpipeline[i].createGraphicsPipeline(swap.swapChainExtent, renderpass.renderPass,uniformBuffer.descriptorSetLayout);
+        }
         
        
         Cbuffer.createCommandBuffers(Fbuffer.swapChainFramebuffers,swap.swapChainExtent, uniformBuffer.descriptorSets);
@@ -110,9 +135,10 @@ namespace VkRenderer
         }
 
         vkFreeCommandBuffers(setup.device, Cbuffer.commandPool, static_cast<uint32_t>(Cbuffer.commandBuffers.size()), Cbuffer.commandBuffers.data());
-
-        gpipeline.destroyPipeline();
-        lightpipeline.destroyPipeline();
+        for(int i = 0; i < gpipeline.size(); i++)
+        {
+            gpipeline[i].destroyPipeline();
+        }
         vkDestroyRenderPass(setup.device, renderpass.renderPass, nullptr);
 
         swap.destroySwap();

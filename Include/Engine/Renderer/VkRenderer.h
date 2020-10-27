@@ -25,9 +25,6 @@ namespace VkRenderer
 
         void InitVulkan();
         void drawFrame();
-        void createSyncObjects();
-        void recreateSwapChain();
-        void cleanupSwapChain();
         void DestroyVulkan();
         
         VkSetup setup;
@@ -38,10 +35,11 @@ namespace VkRenderer
         AppWindow *win; 
     private:  
         
-
+        void createSyncObjects();
+        void recreateSwapChain();
+        void cleanupSwapChain();
         
-        VkGPipeline gpipeline;
-        VkGPipeline lightpipeline;
+        std::vector <VkGPipeline> gpipeline;
         VkRenderpass renderpass;
         VkframeBuffer Fbuffer;
         VkMemoryAllocator memory_alloc;

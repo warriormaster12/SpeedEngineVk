@@ -21,8 +21,7 @@ namespace VkRenderer
         std::vector<VkCommandBuffer> commandBuffers;
 
         VkSetup *setup_ref;
-        VkGPipeline *gpipeline_ref;
-        VkGPipeline *lightpipeline_ref;
+        std::vector <VkGPipeline*> gpipeline_ref;
         VkRenderpass *renderpass_ref;
         PushConstants push_const;
         Scene *scene_ref;

@@ -53,26 +53,22 @@ namespace VkRenderer
 
             vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
                 
-                vkCmdPushConstants(commandBuffers[i], lightpipeline_ref->pipelineLayout, VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(push_const), &push_const);
-                vkCmdPushConstants(commandBuffers[i], gpipeline_ref->pipelineLayout, VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(push_const), &push_const);
+                vkCmdPushConstants(commandBuffers[i], gpipeline_ref[0]->pipelineLayout, VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(push_const), &push_const);
                 
 
                 
                 for(int j=0; j < scene_ref->meshes.size(); j++)
                 {
-                    
-                    if(scene_ref->meshes[j].current_mesh_type == mesh_types::user_mesh)
+                    if(scene_ref->meshes[j].current_mesh_type == mesh_types::user_mesh)   
                     {
-                        vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, gpipeline_ref->graphicsPipeline);
-                        vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, gpipeline_ref->pipelineLayout, 0, 1, &descriptorSets[j], 0, nullptr);
-                    }
-                    else
+                        vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, gpipeline_ref[0]->graphicsPipeline);
+                        vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, gpipeline_ref[0]->pipelineLayout, 0, 1, &descriptorSets[j], 0, nullptr);
+                    } 
+                    else 
                     {
-                        vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, lightpipeline_ref->graphicsPipeline);
-                        vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, lightpipeline_ref->pipelineLayout, 0, 1, &descriptorSets[j], 0, nullptr);
-                    
+                        vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, gpipeline_ref[1]->graphicsPipeline);
+                        vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, gpipeline_ref[1]->pipelineLayout, 0, 1, &descriptorSets[j], 0, nullptr);
                     }
-                    
                     
                     
                     

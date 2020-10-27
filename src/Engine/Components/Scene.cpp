@@ -11,7 +11,9 @@ void Scene::initScene(VkRenderer::VkSetup* setup, VkMemoryAllocator* memory_allo
     meshes[2].NormalTexture.TEXTURE_PATH = "EngineAssets/Textures/chapel_normal.tga";
     meshes[2].model.MODEL_PATH = "EngineAssets/Models/chapel_obj.obj";
     meshes[3].model.MODEL_PATH = "EngineAssets/Models/cube.obj";
+    meshes[3].vertex_attributes = 1;
     meshes[3].current_mesh_type = VkRenderer::mesh_types::preview;
+    meshes[3].shaders = {"EngineAssets/Shaders/light_cube_vert.vert", "EngineAssets/Shaders/light_cube_frag.frag",};
 
     for (int i = 0; i < meshes.size(); i++) {
         meshes[i].InitMesh(setup, memory_alloc, image_m,commandPool);

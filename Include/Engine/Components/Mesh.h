@@ -23,6 +23,8 @@ namespace VkRenderer
         VkvertexBuffer vertexBuffer;
         VkindexBuffer indexBuffer;  
 
+        std::vector<std::string> shaders = {"EngineAssets/Shaders/Model_vert.vert", "EngineAssets/Shaders/Model_frag.frag",};
+        size_t vertex_attributes = 4;
         
         VkSetup *setup_ref;
         
