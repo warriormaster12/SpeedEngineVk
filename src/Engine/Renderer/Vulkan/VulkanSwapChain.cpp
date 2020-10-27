@@ -86,7 +86,7 @@ namespace Renderer
         swapViewInfo.subresourceRange.levelCount = 1;
         for (size_t i = 0; i < swapChainImages.size(); i++) {
             swapViewInfo.image = swapChainImages[i];
-            //swapChainImageViews[i] = image_m_ref->createImageView(swapViewInfo);
+            swapChainImageViews[i] = vulkanImageHandler.createImageView(swapViewInfo);
         } 
     }
 

@@ -3,6 +3,7 @@
 #include "VulkanIncludes.h"
 #include "../../Window/Window.h"
 #include "VulkanDevices.h"
+#include "VulkanImageHandling.h"
 
 
 
@@ -35,7 +36,10 @@ namespace Renderer
         VkFormat swapChainImageFormat;
         VkExtent2D swapChainExtent;
         std::vector<VkImageView> swapChainImageViews;
+
+        VulkanImageHandler vulkanImageHandler;
     private: 
         VulkanDevices* p_vulkanDevices; 
+        
     };
 }

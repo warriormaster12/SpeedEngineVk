@@ -1,7 +1,8 @@
 #pragma once 
 
 #include "VulkanDevices.h"
-#include "VulkanSwapChain.h"
+#include "VulkanImages.h"
+#include "VulkanMemoryAllocator.h"
 
 namespace Renderer
 {
@@ -13,7 +14,8 @@ namespace Renderer
         void destroyVulkan();
     private: 
         VulkanDevices vulkanDevices;
-        VulkanSwapChain vulkanSwapChain;
+        VulkanImages vulkanImages;
+        VulkanMemoryAllocator vulkanMemoryAllocator;
     };
     
 }
