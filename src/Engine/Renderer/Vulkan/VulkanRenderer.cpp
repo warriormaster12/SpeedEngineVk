@@ -20,7 +20,7 @@ namespace Renderer
 
     void Vulkan::destroyVulkan()
     {
-        vulkanImages.destroyImages();
+        vulkanImages.destroyImages(vulkanDevices);
         vulkanMemoryAllocator.destroyAllocator();
         vulkanDevices.destroyDevices();
     }

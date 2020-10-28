@@ -8,11 +8,14 @@ namespace Renderer
         createSwapChain(win);
         createImageViews();
         initDepthBuffer(vulkanDevices, vulkanMemoryAllocator, vulkanImageHandler);
+        createRenderPass(vulkanDevices.device, swapChainImageFormat);
         createDepthResources(swapChainExtent);
     }
 
-    void VulkanImages::destroyImages()
+    void VulkanImages::destroyImages(VulkanDevices& vulkanDevices)
     {
+        destroyDepthBuffer();
+        destroyRenderPass(vulkanDevices.device);
         destroySwapChain();
     }
 }
