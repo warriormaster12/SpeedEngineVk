@@ -7,6 +7,8 @@ namespace Renderer
         vulkanImageHandler.initImageHandler(vulkanDevices, vulkanMemoryAllocator);
         createSwapChain(win);
         createImageViews();
+        initDepthBuffer(vulkanDevices, vulkanMemoryAllocator, vulkanImageHandler);
+        createDepthResources(swapChainExtent);
     }
 
     void VulkanImages::destroyImages()
