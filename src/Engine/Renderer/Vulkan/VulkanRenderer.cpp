@@ -9,8 +9,12 @@ namespace Renderer
         vulkanDevices.createLogicalDevice(vulkanImages.vulkanSwapChain.surface);
         vulkanMemoryAllocator.createAllocator(vulkanDevices);
         vulkanImages.initImages(vulkanDevices, vulkanMemoryAllocator, win);
+
+        //Per shader process
+        vulkanObjectBuffers.vulkanDescriptors.createDescriptorSetLayout(vulkanDevices);
+        vulkanGraphicsPipeline.vertex_attributes = 1;
         vulkanGraphicsPipeline.shaders = {"EngineAssets/Shaders/light_cube_vert.vert","EngineAssets/Shaders/light_cube_frag.frag"};
-        vulkanGraphicsPipeline.createGraphicsPipeline(vulkanDevices, vulkanImages, nullptr);
+        vulkanGraphicsPipeline.createGraphicsPipeline(vulkanDevices, vulkanImages, vulkanObjectBuffers.vulkanDescriptors.descriptorSetLayout);
         
     }
 
