@@ -5,6 +5,7 @@
 #include "VulkanMemoryAllocator.h"
 #include "VulkanGraphicsPipeline.h"
 #include "ObjectBuffers/VulkanObjectBuffers.h"
+#include "Buffers/VulkanCommandBuffers.h"
 
 namespace Renderer
 {
@@ -20,6 +21,7 @@ namespace Renderer
         VulkanObjectBuffers vulkanObjectBuffers;
         VulkanGraphicsPipeline vulkanGraphicsPipeline;
         VulkanMemoryAllocator vulkanMemoryAllocator;
+        VulkanCommandBuffer vulkanCommandBuffer;
     };
     
 }
