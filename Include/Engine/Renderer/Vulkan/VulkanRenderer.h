@@ -14,7 +14,7 @@ namespace Renderer
         void initVulkan(AppWindow& win);
         void updateVulkan(double deltaTime);
         void destroyVulkan();
-    private: 
+        
         VulkanDevices vulkanDevices;
         VulkanImages vulkanImages;
         VulkanObjectBuffers vulkanObjectBuffers;

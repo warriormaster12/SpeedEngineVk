@@ -2,6 +2,7 @@
 
 #include <iostream> 
 #include "Vulkan/VulkanRenderer.h"
+#include "../Components/Mesh.h"
 
 enum class API 
 {
@@ -16,6 +17,7 @@ public:
     void updateLoop(double deltaTime);
     void destroyLoop();
     Renderer::Vulkan vulkan_api;
+    Renderer::Mesh mesh;
 private: 
     API apis = API::Vulkan;
 };

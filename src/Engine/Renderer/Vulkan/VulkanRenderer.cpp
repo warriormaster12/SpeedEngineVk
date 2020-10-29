@@ -8,14 +8,7 @@ namespace Renderer
         vulkanImages.vulkanSwapChain.initializeSwapChain(vulkanDevices, win);
         vulkanDevices.createLogicalDevice(vulkanImages.vulkanSwapChain.surface);
         vulkanMemoryAllocator.createAllocator(vulkanDevices);
-        vulkanImages.initImages(vulkanDevices, vulkanMemoryAllocator, win);
-
-        //Per shader process
-        vulkanObjectBuffers.vulkanDescriptors.createDescriptorSetLayout(vulkanDevices);
-        vulkanGraphicsPipeline.vertex_attributes = 1;
-        vulkanGraphicsPipeline.shaders = {"EngineAssets/Shaders/light_cube_vert.vert","EngineAssets/Shaders/light_cube_frag.frag"};
-        vulkanGraphicsPipeline.createGraphicsPipeline(vulkanDevices, vulkanImages, vulkanObjectBuffers.vulkanDescriptors.descriptorSetLayout);
-        
+        vulkanImages.initImages(vulkanDevices, vulkanMemoryAllocator, win);        
     }
 
     void Vulkan::updateVulkan(double deltaTime)

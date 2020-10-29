@@ -6,6 +6,7 @@ void RenderLoop::initLoop(AppWindow& win)
     if(apis == API::Vulkan)
     {
         vulkan_api.initVulkan(win);
+        mesh.initMesh(vulkan_api);
     }
     else
     {
