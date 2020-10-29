@@ -4,18 +4,21 @@ namespace Renderer
 {
     void VulkanImages::initImages(VulkanDevices& vulkanDevices, VulkanMemoryAllocator& vulkanMemoryAllocator, AppWindow& win)
     {
-        vulkanImageHandler.initImageHandler(vulkanDevices, vulkanMemoryAllocator);
-        createSwapChain(win);
-        createImageViews();
-        initDepthBuffer(vulkanDevices, vulkanMemoryAllocator, vulkanImageHandler);
-        createRenderPass(vulkanDevices.device, swapChainImageFormat);
-        createDepthResources(swapChainExtent);
+        vulkanSwapChain.vulkanImageHandler.initImageHandler(vulkanDevices, vulkanMemoryAllocator);
+        vulkanSwapChain.createSwapChain(win);
+        vulkanSwapChain.createImageViews();
+        vulkanRenderPass.initDepthBuffer(vulkanDevices, vulkanMemoryAllocator, vulkanSwapChain.vulkanImageHandler);
+        vulkanRenderPass.createRenderPass(vulkanDevices.device, vulkanSwapChain.swapChainImageFormat);
+        vulkanRenderPass.createDepthResources(vulkanSwapChain.swapChainExtent);
+        vulkanFrameBuffer.createFramebuffers(vulkanDevices, vulkanSwapChain, vulkanRenderPass);
+        
     }
 
     void VulkanImages::destroyImages(VulkanDevices& vulkanDevices)
     {
-        destroyDepthBuffer();
-        destroyRenderPass(vulkanDevices.device);
-        destroySwapChain();
+        vulkanRenderPass.destroyDepthBuffer();
+        vulkanFrameBuffer.destroyFramebuffers(vulkanDevices);
+        vulkanRenderPass.destroyRenderPass(vulkanDevices.device);
+        vulkanSwapChain.destroySwapChain();
     }
 }

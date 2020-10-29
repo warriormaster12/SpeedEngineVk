@@ -5,8 +5,8 @@ namespace Renderer
     void Vulkan::initVulkan(AppWindow& win)
     {
         vulkanDevices.initializeDevices();
-        vulkanImages.initializeSwapChain(vulkanDevices, win);
-        vulkanDevices.createLogicalDevice(vulkanImages.surface);
+        vulkanImages.vulkanSwapChain.initializeSwapChain(vulkanDevices, win);
+        vulkanDevices.createLogicalDevice(vulkanImages.vulkanSwapChain.surface);
         vulkanMemoryAllocator.createAllocator(vulkanDevices);
         vulkanImages.initImages(vulkanDevices, vulkanMemoryAllocator, win);
         
