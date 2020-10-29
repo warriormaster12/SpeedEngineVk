@@ -2,6 +2,7 @@
 
 void RenderLoop::initLoop(AppWindow& win)
 {
+    //After initializing selected API, the program draws all of the objects
     if(apis == API::Vulkan)
     {
         vulkan_api.initVulkan(win);
@@ -15,6 +16,7 @@ void RenderLoop::initLoop(AppWindow& win)
 
 void RenderLoop::updateLoop(double deltaTime)
 {
+    //The program redraws all of the objects here
     if(apis == API::Vulkan)
     {
         vulkan_api.updateVulkan(deltaTime);
@@ -27,6 +29,7 @@ void RenderLoop::updateLoop(double deltaTime)
 
 void RenderLoop::destroyLoop()
 {
+    //The program destroyes everything before closing
     if(apis == API::Vulkan)
     {
         vulkan_api.destroyVulkan();
