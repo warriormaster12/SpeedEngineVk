@@ -46,6 +46,7 @@ namespace Renderer
     {
     public: 
         void createVertexBuffer(VulkanMemoryAllocator& vulkanMemoryAllocator);
+        void destroyVertexBuffer(VulkanMemoryAllocator& vulkanMemoryAllocator);
         VkBuffer vertexBuffer;
         VmaAllocation allocation;
         std::vector<Vertex> vertices;

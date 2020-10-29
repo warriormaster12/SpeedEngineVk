@@ -22,4 +22,9 @@ namespace Renderer
         vmaDestroyBuffer(vulkanMemoryAllocator.allocator, stagingBuffer, allocation);
         vmaCreateBuffer(vulkanMemoryAllocator.allocator, &bufferInfo, &allocInfo, &indexBuffer, &allocation, nullptr);     
     }
+
+    void VulkanIndexBuffer::destroyIndexBuffer(VulkanMemoryAllocator& vulkanMemoryAllocator)
+    {
+        vmaDestroyBuffer(vulkanMemoryAllocator.allocator, indexBuffer, allocation);
+    }
 }

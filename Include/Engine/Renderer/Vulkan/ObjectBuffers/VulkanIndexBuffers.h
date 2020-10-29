@@ -14,6 +14,7 @@ namespace Renderer
         std::vector<uint32_t> indices;
 
         void createIndexBuffer(VulkanMemoryAllocator& vulkanMemoryAllocator);
+        void destroyIndexBuffer(VulkanMemoryAllocator& vulkanMemoryAllocator);
         VmaAllocation allocation;
     };
 }

@@ -27,4 +27,9 @@ namespace Renderer
         
 
     }
+
+    void VulkanVertexBuffer::destroyVertexBuffer(VulkanMemoryAllocator& vulkanMemoryAllocator)
+    {
+        vmaDestroyBuffer(vulkanMemoryAllocator.allocator, vertexBuffer, allocation);
+    }
 }
