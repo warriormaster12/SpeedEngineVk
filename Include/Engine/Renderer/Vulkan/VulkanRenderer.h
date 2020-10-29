@@ -3,6 +3,7 @@
 #include "VulkanDevices.h"
 #include "VulkanImages.h"
 #include "VulkanMemoryAllocator.h"
+#include "VulkanGraphicsPipeline.h"
 
 namespace Renderer
 {
@@ -15,6 +16,7 @@ namespace Renderer
     private: 
         VulkanDevices vulkanDevices;
         VulkanImages vulkanImages;
+        VulkanGraphicsPipeline vulkanGraphicsPipeline;
         VulkanMemoryAllocator vulkanMemoryAllocator;
     };
     

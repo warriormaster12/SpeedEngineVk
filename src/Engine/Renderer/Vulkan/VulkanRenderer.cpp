@@ -9,7 +9,8 @@ namespace Renderer
         vulkanDevices.createLogicalDevice(vulkanImages.vulkanSwapChain.surface);
         vulkanMemoryAllocator.createAllocator(vulkanDevices);
         vulkanImages.initImages(vulkanDevices, vulkanMemoryAllocator, win);
-        
+        vulkanGraphicsPipeline.shaders = {"EngineAssets/Shaders/light_cube_vert.vert","EngineAssets/Shaders/light_cube_frag.frag"};
+        vulkanGraphicsPipeline.createGraphicsPipeline(vulkanDevices, vulkanImages, nullptr);
         
     }
 
@@ -20,6 +21,7 @@ namespace Renderer
 
     void Vulkan::destroyVulkan()
     {
+        vulkanGraphicsPipeline.destroyPipeline(vulkanDevices);
         vulkanImages.destroyImages(vulkanDevices);
         vulkanMemoryAllocator.destroyAllocator();
         vulkanDevices.destroyDevices();
