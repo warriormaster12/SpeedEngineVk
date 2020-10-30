@@ -17,7 +17,7 @@ namespace Renderer
             throw std::runtime_error("failed to create command pool!");
         }    
     }
-    void VulkanCommandBuffer::createCommandBuffers(std::vector<VkDescriptorSet>& descriptorSets)
+    void VulkanCommandBuffer::createCommandBuffers(VulkanObjectBuffers& vulkanObjectBuffer,VulkanGraphicsPipeline& vulkanGraphicsPipeline)
     {
         commandBuffers.resize(p_vulkanImages->vulkanFrameBuffer.swapChainFramebuffers.size());
 
@@ -61,38 +61,25 @@ namespace Renderer
                 
 
                 
-                // for(int j=0; j < scene_ref->meshes.size(); j++)
-                // {
-                    
-                //     if(scene_ref->meshes[j].current_mesh_type == mesh_types::user_mesh)
-                //     {
-                //         vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, gpipeline_ref->graphicsPipeline);
-                //         vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, gpipeline_ref->pipelineLayout, 0, 1, &descriptorSets[j], 0, nullptr);
-                //     }
-                //     else
-                //     {
-                //         vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, lightpipeline_ref->graphicsPipeline);
-                //         vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, lightpipeline_ref->pipelineLayout, 0, 1, &descriptorSets[j], 0, nullptr);
-                    
-                //     }
+                
+                vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, vulkanGraphicsPipeline.graphicsPipeline);
+                vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, vulkanGraphicsPipeline.pipelineLayout, 0, 1, &vulkanObjectBuffer.vulkanDescriptors.descriptorSets[i], 0, nullptr);
+             
                     
                     
                     
-                    
-                //     VkBuffer vertexBuffers[] = {scene_ref->meshes[j].vertexBuffer.vertexBuffer};
-                //     VkDeviceSize offsets[] = {0};
-                //     vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
-                    
+                VkBuffer vertexBuffers[] = {vulkanObjectBuffer.vulkanVertexBuffer.vertexBuffer};
+                VkDeviceSize offsets[] = {0};
+                vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
+                
 
-                //     vkCmdBindIndexBuffer(commandBuffers[i], scene_ref->meshes[j].indexBuffer.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
-                    
-                    
-                    
-                    
-            
-                //     vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(scene_ref->meshes[j].indexBuffer.indices.size()), 1, 0, 0, 0);
-    
-                // }
+                vkCmdBindIndexBuffer(commandBuffers[i], vulkanObjectBuffer.vulkanIndexBuffer.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+                
+                
+                
+                
+        
+                vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(vulkanObjectBuffer.vulkanIndexBuffer.indices.size()), 1, 0, 0, 0);
                 
 
             vkCmdEndRenderPass(commandBuffers[i]);

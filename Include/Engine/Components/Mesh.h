@@ -1,6 +1,7 @@
 #pragma once 
 
 #include "../Renderer/Vulkan/VulkanRenderer.h"
+#include "../Math/Math3D.h"
 
 namespace Renderer
 {
@@ -15,6 +16,8 @@ namespace Renderer
         void initMesh(Vulkan& vulkan_api);
         void drawMesh();
         void destroyMesh();
+
+        Transform3D transform;
 
         size_t vertex_attributes = 1;
         std::vector<VkBuffer> uniformBuffers;

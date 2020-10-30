@@ -10,7 +10,7 @@ namespace Renderer
     public: 
         void createDescriptorSetLayout(VulkanDevices& vulkanDevices, uint32_t descriptor_size);
         void createDescriptorPool();
-        void createDescriptorSets(); 
+        void createDescriptorSets(std::vector<VkBuffer> inputBuffer, uint32_t byte_size); 
 
         VkDescriptorSetLayout descriptorSetLayout;
         VkDescriptorPool descriptorPool;

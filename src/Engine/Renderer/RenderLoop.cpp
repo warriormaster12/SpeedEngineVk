@@ -7,6 +7,7 @@ void RenderLoop::initLoop(AppWindow& win)
     {
         vulkan_api.initVulkan(win);
         mesh.initMesh(vulkan_api);
+        
     }
     else
     {
@@ -20,7 +21,10 @@ void RenderLoop::updateLoop(double deltaTime)
     //The program redraws all of the objects here
     if(apis == API::Vulkan)
     {
+       
         vulkan_api.updateVulkan(deltaTime);
+        //mesh.drawMesh();
+        vulkan_api.finishUpdate();
     }
     else
     {

@@ -28,7 +28,7 @@ namespace Renderer
         }   
     }
 
-    void VulkanDescriptors::createDescriptorSets()
+    void VulkanDescriptors::createDescriptorSets(std::vector<VkBuffer> inputBuffer, uint32_t byte_size)
     {
         descriptorSets.resize(d_size);
         for (size_t i = 0; i < descriptorSets.size(); i++) {
@@ -46,9 +46,9 @@ namespace Renderer
 
         
             VkDescriptorBufferInfo bufferInfo{};
-            // bufferInfo.buffer = uniformBuffers[i];
-            // bufferInfo.offset = 0;
-            // bufferInfo.range = sizeof(UniformBufferObject);
+            bufferInfo.buffer = inputBuffer[i];
+            bufferInfo.offset = 0;
+            bufferInfo.range = byte_size;
 
             // VkDescriptorImageInfo DiffuseImageInfo{};
             // DiffuseImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;

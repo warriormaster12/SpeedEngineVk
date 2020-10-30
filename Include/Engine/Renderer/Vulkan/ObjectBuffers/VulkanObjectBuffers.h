@@ -3,6 +3,7 @@
 #include "VulkanIndexBuffers.h"
 #include "VulkanVertexBuffers.h"
 #include "VulkanDescriptors.h"
+#include "VulkanUniformBuffers.h"
 
 
 namespace Renderer
@@ -13,5 +14,6 @@ namespace Renderer
         VulkanIndexBuffer vulkanIndexBuffer;
         VulkanVertexBuffer vulkanVertexBuffer;
         VulkanDescriptors vulkanDescriptors;
+        VulkanUniformBuffer vulkanUniformBuffer;
     };
 }

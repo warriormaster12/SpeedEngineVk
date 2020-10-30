@@ -4,6 +4,7 @@
 #include "../VulkanDevices.h"
 #include "../VulkanGraphicsPipeline.h"
 #include "../VulkanImages.h"
+#include "../ObjectBuffers/VulkanObjectBuffers.h"
 
 
 
@@ -17,7 +18,7 @@ namespace Renderer
     public: 
         VkCommandPool commandPool;
         void createCommandPool(VulkanDevices& vulkanDevices, VulkanImages& vulkanImages);
-        void createCommandBuffers(std::vector<VkDescriptorSet>& descriptorSets);
+        void createCommandBuffers(VulkanObjectBuffers& vulkanObjectBuffer, VulkanGraphicsPipeline& vulkanGraphicsPipeline);
         std::vector<VkCommandBuffer> commandBuffers;
 
         PushConstants push_const;
