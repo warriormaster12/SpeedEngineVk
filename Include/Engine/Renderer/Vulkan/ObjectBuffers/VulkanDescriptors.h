@@ -8,7 +8,7 @@ namespace Renderer
     class VulkanDescriptors
     {
     public: 
-        void createDescriptorSetLayout(VulkanDevices& vulkanDevices);
+        void createDescriptorSetLayout(VulkanDevices& vulkanDevices, uint32_t descriptor_size);
         void createDescriptorPool();
         void createDescriptorSets(); 
 
@@ -17,6 +17,8 @@ namespace Renderer
         std::vector<VkDescriptorSet> descriptorSets;
     
     private: 
+        VulkanDevices* p_vulkanDevices;
+        uint32_t d_size;
         inline VkDescriptorPoolSize descriptorPoolSize(VkDescriptorType type,uint32_t descriptorCount);
         inline VkDescriptorPoolCreateInfo descriptorPoolCreateInfo(const std::vector<VkDescriptorPoolSize>& poolSizes,uint32_t maxSets);
         inline VkWriteDescriptorSet writeDescriptorSet(VkDescriptorSet dstSet, VkDescriptorType type, uint32_t binding, VkDescriptorImageInfo *imageInfo, VkDescriptorBufferInfo *bufferInfo, uint32_t descriptorCount);
