@@ -16,7 +16,7 @@ namespace Renderer
         void initVulkan(AppWindow& win);
         void updateVulkan(double deltaTime);
         void destroyVulkan();
-        
+    
         VulkanDevices vulkanDevices;
         VulkanImages vulkanImages;
         VulkanObjectBuffers vulkanObjectBuffers;
@@ -24,6 +24,15 @@ namespace Renderer
         VulkanMemoryAllocator vulkanMemoryAllocator;
         VulkanCommandBuffer vulkanCommandBuffer;
         VulkanModelLoader vulkanModelLoader;
+    private:
+        void createSyncObjects();
+        std::vector<VkSemaphore> imageAvailableSemaphores;
+        std::vector<VkSemaphore> renderFinishedSemaphores;
+        std::vector<VkFence> inFlightFences;
+        std::vector<VkFence> imagesInFlight;
+        size_t currentFrame = 0;
+        
+        const int MAX_FRAMES_IN_FLIGHT = 2;
     };
     
 }
