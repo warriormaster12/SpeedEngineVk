@@ -10,11 +10,12 @@ void Application::UpdateApplication()
 {
     while (!glfwWindowShouldClose(win.window))
     {
+        
+        
+        glfwPollEvents();
         double currentFrame = glfwGetTime();
         double lastFrame = currentFrame;
         double deltaTime = currentFrame - lastFrame;
-        
-        glfwPollEvents();
         renderLoop.updateLoop(deltaTime);
 
         if(glfwGetKey(win.window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -22,12 +23,12 @@ void Application::UpdateApplication()
             glfwSetWindowShouldClose(win.window, true);
         }
     }
-    vkDeviceWaitIdle(renderLoop.vulkan_api.vulkanDevices.device);
     DestroyApplication();
 }
 
 void Application::DestroyApplication()
 {
+    renderLoop.destroyLoop();
     win.cleanupWindow();
 }
 

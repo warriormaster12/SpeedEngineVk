@@ -20,8 +20,7 @@ void RenderLoop::updateLoop(double deltaTime)
 {
     //The program redraws all of the objects here
     if(apis == API::Vulkan)
-    {
-       
+    {   
         vulkan_api.updateVulkan();
         mesh.drawMesh(vulkan_api.imageIndex, deltaTime);
     }
@@ -36,6 +35,7 @@ void RenderLoop::destroyLoop()
     //The program destroyes everything before closing
     if(apis == API::Vulkan)
     {
+        vkDeviceWaitIdle(vulkan_api.vulkanDevices.device);
         vulkan_api.destroyVulkan();
     }
     else
