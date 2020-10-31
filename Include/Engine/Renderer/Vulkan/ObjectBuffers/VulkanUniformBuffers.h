@@ -10,8 +10,8 @@ namespace Renderer
     {
     public: 
         void initBuffer(VulkanMemoryAllocator& vulkanMemoryAllocator);
-        std::vector <VkBuffer> createBuffer(std::vector <VkBuffer> inputBuffer,  std::vector <VmaAllocation> inputAllocation, uint32_t byte_size, uint32_t size);
-        void updateBuffer(double deltaTime);
+        std::vector <VkBuffer> createBuffer(std::vector <VkBuffer> inputBuffer, uint32_t byte_size, uint32_t size);
+        std::vector <VmaAllocation> bufferAllocation;
     private:
         VulkanMemoryAllocator* p_vulkanMemoryAllocator;
     };

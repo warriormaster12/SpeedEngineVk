@@ -22,9 +22,8 @@ void RenderLoop::updateLoop(double deltaTime)
     if(apis == API::Vulkan)
     {
        
-        vulkan_api.updateVulkan(deltaTime);
-        //mesh.drawMesh();
-        vulkan_api.finishUpdate();
+        vulkan_api.updateVulkan();
+        mesh.drawMesh(vulkan_api.imageIndex, deltaTime);
     }
     else
     {

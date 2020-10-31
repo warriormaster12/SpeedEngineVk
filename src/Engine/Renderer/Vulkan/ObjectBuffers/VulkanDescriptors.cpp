@@ -50,6 +50,7 @@ namespace Renderer
             bufferInfo.offset = 0;
             bufferInfo.range = byte_size;
 
+
             // VkDescriptorImageInfo DiffuseImageInfo{};
             // DiffuseImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
             // DiffuseImageInfo.imageView = scene_ref->meshes[i].DiffuseTexture.textureImageView;

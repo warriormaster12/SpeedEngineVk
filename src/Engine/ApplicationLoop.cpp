@@ -22,7 +22,7 @@ void Application::UpdateApplication()
             glfwSetWindowShouldClose(win.window, true);
         }
     }
-    //vkDeviceWaitIdle(renderer.setup.device);
+    vkDeviceWaitIdle(renderLoop.vulkan_api.vulkanDevices.device);
     DestroyApplication();
 }
 

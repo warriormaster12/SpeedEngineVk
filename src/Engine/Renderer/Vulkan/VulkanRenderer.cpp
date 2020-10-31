@@ -11,11 +11,10 @@ namespace Renderer
         vulkanImages.initImages(vulkanDevices, vulkanMemoryAllocator, win);        
     }
 
-    void Vulkan::updateVulkan(double deltaTime)
+    void Vulkan::updateVulkan()
     {
        vkWaitForFences(vulkanDevices.device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
-        
         result = vkAcquireNextImageKHR(vulkanDevices.device, vulkanImages.vulkanSwapChain.swapChain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
         
         // if (result == VK_ERROR_OUT_OF_DATE_KHR) {
@@ -31,12 +30,6 @@ namespace Renderer
         // }
 
         
-
-         
-    }
-
-    void Vulkan::finishUpdate()
-    {
         if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) {
             vkWaitForFences(vulkanDevices.device, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
         }
@@ -86,6 +79,7 @@ namespace Renderer
         // }
 
         currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+         
     }
 
     void Vulkan::destroyVulkan()

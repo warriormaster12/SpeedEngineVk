@@ -14,8 +14,7 @@ namespace Renderer
     {
     public: 
         void initVulkan(AppWindow& win);
-        void updateVulkan(double deltaTime);
-        void finishUpdate();
+        void updateVulkan();
         void destroyVulkan();
         void createSyncObjects();
     
