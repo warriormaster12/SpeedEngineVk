@@ -17,6 +17,8 @@ public:
     void cursor_enter_callback(GLFWwindow* window, int entered);
 
 private:
+    double deltaTime = 0;
+    double lastFrame = 0;
     RenderLoop renderLoop;
     FileConf renderer_config;
     window_mode mode;

@@ -49,7 +49,7 @@ namespace Renderer
         imageInfo.usage = Info.usage;
         imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
         imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-
+    
         if (vkCreateImage(p_vulkanDevices->device, &imageInfo, nullptr, &image) != VK_SUCCESS) {
             throw std::runtime_error("failed to create image!");
         }

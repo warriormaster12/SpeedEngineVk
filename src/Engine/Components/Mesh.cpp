@@ -20,7 +20,7 @@ namespace Renderer
 
         p_vulkan_api->vulkanObjectBuffers.vulkanUniformBuffer.initBuffer(p_vulkan_api->vulkanMemoryAllocator);
         p_vulkan_api->vulkanObjectBuffers.vulkanDescriptors.createDescriptorPool();
-        p_vulkan_api->vulkanObjectBuffers.vulkanDescriptors.createDescriptorSets(p_vulkan_api->vulkanObjectBuffers.vulkanUniformBuffer.createBuffer(uniformBuffers, sizeof(UniformBufferObject), p_vulkan_api->vulkanImages.vulkanSwapChain.swapChainImages.size()), sizeof(UniformBufferObject));
+        p_vulkan_api->vulkanObjectBuffers.vulkanDescriptors.createDescriptorSets(p_vulkan_api->vulkanObjectBuffers.vulkanUniformBuffer.createBuffer(sizeof(UniformBufferObject), p_vulkan_api->vulkanImages.vulkanSwapChain.swapChainImages.size()), sizeof(UniformBufferObject));
         
         p_vulkan_api->vulkanCommandBuffer.createCommandPool(p_vulkan_api->vulkanDevices, p_vulkan_api->vulkanImages);
         p_vulkan_api->vulkanCommandBuffer.createCommandBuffers(p_vulkan_api->vulkanObjectBuffers, p_vulkan_api->vulkanGraphicsPipeline);
@@ -50,5 +50,14 @@ namespace Renderer
         vmaMapMemory(p_vulkan_api->vulkanMemoryAllocator.allocator, p_vulkan_api->vulkanObjectBuffers.vulkanUniformBuffer.bufferAllocation[imageIndex], &data);
             memcpy(data, &ubo, sizeof(ubo));
         vmaUnmapMemory(p_vulkan_api->vulkanMemoryAllocator.allocator, p_vulkan_api->vulkanObjectBuffers.vulkanUniformBuffer.bufferAllocation[imageIndex]);
+    }
+
+    void Mesh::destroyMesh()
+    {
+        p_vulkan_api->vulkanGraphicsPipeline.destroyPipeline(p_vulkan_api->vulkanDevices);
+        p_vulkan_api->vulkanObjectBuffers.vulkanUniformBuffer.destroyBuffer();
+        p_vulkan_api->vulkanObjectBuffers.vulkanVertexBuffer.destroyVertexBuffer(p_vulkan_api->vulkanMemoryAllocator);
+        p_vulkan_api->vulkanObjectBuffers.vulkanIndexBuffer.destroyIndexBuffer(p_vulkan_api->vulkanMemoryAllocator);
+        
     }
 }

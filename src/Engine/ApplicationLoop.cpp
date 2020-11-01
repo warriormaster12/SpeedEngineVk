@@ -14,8 +14,8 @@ void Application::UpdateApplication()
         
         glfwPollEvents();
         double currentFrame = glfwGetTime();
-        double lastFrame = currentFrame;
-        double deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+        deltaTime = currentFrame - lastFrame;
         renderLoop.updateLoop(deltaTime);
 
         if(glfwGetKey(win.window, GLFW_KEY_ESCAPE) == GLFW_PRESS)

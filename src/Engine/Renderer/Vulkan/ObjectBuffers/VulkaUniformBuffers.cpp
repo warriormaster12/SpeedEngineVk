@@ -6,10 +6,9 @@ namespace Renderer
     {
         p_vulkanMemoryAllocator = &vulkanMemoryAllocator;
     }
-    std::vector <VkBuffer> VulkanUniformBuffer::createBuffer(std::vector <VkBuffer> inputBuffer, uint32_t byte_size, uint32_t size)
+    std::vector <VkBuffer> VulkanUniformBuffer::createBuffer(uint32_t byte_size, uint32_t size)
     {
-        inputBuffer.resize(size);
-        std::vector <VkBuffer> outputBuffer = inputBuffer;
+        Buffers.resize(size);
         VkBufferCreateInfo UniformBufferInfo = { VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO };
         UniformBufferInfo.size = byte_size;
         UniformBufferInfo.usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
@@ -21,9 +20,17 @@ namespace Renderer
         bufferAllocation.resize(size);
 
         for (size_t i = 0; i < size; i++) {
-            vmaCreateBuffer(p_vulkanMemoryAllocator->allocator, &UniformBufferInfo, &allocInfo, &outputBuffer[i], &bufferAllocation[i], nullptr);
+            vmaCreateBuffer(p_vulkanMemoryAllocator->allocator, &UniformBufferInfo, &allocInfo, &Buffers[i], &bufferAllocation[i], nullptr);
         }
-        return outputBuffer;
+        return Buffers;
+    }
+    void VulkanUniformBuffer::destroyBuffer()
+    {
+        for(int i = 0; i < Buffers.size(); i++)
+        {
+            vmaDestroyBuffer(p_vulkanMemoryAllocator->allocator, Buffers[i], bufferAllocation[i]);
+        }
+        
     }
     
 }

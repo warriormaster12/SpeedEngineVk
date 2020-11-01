@@ -36,6 +36,7 @@ void RenderLoop::destroyLoop()
     if(apis == API::Vulkan)
     {
         vkDeviceWaitIdle(vulkan_api.vulkanDevices.device);
+        mesh.destroyMesh();
         vulkan_api.destroyVulkan();
     }
     else
