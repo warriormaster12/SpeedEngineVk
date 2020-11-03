@@ -58,6 +58,11 @@ namespace Renderer
         p_vulkan_api->vulkanObjectBuffers.vulkanUniformBuffer.destroyBuffer();
         p_vulkan_api->vulkanObjectBuffers.vulkanVertexBuffer.destroyVertexBuffer(p_vulkan_api->vulkanMemoryAllocator);
         p_vulkan_api->vulkanObjectBuffers.vulkanIndexBuffer.destroyIndexBuffer(p_vulkan_api->vulkanMemoryAllocator);
+
+        vkFreeCommandBuffers(p_vulkan_api->vulkanDevices.device, p_vulkan_api->vulkanCommandBuffer.commandPool, static_cast<uint32_t>(p_vulkan_api->vulkanCommandBuffer.commandBuffers.size()), p_vulkan_api->vulkanCommandBuffer.commandBuffers.data());
+        vkDestroyCommandPool(p_vulkan_api->vulkanDevices.device, p_vulkan_api->vulkanCommandBuffer.commandPool, nullptr);
+        vkDestroyDescriptorPool(p_vulkan_api->vulkanDevices.device, p_vulkan_api->vulkanObjectBuffers.vulkanDescriptors.descriptorPool, nullptr);
+        vkDestroyDescriptorSetLayout(p_vulkan_api->vulkanDevices.device, p_vulkan_api->vulkanObjectBuffers.vulkanDescriptors.descriptorSetLayout, nullptr);  
         
     }
 }

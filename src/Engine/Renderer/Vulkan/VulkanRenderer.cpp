@@ -84,6 +84,11 @@ namespace Renderer
 
     void Vulkan::destroyVulkan()
     {
+        for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+            vkDestroySemaphore(vulkanDevices.device, renderFinishedSemaphores[i], nullptr);
+            vkDestroySemaphore(vulkanDevices.device, imageAvailableSemaphores[i], nullptr);
+            vkDestroyFence(vulkanDevices.device, inFlightFences[i], nullptr);
+        }
         vulkanImages.destroyImages(vulkanDevices);
         vulkanMemoryAllocator.destroyAllocator();
         vulkanDevices.destroyDevices();

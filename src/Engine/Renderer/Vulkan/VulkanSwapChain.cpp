@@ -76,6 +76,7 @@ namespace Renderer
         }
 
         vkDestroySwapchainKHR(p_vulkanDevices->device, swapChain, nullptr);
+        vkDestroySurfaceKHR(p_vulkanDevices->instance, surface, nullptr);
     }
     void VulkanSwapChain::createImageViews()
     {
