@@ -27,7 +27,7 @@ namespace Renderer
         p_vulkan_api->createSyncObjects();
     }
 
-    const void *__restrict Mesh::drawMesh(double deltaTime)
+    void Mesh::drawMesh(double deltaTime)
     {
         
         glm::mat4 ModelMatrix(1.0f);
@@ -46,8 +46,6 @@ namespace Renderer
         camera.CameraUpdate(deltaTime);
         ubo.view = camera.matrices.view;
         ubo.projection = camera.matrices.perspective;
-
-        return &ubo;
     }
 
     void Mesh::destroyMesh()

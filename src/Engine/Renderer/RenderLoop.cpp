@@ -26,8 +26,8 @@ void RenderLoop::updateLoop()
     //The program redraws all of the objects here
     if(apis == API::Vulkan)
     {   
-        
-        vulkan_api.updateVulkan(mesh.drawMesh(deltaTime), sizeof(mesh.ubo));
+        mesh.drawMesh(deltaTime);
+        vulkan_api.updateVulkan(mesh.ubo, sizeof(mesh.ubo));
         
     }
     else

@@ -15,7 +15,7 @@ namespace Renderer
     {
     public:
         void initMesh(Vulkan& vulkan_api);
-        const void *__restrict drawMesh(double deltaTime);
+        void drawMesh(double deltaTime);
         void destroyMesh();
 
         Transform3D transform;
