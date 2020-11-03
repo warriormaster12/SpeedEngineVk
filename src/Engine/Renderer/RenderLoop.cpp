@@ -6,8 +6,7 @@ void RenderLoop::initLoop(AppWindow& win)
     if(apis == API::Vulkan)
     {
         vulkan_api.initVulkan(win);
-        mesh.initMesh(vulkan_api);
-        camera.Set_Camera(win, mesh);
+        scene.initScene(vulkan_api, win);
     }
     else
     {
@@ -25,9 +24,8 @@ void RenderLoop::updateLoop()
     //The program redraws all of the objects here
     if(apis == API::Vulkan)
     {   
-        mesh.drawMesh(deltaTime);
-        camera.CameraUpdate(deltaTime, vulkan_api.vulkanImages.vulkanSwapChain.swapChainExtent.width / (float) vulkan_api.vulkanImages.vulkanSwapChain.swapChainExtent.height);
-        vulkan_api.updateVulkan(mesh.ubo, sizeof(mesh.ubo));
+        scene.updateScene(deltaTime);
+        vulkan_api.updateVulkan(scene.mesh.ubo, sizeof(scene.mesh.ubo));
         
     }
     else
@@ -42,7 +40,7 @@ void RenderLoop::destroyLoop()
     if(apis == API::Vulkan)
     {
         vkDeviceWaitIdle(vulkan_api.vulkanDevices.device);
-        mesh.destroyMesh();
+        scene.destroyScene();
         vulkan_api.destroyVulkan();
     }
     else

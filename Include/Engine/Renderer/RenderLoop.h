@@ -2,8 +2,7 @@
 
 #include <iostream> 
 #include "Vulkan/VulkanRenderer.h"
-#include "../Components/Mesh.h"
-#include "../Components/Camera.h"
+#include "../Components/Scene.h"
 
 enum class API 
 {
@@ -18,8 +17,7 @@ public:
     void updateLoop();
     void destroyLoop();
     Renderer::Vulkan vulkan_api;
-    Renderer::Mesh mesh;
-    Renderer::Camera camera;
+    Renderer::Scene scene;
 private: 
     API apis = API::Vulkan;
     double deltaTime = 0;
