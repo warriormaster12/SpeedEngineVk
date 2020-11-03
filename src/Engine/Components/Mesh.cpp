@@ -43,9 +43,10 @@ namespace Renderer
         ubo.model= glm::rotate(ubo.model, glm::radians(transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
         ubo.model = glm::scale(ubo.model, transform.scale);	
 
-        ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        ubo.projection = glm::perspective(glm::radians(60.0f), aspect, 0.1f, 100.0f);
-        ubo.projection[1][1] *= -1.0f;
+        camera.CameraUpdate(deltaTime);
+        ubo.view = camera.matrices.view;
+        ubo.projection = camera.matrices.perspective;
+        
         void* data;
         vmaMapMemory(p_vulkan_api->vulkanMemoryAllocator.allocator, p_vulkan_api->vulkanObjectBuffers.vulkanUniformBuffer.bufferAllocation[imageIndex], &data);
             memcpy(data, &ubo, sizeof(ubo));

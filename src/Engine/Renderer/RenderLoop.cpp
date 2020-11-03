@@ -6,6 +6,7 @@ void RenderLoop::initLoop(AppWindow& win)
     if(apis == API::Vulkan)
     {
         vulkan_api.initVulkan(win);
+        mesh.camera.Set_Camera(win, vulkan_api.vulkanImages.vulkanSwapChain.swapChainExtent.width / (float) vulkan_api.vulkanImages.vulkanSwapChain.swapChainExtent.height);
         mesh.initMesh(vulkan_api);
         
     }
@@ -16,8 +17,12 @@ void RenderLoop::initLoop(AppWindow& win)
     
 }
 
-void RenderLoop::updateLoop(double deltaTime)
+void RenderLoop::updateLoop()
 {
+    float currentFrame = glfwGetTime();
+    deltaTime = currentFrame - lastFrame;
+    lastFrame = currentFrame;
+    
     //The program redraws all of the objects here
     if(apis == API::Vulkan)
     {   

@@ -10,5 +10,5 @@ layout(binding = 0) uniform UniformBufferObject {
 } ubo;
 void main()
 {
-    FragColor = vec4(1.0); // set alle 4 vector values to 1.0
+    FragColor = vec4(0.0, 0.8824, 1.0, 1.0); // set alle 4 vector values to 1.0
 }

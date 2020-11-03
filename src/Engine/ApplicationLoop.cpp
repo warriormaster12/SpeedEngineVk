@@ -13,10 +13,7 @@ void Application::UpdateApplication()
         
         
         glfwPollEvents();
-        double currentFrame = glfwGetTime();
-        lastFrame = currentFrame;
-        deltaTime = currentFrame - lastFrame;
-        renderLoop.updateLoop(deltaTime);
+        renderLoop.updateLoop();
 
         if(glfwGetKey(win.window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         {
@@ -32,17 +29,17 @@ void Application::DestroyApplication()
     win.cleanupWindow();
 }
 
-// void Application::mouse_callback(GLFWwindow* window, double xpos, double ypos)
-// {
-//     renderer.scene.camera.processMouse(xpos, ypos);
-// }
+void Application::mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    renderLoop.mesh.camera.processMouse(xpos, ypos);
+}
 
-// void Application::cursor_enter_callback(GLFWwindow* window, int entered) {
-//     if (entered)
-//     {
-//         glfwGetCursorPos(window, &renderer.scene.camera.lastX, &renderer.scene.camera.lastY);
-//     }
-// }   
+void Application::cursor_enter_callback(GLFWwindow* window, int entered) {
+    if (entered)
+    {
+        glfwGetCursorPos(window, &renderLoop.mesh.camera.lastX, &renderLoop.mesh.camera.lastY);
+    }
+}   
 
 
 

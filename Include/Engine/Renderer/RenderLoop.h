@@ -14,10 +14,12 @@ class RenderLoop
 {
 public: 
     void initLoop(AppWindow& win);
-    void updateLoop(double deltaTime);
+    void updateLoop();
     void destroyLoop();
     Renderer::Vulkan vulkan_api;
     Renderer::Mesh mesh;
 private: 
     API apis = API::Vulkan;
+    double deltaTime = 0;
+    double lastFrame = 0;
 };
