@@ -14,7 +14,7 @@ namespace Renderer
     {
     public: 
         void initVulkan(AppWindow& win);
-        void updateVulkan();
+        void updateVulkan(const void *__restrict object, uint32_t byte_size);
         void destroyVulkan();
         void createSyncObjects();
     

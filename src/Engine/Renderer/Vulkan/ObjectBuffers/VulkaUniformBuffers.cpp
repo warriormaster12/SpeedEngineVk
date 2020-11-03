@@ -24,6 +24,13 @@ namespace Renderer
         }
         return Buffers;
     }
+    void VulkanUniformBuffer::updateBuffer(uint32_t imageIndex, const void *__restrict object, uint32_t byte_size)
+    {
+        void* data;
+        vmaMapMemory(p_vulkanMemoryAllocator->allocator, bufferAllocation[imageIndex], &data);
+            memcpy(data, object, byte_size);
+        vmaUnmapMemory(p_vulkanMemoryAllocator->allocator, bufferAllocation[imageIndex]);
+    }
     void VulkanUniformBuffer::destroyBuffer()
     {
         for(int i = 0; i < Buffers.size(); i++)

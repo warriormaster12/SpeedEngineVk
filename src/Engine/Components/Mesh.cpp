@@ -27,9 +27,9 @@ namespace Renderer
         p_vulkan_api->createSyncObjects();
     }
 
-    void Mesh::drawMesh(uint32_t imageIndex, double deltaTime)
+    const void *__restrict Mesh::drawMesh(double deltaTime)
     {
-        UniformBufferObject ubo{};
+        
         glm::mat4 ModelMatrix(1.0f);
         ubo.model = ModelMatrix;
 
@@ -46,11 +46,8 @@ namespace Renderer
         camera.CameraUpdate(deltaTime);
         ubo.view = camera.matrices.view;
         ubo.projection = camera.matrices.perspective;
-        
-        void* data;
-        vmaMapMemory(p_vulkan_api->vulkanMemoryAllocator.allocator, p_vulkan_api->vulkanObjectBuffers.vulkanUniformBuffer.bufferAllocation[imageIndex], &data);
-            memcpy(data, &ubo, sizeof(ubo));
-        vmaUnmapMemory(p_vulkan_api->vulkanMemoryAllocator.allocator, p_vulkan_api->vulkanObjectBuffers.vulkanUniformBuffer.bufferAllocation[imageIndex]);
+
+        return &ubo;
     }
 
     void Mesh::destroyMesh()

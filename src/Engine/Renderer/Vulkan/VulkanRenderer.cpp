@@ -11,7 +11,7 @@ namespace Renderer
         vulkanImages.initImages(vulkanDevices, vulkanMemoryAllocator, win);        
     }
 
-    void Vulkan::updateVulkan()
+    void Vulkan::updateVulkan(const void *__restrict object, uint32_t byte_size)
     {
        vkWaitForFences(vulkanDevices.device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
@@ -23,12 +23,8 @@ namespace Renderer
         // } else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
         //     throw std::runtime_error("failed to acquire swap chain image!");
         // }
-        
-        // for (int i=0; i < scene.meshes.size(); i++)
-        // {
-        //     uniformBuffer.updateUniformBuffer(i);
-        // }
 
+        vulkanObjectBuffers.vulkanUniformBuffer.updateBuffer(imageIndex, object, byte_size);
         
         if (imagesInFlight[imageIndex] != VK_NULL_HANDLE) {
             vkWaitForFences(vulkanDevices.device, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
