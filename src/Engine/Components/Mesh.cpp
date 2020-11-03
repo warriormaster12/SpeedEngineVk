@@ -33,8 +33,6 @@ namespace Renderer
         glm::mat4 ModelMatrix(1.0f);
         ubo.model = ModelMatrix;
 
-        float aspect = p_vulkan_api->vulkanImages.vulkanSwapChain.swapChainExtent.width / (float) p_vulkan_api->vulkanImages.vulkanSwapChain.swapChainExtent.height;
-
         transform.scale = glm::vec3(0.2f);
 
         ubo.model = glm::translate(ubo.model, transform.translate);
@@ -42,10 +40,7 @@ namespace Renderer
         ubo.model= glm::rotate(ubo.model, glm::radians(transform.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
         ubo.model= glm::rotate(ubo.model, glm::radians(transform.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
         ubo.model = glm::scale(ubo.model, transform.scale);	
-
-        camera.CameraUpdate(deltaTime);
-        ubo.view = camera.matrices.view;
-        ubo.projection = camera.matrices.perspective;
+        
     }
 
     void Mesh::destroyMesh()

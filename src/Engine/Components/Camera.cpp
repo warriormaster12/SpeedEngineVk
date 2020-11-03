@@ -6,23 +6,26 @@ namespace Renderer
     {
         camera_transform.translate = glm::vec3(0.0f, 0.0f, 0.0f);
     }
-    void Camera::Set_Camera(AppWindow& win, float aspect)
+    void Camera::Set_Camera(AppWindow& win, Mesh& mesh)
     {
         win_ref = &win;   
-        aspect_ref = aspect;
+        p_mesh = &mesh;
     }
 
-    void Camera::CameraUpdate(double DeltaT)
+    void Camera::CameraUpdate(double deltaTime, float aspect)
     {
         matrices.view = glm::lookAt(camera_transform.translate, camera_transform.translate + cameraFront, cameraUp);
 
-        matrices.perspective = glm::perspective(glm::radians(fov), aspect_ref, znear, zfar);
-        matrices.perspective[1][1] *= -1.0f;
-        processMovement(DeltaT);
+        matrices.projection = glm::perspective(glm::radians(fov), aspect, znear, zfar);
+        matrices.projection[1][1] *= -1.0f;
+
+        p_mesh->ubo.view = matrices.view;
+        p_mesh->ubo.projection = matrices.projection;
+        processMovement(deltaTime);
     }
-    void Camera::processMovement(double DeltaT)
+    void Camera::processMovement(double deltaTime)
     {
-        float camera_speed = movement_speed * DeltaT;
+        float camera_speed = movement_speed * deltaTime;
         if (glfwGetKey(win_ref->window, GLFW_KEY_W) == GLFW_PRESS)
         {
             camera_transform.translate += camera_speed * cameraFront;

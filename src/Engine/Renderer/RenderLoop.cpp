@@ -6,9 +6,8 @@ void RenderLoop::initLoop(AppWindow& win)
     if(apis == API::Vulkan)
     {
         vulkan_api.initVulkan(win);
-        mesh.camera.Set_Camera(win, vulkan_api.vulkanImages.vulkanSwapChain.swapChainExtent.width / (float) vulkan_api.vulkanImages.vulkanSwapChain.swapChainExtent.height);
         mesh.initMesh(vulkan_api);
-        
+        camera.Set_Camera(win, mesh);
     }
     else
     {
@@ -27,6 +26,7 @@ void RenderLoop::updateLoop()
     if(apis == API::Vulkan)
     {   
         mesh.drawMesh(deltaTime);
+        camera.CameraUpdate(deltaTime, vulkan_api.vulkanImages.vulkanSwapChain.swapChainExtent.width / (float) vulkan_api.vulkanImages.vulkanSwapChain.swapChainExtent.height);
         vulkan_api.updateVulkan(mesh.ubo, sizeof(mesh.ubo));
         
     }

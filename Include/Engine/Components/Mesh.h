@@ -2,7 +2,7 @@
 
 #include "../Renderer/Vulkan/VulkanRenderer.h"
 #include "../Math/Math3D.h"
-#include "Camera.h"
+
 
 namespace Renderer
 {
@@ -19,7 +19,6 @@ namespace Renderer
         void destroyMesh();
 
         Transform3D transform;
-        Camera camera;
 
         size_t vertex_attributes = 1;
         UniformBufferObject ubo{};

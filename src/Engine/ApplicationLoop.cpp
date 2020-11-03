@@ -31,13 +31,13 @@ void Application::DestroyApplication()
 
 void Application::mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
-    renderLoop.mesh.camera.processMouse(xpos, ypos);
+    renderLoop.camera.processMouse(xpos, ypos);
 }
 
 void Application::cursor_enter_callback(GLFWwindow* window, int entered) {
     if (entered)
     {
-        glfwGetCursorPos(window, &renderLoop.mesh.camera.lastX, &renderLoop.mesh.camera.lastY);
+        glfwGetCursorPos(window, &renderLoop.camera.lastX, &renderLoop.camera.lastY);
     }
 }   
 
